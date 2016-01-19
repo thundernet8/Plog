@@ -1,0 +1,14 @@
+{
+  "name": "plog-static",
+  "version": "1.0.0",
+  "description": "plog static resources",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "ploggulptest"
+  },
+  "author": "wuxueqian",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.0"
+  }
+}

@@ -1,0 +1,6 @@
+.env
+.idea
+venv/*
+*.pyc
+*.db
+app/static/node_modules/*
