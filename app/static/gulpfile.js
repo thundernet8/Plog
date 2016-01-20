@@ -3,6 +3,7 @@ var webpack = require('gulp-webpack');
 var less = require('gulp-less');
 var minify = require('gulp-minify-css');
 var uglify = require('gulp-uglify');
+var jshint = require('gulp-jshint');
 
 gulp.task('default', ['auto-combine'], function () {
     console.log('default task');
@@ -19,7 +20,7 @@ gulp.task('less', function () {
 gulp.task('scripts', function () {
     console.log('start pack scripts');
     gulp.src('./src/scripts/*.js')
-        .pipe(webpack())
+        .pipe(webpack(require('./webpack.config.js')))
         .pipe(uglify())
         .pipe(gulp.dest('./dist/scripts'))
 });
@@ -29,4 +30,11 @@ gulp.task('auto-combine', function () {
     console.log('execute watch and auto-combine task');
     gulp.watch('./src/scripts/*.js', ['scripts']);
     gulp.watch('./src/styles/*.less', ['less']);
+});
+
+//JS代码检查
+gulp.task('jshint', function () {
+    gulp.src('./src/scripts/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter());
 });
