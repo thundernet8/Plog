@@ -30,9 +30,9 @@ class DevConfig(Config):
     DEBUG = True
 
     # db config
-    MONGO_HOST = 'http://localhost'
+    MONGO_HOST = 'localhost'
     MONGO_PORT = 27017
-    MONGO_DBNAME = 'Plog-Dev'
+    MONGO_DBNAME = 'Plog_Dev'
     MONGO_USERNAME = 'root'
     MONGO_PASSWORD = 'root'
 
@@ -44,7 +44,7 @@ class DistConfig(Config):
     DEBUG = False
 
     # db config
-    MONGO_HOST = 'http://localhost'
+    MONGO_HOST = 'localhost'
     MONGO_PORT = 27017
     MONGO_DBNAME = 'Plog'
     MONGO_USERNAME = None

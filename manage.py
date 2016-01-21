@@ -20,7 +20,12 @@ if os.path.exists('.env'):
 
 
 from app import create_app
-from flask.ext.script import Manager, Shell
+from app import mongo
+from app import login_manager
+from app import mail
+from app.core.models.roles import Role
+from flask.ext.script import Manager
+from flask.ext.script import Shell
 
 # 创建App
 app = create_app(os.getenv('PLOG_CONFIG') or 'default')
@@ -29,8 +34,8 @@ manager = Manager(app)
 
 # Manager Script上下文
 def make_shell_context():
-    return dict(app=app)
-manager.add_command('shell', Shell(make_context=make_shell_context()))
+    return dict(app=app, mongo=mongo, login_manager=login_manager, mail=mail)
+manager.add_command('shell', Shell(make_context=make_shell_context))
 
 
 @manager.command
@@ -40,6 +45,12 @@ def deploy():
     :return:
     """
 
+    # 插入默认角色
+    Role.insert_default_roles()
+
+
+@manager.command
+def test():
     pass
 
 
