@@ -3,6 +3,16 @@
 
 import os
 
+from flask.ext.script import Manager
+from flask.ext.script import Shell
+
+from app import create_app
+from app import mongo
+from app import login_manager
+from app import mail
+from app.core.models.roles import Role
+from app.core.models.settings import Setting
+
 # 启用覆盖测试
 COV = None
 if os.environ.get('PG_COVERAGE'):
@@ -19,14 +29,6 @@ if os.path.exists('.env'):
             os.environ[var[0]] = var[1]
 
 
-from app import create_app
-from app import mongo
-from app import login_manager
-from app import mail
-from app.core.models.roles import Role
-from flask.ext.script import Manager
-from flask.ext.script import Shell
-
 # 创建App
 app = create_app(os.getenv('PLOG_CONFIG') or 'default')
 manager = Manager(app)
@@ -34,7 +36,7 @@ manager = Manager(app)
 
 # Manager Script上下文
 def make_shell_context():
-    return dict(app=app, mongo=mongo, login_manager=login_manager, mail=mail)
+    return dict(app=app, mongo=mongo, login_manager=login_manager, mail=mail, Role=Role, Setting=Setting)
 manager.add_command('shell', Shell(make_context=make_shell_context))
 
 
