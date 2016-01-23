@@ -33,9 +33,11 @@ class Setting(object):
         插入默认设置
         :return:
         """
-
         # 创建唯一索引键
         mongo.db.settings.create_index([("setting_name", flask_pymongo.ASCENDING)], unique=True)
+
+        # 每页文章数
+        Setting.update_setting('posts_per_page', 10, 'blog')
 
     @staticmethod
     def update_setting(setting_name, setting_value, type='blog'):
@@ -75,19 +77,20 @@ class Setting(object):
         return Setting.update_setting(setting_name, setting_value, type)
 
     @staticmethod
-    def get_setting(setting_name, record=False):
+    def get_setting(setting_name, default=None, record=False):
         """
         获取设置值
         :param setting_name: 设置名
+        :param default: 默认值
         :param record: 是否返回整条记录,如果为True,返回 dict 形式整条记录,否则返回设置值
         :return: 设置值/记录 or None
         """
         result = mongo.db.settings.find_one({"setting_name": setting_name})
         if not result:
-            return None
+            return default
         if record:
             return result
-        return result.get('setting_value')
+        return result.get('setting_value', default)
 
     @staticmethod
     def get_settings(setting_names, record=False):
@@ -100,7 +103,7 @@ class Setting(object):
         if not isinstance(setting_names, list):
             return None
         results = mongo.db.settings.find({"setting_name": {"$in": setting_names}})
-        if not results or len(list(results)) == 0:
+        if not results or results.count() == 0:
             return None
         if record:
             records = {}
@@ -120,7 +123,7 @@ class Setting(object):
         :return: 删除成功返回True,否则返回False
         """
         deletes = mongo.db.settings.delete_many({'setting_name': setting_name})
-        if deletes and len(list(deletes)) > 0:
+        if deletes and deletes.deleted_count > 0:
             return True
         # TODO 添加类型错误,指示该设置不存在或者是删除失败
         return False

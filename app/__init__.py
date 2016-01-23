@@ -33,6 +33,8 @@ def create_app(config_name):
     mail.init_app(app)
 
     # 引入蓝本
+    from .core.auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
     from .core.api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')
     from .core.main import main as main_blueprint

@@ -15,6 +15,10 @@ class Role(object):
 
     @staticmethod
     def insert_default_roles():
+        """
+        插入默认角色并建立数据库索引,网站部署初始化使用
+        :return:
+        """
         roles = [
             {
                 'rid': 1,
@@ -45,3 +49,30 @@ class Role(object):
             mongo.db.roles.insert(roles)
         except Exception:
             pass
+
+    @staticmethod
+    def get_role_id(role):
+        """
+        根据角色查询角色 id
+        :param role: 用户角色 Owner/Administrator/Editor/Author
+        :return: 角色 id or None
+        """
+        roles = ['Owner', 'Administrator', 'Editor', 'Author']
+        try:
+            roles.index(role)
+            return mongo.db.roles.find_one({'name': role}).get('rid', None)
+        except:
+            return None
+
+    @staticmethod
+    def get_role_name(role_id):
+        """
+        根据角色 id 查询角色
+        :param role_id: 用户角色 id 1/2/3/4
+        :return: 角色 or None
+        """
+        try:
+            result = mongo.db.roles.find_one({'rid': role_id})
+            return result.get('name', None)
+        except:
+            return None

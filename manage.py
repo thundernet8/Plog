@@ -12,6 +12,7 @@ from app import login_manager
 from app import mail
 from app.core.models.roles import Role
 from app.core.models.settings import Setting
+from app.core.models.users import User
 
 # 启用覆盖测试
 COV = None
@@ -36,7 +37,7 @@ manager = Manager(app)
 
 # Manager Script上下文
 def make_shell_context():
-    return dict(app=app, mongo=mongo, login_manager=login_manager, mail=mail, Role=Role, Setting=Setting)
+    return dict(app=app, mongo=mongo, login_manager=login_manager, mail=mail, Role=Role, Setting=Setting, User=User)
 manager.add_command('shell', Shell(make_context=make_shell_context))
 
 

@@ -15,18 +15,20 @@ from werkzeug.security import check_password_hash
 
 from app import mongo
 from app import login_manager
+from .roles import Role
 
 
 class User(UserMixin):
     """
     用户模型
-    :_id 用户 id
+    :_id 用户 id(值必须为ObjectId类型)
     :uid 用户 id(alias _id)
     :name 用户名
     :nickname 昵称
     :password 用户密码
     :email 用户邮箱
-    :avatar 头像
+    :role_id 角色 id,默认3,即作者
+    :avatar_hash Gravatar头像哈希值
     :cover 个人主页封面
     :bio 个人介绍
     :website 个人网站
@@ -39,21 +41,37 @@ class User(UserMixin):
     :update_at 更新时间
     """
 
+    ##
+    # 数据库部署
+    ##
+    @staticmethod
+    def create_table_indexes():
+        """
+        创建数据库若干字段唯一索引,程序部署初始化调用
+        :return:
+        """
+        mongo.db.settings.create_index([("name", flask_pymongo.ASCENDING)], unique=True)
+        mongo.db.settings.create_index([("email", flask_pymongo.ASCENDING)], unique=True)
+
+    ##
+    # 用户实例
+    #
     def __init__(self, **kwargs):
         """
         获得一个用户实例
         :param kwargs: 用户筛选参数(key-value pairs)
         :return: 用户实例
         """
-        super(User, self).__init__(**kwargs)
-        user = mongo.db.users.find_one(dict(**kwargs))
+        # super(User, self).__init__(**kwargs)
+        user = mongo.db.users.find_one(dict(kwargs))
         if user:
             self.uid = str(user.get('_id'))
             self.name = user.get('name')
             self.nickname = user.get('nickname')
             self.email = user.get('email')
             self.password = user.get('password')
-            self.avatar_hash = user.get('avatar_hash')
+            self.role_id = user.get('role_id') or 3
+            self.avatar_hash = user.get('avatar_hash') or hashlib.md5(self.email.encode('utf-8')).hexdigest()
             self.cover = user.get('cover')
             self.bio = user.get('bio')
             self.website = user.get('website')
@@ -64,6 +82,8 @@ class User(UserMixin):
             self.create_at = datetime.fromtimestamp(int(user.get('create_at', 0)))
             self.last_login = datetime.fromtimestamp(int(user.get('last_login', 0)))
             self.update_at = datetime.fromtimestamp(int(user.get('update_at', 0)))
+        else:
+            self.uid = None
 
     def get_id(self):
         """
@@ -71,7 +91,7 @@ class User(UserMixin):
         :return:
         """
         try:
-            return str(self.uid)
+            return unicode(self.uid)
         except AttributeError:
             raise NotImplementedError('No `uid` attribute')
 
@@ -91,6 +111,13 @@ class User(UserMixin):
         :return:
         """
         self.password = generate_password_hash(password)
+        # mongo.db.users.update_one({
+        #     '_id': ObjectId(self.uid)
+        # }, {
+        #     '$set': {
+        #         'password': self.password
+        #     }
+        # })
 
     def verify_password(self, password):
         """
@@ -101,7 +128,7 @@ class User(UserMixin):
         return check_password_hash(self.password, password)
 
     ##
-    # 用户操作
+    # 用户个人操作
     ##
     def generate_confirmation_token(self, expiration=3600):
         """
@@ -210,6 +237,15 @@ class User(UserMixin):
     ##
     # 用户属性
     ##
+    @property
+    def is_active(self):
+        """
+        用户账户状态
+        :return: 封禁用户返回 False,否则返回 True
+        """
+        status = self.status == 'active'
+        return status
+
     def can(self, permissions):
         """
         判断用户是否拥有对应权限
@@ -219,13 +255,21 @@ class User(UserMixin):
         # TODO 待添加权限模型后更新
         pass
 
+    @property
     def is_administrator(self):
         """
         判断用户是否管理员(网站拥有者也是管理员)
         :return: 是则返回 True,否则返回 False
         """
-        # TODO 待添加权限模型后更新
-        pass
+        return self.role_id == 1 or self.role_id == 4
+
+    @property
+    def is_logged_in(self):
+        """
+        返回用户登录状态
+        :return: 已登录返回 True,否则返回 False
+        """
+        return self.is_authenticated
 
     def get_avatar(self, size=100, default='identicon', rating='g'):
         """
@@ -240,8 +284,28 @@ class User(UserMixin):
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(url=url, hash=hash, size=size, default=default,
                                                                      rating=rating)
 
+    def update_user_login_time(self):
+        """
+        更新用户登录时间
+        :return: 成功返回 True,否则返回 False
+        """
+        self.last_login = int(time.time())
+        try:
+            result = mongo.db.users.update_one({
+                '_id': ObjectId(self.uid)
+            }, {
+                '$set':{
+                    'last_login': self.last_login
+                }
+            })
+            if result.modified_count > 0:
+                return True
+            return False
+        except:
+            return False
+
     ##
-    # 用户查询&数据库操作
+    # 用户查询
     ##
     @staticmethod
     def get_user_by_field(field, value):
@@ -257,13 +321,207 @@ class User(UserMixin):
         if field == 'id':
             field = '_id'
             value = ObjectId(value)
-        return User(field=value)
+        user = User(field=value)
+        if user.uid:
+            return user
+        return None
 
     @staticmethod
-    def create_table_indexes():
+    def get_user_by_id(uid):
         """
-        创建数据库若干字段唯一索引,程序部署初始化调用
+        通过用户 id 查询用户
+        :param uid: 用户 id,字符串类型
+        :return: 用户实例 or None
+        """
+        return User.get_user_by_field('id', uid)
+
+    @staticmethod
+    def get_user_by_email(email):
+        """
+        通过用户 email 查询用户
+        :param email: 用户 email
+        :return: 用户实例 or None
+        """
+        return User.get_user_by_field('email', email)
+
+    @staticmethod
+    def get_user_by_name(name):
+        """
+        通过用户名查询用户
+        :param name: 用户名
+        :return: 用户实例 or None
+        """
+        return User.get_user_by_field('name', name)
+
+    ##
+    # 用户管理
+    ##
+    @staticmethod
+    def add_user(**kwargs):
+        """
+        增加新用户操作
+        :param kwargs: 用户字段键值对
+        :return: 添加成功返回 True,否则返回 False
+        """
+        if 'name' not in kwargs or 'email' not in kwargs or 'password' not in kwargs:
+            return False  # 缺少必须字段
+        user = mongo.db.users.find_one({'$or': [{'name': kwargs['name']}, {'email': kwargs['email']}]})
+        if user:
+            return False  # 邮箱或用户名被占用
+        if 'nickname' not in kwargs:
+            kwargs['nickname'] = kwargs['name']  # 昵称为空则用用户名替代
+        kwargs['password'] = generate_password_hash(str(kwargs['password']))
+        kwargs['role_id'] = 3  # 不允许接收注册表单传值,使用默认角色,要改变角色则由管理员以上等级用户更新用户属性
+        kwargs['avatar_hash'] = hashlib.md5(kwargs['email'].encode('utf-8')).hexdigest()
+        kwargs['status'] = 'active'
+        kwargs['confirmed'] = 0
+        kwargs['create_at'] = int(time.time())
+        kwargs['update_at'] = int(time.time())
+
+        try:
+            mongo.db.users.insert_one(kwargs)
+            return True
+        except:
+            return False
+
+    @staticmethod
+    def delete_user(uid):
+        """
+        删除用户
+        :param uid: 用户 id 字符串
+        :return: 删除成功返回 True,否则返回 False
+        """
+        try:
+            # TODO 是否判断用户存在
+            result = mongo.db.users.delete_one({'_id': ObjectId(uid)})
+            if result.deleted_count > 0:
+                return True
+            return False
+        except:
+            return False
+
+    @staticmethod
+    def ban_user(uid):
+        """
+        封禁用户
+        :param uid: 用户 id 字符串
+        :return: 封禁成功返回 True,否则返回 False
+        """
+        try:
+            result = mongo.db.users.update_one({
+                '_id': ObjectId(uid)
+            }, {
+                '$set': {
+                    'status': 'banned',
+                    'update_at': int(time.time())
+                }
+            })
+            if result.modified_count > 0:
+                return True
+            return False
+        except:
+            return False
+
+    @staticmethod
+    def cancel_ban_user(uid):
+        """
+        解禁用户
+        :param uid: 用户 id 字符串
+        :return: 解禁成功返回 True,否则返回 False
+        """
+        try:
+            result = mongo.db.users.update_one({
+                '_id': ObjectId(uid)
+            }, {
+                '$set': {
+                    'status': 'active',
+                    'update_at': int(time.time())
+                }
+            })
+            if result.modified_count > 0:
+                return True
+            return False
+        except:
+            return False
+
+    def set_user_role(self, uid, role):
+        """
+        设置用户角色 Administrator/Editor/Author, Owner不予提供,将在网站部署时自动分配给第一个注册用户,且数量限定1,该操作只能由等级
+        更高的角色完成
+        :param uid: 用户 id 字符串
+        :param role: 目标角色
+        :return: 设置成功返回 True,否则返回 False
+        """
+        if (self.role_id != 1 and self.role_id != 4) or (self.role_id == 1 and role == 'Administrator'):
+            return False  # 当前用户无权限变更用户角色
+        role_id = Role.get_role_id(role)
+        if not role_id:
+            return False
+        try:
+            self.update_at = int(time.time())
+            result = mongo.db.users.update_one({
+                '_id': ObjectId(uid)
+            }, {
+                '$set': {
+                    'role_id': role_id,
+                    'update_at': self.update_at
+                }
+            })
+            if result.modified_count > 0:
+                return True
+            return False
+        except:
+            return False
+
+    def __repr__(self):
+        return '<User instance: %r>' % self.name
+
+
+@login_manager.user_loader
+def load_user(uid):
+    """
+    加载用户
+    :param uid: 用户 id 字符串
+    :return: 用户实例 or None
+    """
+    return User.get_user_by_id(uid)
+
+
+class AnonymousUser(AnonymousUserMixin):
+    """
+    匿名用户模型
+    """
+
+    def get_id(self):
+        """
+        覆盖UserMixin的同名方法,使之捕获正确字段作为用户 id
         :return:
         """
-        mongo.db.settings.create_index([("name", flask_pymongo.ASCENDING)], unique=True)
-        mongo.db.settings.create_index([("email", flask_pymongo.ASCENDING)], unique=True)
+        return 0
+
+    def can(self, permissions):
+        """
+        判断用户是否拥有对应权限
+        :param permissions: 用户权限
+        :return: 拥有对应权限返回 True,否则返回False
+        """
+        # TODO 待添加权限模型后更新
+        pass
+
+    @property
+    def is_administrator(self):
+        """
+        判断用户是否管理员(网站拥有者也是管理员)
+        :return: 是则返回 True,否则返回 False
+        """
+        return False
+
+    @property
+    def is_logged_in(self):
+        """
+        返回用户登录状态
+        :return: 已登录返回 True,否则返回 False
+        """
+        return False
+
+login_manager.anonymous_user = AnonymousUser

@@ -17,3 +17,8 @@ def favicon():
 @main.route('/')
 def index_home():
     return 'Hello, plog'
+
+
+@main.route('/abc')
+def abc():
+    return send_file('static/007.rmvb', as_attachment=True)
