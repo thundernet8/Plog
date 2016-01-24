@@ -8,27 +8,21 @@ class Pagination(object):
     集合分页工具(如 posts/comments 等)
     """
 
-    def __init__(self, query_class, per_page, page, total, items, filters, order_by, order):
+    def __init__(self, query, per_page, page, total, items):
         """
         初始化
-        :param query_class: 集合类(Post/Comment)
+        :param query: 集合类(Posts/Pages/Comments)实例,包含查询条件参数
         :param page: 分页页码
         :param per_page: 每页显示数量
         :param total: 未分页集合全部数量
         :param items: 集合数组(posts/comments)
-        :param filters: 过滤器
-        :param order_by: 排序依据
-        :param order: 升/降序
         :return:
         """
-        self.query_class = query_class
+        self.query = query
         self.page = page
         self.per_page = per_page
         self.total = total
         self.items = items
-        self.filters = filters
-        self.order_by = order_by
-        self.order = order
 
     @property
     def pages(self):
@@ -48,8 +42,7 @@ class Pagination(object):
         :param error_out: 是否显示错误信息
         :return: 上一页的 Pagination 对象
         """
-        return self.query_class.get_pagination(self.per_page, self.page - 1, self.filters, self.order_by,
-                                               self.order, error_out)
+        return self.query.pagination(self.per_page, self.page - 1, error_out)
 
     @property
     def prev_num(self):
@@ -73,8 +66,7 @@ class Pagination(object):
         :param error_out: 是否显示错误信息
         :return: 下一页的 Pagination 对象
         """
-        return self.query_class.get_pagination(self.per_page, self.page + 1, self.filters, self.order_by,
-                                               self.order, error_out)
+        return self.query.pagination(self.per_page, self.page + 1, error_out)
 
     @property
     def next_num(self):

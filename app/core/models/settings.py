@@ -38,6 +38,8 @@ class Setting(object):
 
         # 每页文章数
         Setting.update_setting('posts_per_page', 10, 'blog')
+        # 每页评论数
+        Setting.update_setting('comments_per_page', 20, 'blog')
 
     @staticmethod
     def update_setting(setting_name, setting_value, type='blog'):

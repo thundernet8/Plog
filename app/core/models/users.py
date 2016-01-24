@@ -16,18 +16,18 @@ from werkzeug.security import check_password_hash
 from app import mongo
 from app import login_manager
 from .roles import Role
+from .mongo_counter import get_next_sequence
 
 
 class User(UserMixin):
     """
     用户模型
-    :_id 用户 id(值必须为ObjectId类型)
-    :uid 用户 id(alias _id)
+    :user_id 用户 id
     :name 用户名
     :nickname 昵称
     :password 用户密码
     :email 用户邮箱
-    :role_id 角色 id,默认3,即作者
+    :role_id 角色 id,默认5,即读者
     :avatar_hash Gravatar头像哈希值
     :cover 个人主页封面
     :bio 个人介绍
@@ -50,6 +50,7 @@ class User(UserMixin):
         创建数据库若干字段唯一索引,程序部署初始化调用
         :return:
         """
+        mongo.db.settings.create_index([("user_id", flask_pymongo.ASCENDING)], unique=True)
         mongo.db.settings.create_index([("name", flask_pymongo.ASCENDING)], unique=True)
         mongo.db.settings.create_index([("email", flask_pymongo.ASCENDING)], unique=True)
 
@@ -65,12 +66,12 @@ class User(UserMixin):
         # super(User, self).__init__(**kwargs)
         user = mongo.db.users.find_one(dict(kwargs))
         if user:
-            self.uid = str(user.get('_id'))
+            self.user_id = str(user.get('user_id'))
             self.name = user.get('name')
             self.nickname = user.get('nickname')
             self.email = user.get('email')
             self.password = user.get('password')
-            self.role_id = user.get('role_id') or 3
+            self.role_id = user.get('role_id') or 5
             self.avatar_hash = user.get('avatar_hash') or hashlib.md5(self.email.encode('utf-8')).hexdigest()
             self.cover = user.get('cover')
             self.bio = user.get('bio')
@@ -83,7 +84,7 @@ class User(UserMixin):
             self.last_login = datetime.fromtimestamp(int(user.get('last_login', 0)))
             self.update_at = datetime.fromtimestamp(int(user.get('update_at', 0)))
         else:
-            self.uid = None
+            self.user_id = None
 
     def get_id(self):
         """
@@ -91,9 +92,9 @@ class User(UserMixin):
         :return:
         """
         try:
-            return unicode(self.uid)
+            return unicode(self.user_id)
         except AttributeError:
-            raise NotImplementedError('No `uid` attribute')
+            raise NotImplementedError('No `user_id` attribute')
 
     @property
     def raw_password(self):
@@ -112,7 +113,7 @@ class User(UserMixin):
         """
         self.password = generate_password_hash(password)
         # mongo.db.users.update_one({
-        #     '_id': ObjectId(self.uid)
+        #     'user_id': self.user_id
         # }, {
         #     '$set': {
         #         'password': self.password
@@ -137,7 +138,7 @@ class User(UserMixin):
         :return: token 字符串
         """
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dumps({'confirm_uid': self.uid}).decode('ascii')
+        return s.dumps({'confirm_uid': self.user_id}).decode('ascii')
 
     def confirm(self, token):
         """
@@ -150,11 +151,11 @@ class User(UserMixin):
             data = s.loads(token)
         except:
             return False
-        if data.get('confirm_uid') != self.uid:
+        if data.get('confirm_uid') != self.user_id:
             return False
         self.confirmed = 1
         mongo.db.users.update_one({
-            '_id': ObjectId(self.uid)
+            'user_id': self.user_id
         }, {
             '$set': {
                 'confirmed': 1
@@ -169,7 +170,7 @@ class User(UserMixin):
         :return: token 字符串
         """
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dumps({'reset_uid': self.uid}).decode('ascii')
+        return s.dumps({'reset_uid': self.user_id}).decode('ascii')
 
     def reset_user_password(self, token, new_password):
         """
@@ -183,11 +184,11 @@ class User(UserMixin):
             data = s.loads(token)
         except:
             return False
-        if data.get('reset_uid') != self.uid:
+        if data.get('reset_uid') != self.user_id:
             return False
         self.raw_password = new_password
         mongo.db.users.update_one({
-            '_id': ObjectId(self.uid)
+            'user_id': self.user_id
         }, {
             '$set': {
                 'password': self.password
@@ -203,7 +204,7 @@ class User(UserMixin):
         :return: token 字符串
         """
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dumps({'reset_uid': self.uid, 'new_email': new_email}).decode('ascii')
+        return s.dumps({'reset_uid': self.user_id, 'new_email': new_email}).decode('ascii')
 
     def change_user_email(self, token):
         """
@@ -216,7 +217,7 @@ class User(UserMixin):
             data = s.loads(token)
         except:
             return False
-        if data.get('reset_uid') != self.uid:
+        if data.get('reset_uid') != self.user_id:
             return False
         new_email = data.get('new_email')
         if new_email is None:
@@ -226,7 +227,7 @@ class User(UserMixin):
         self.email = new_email
         self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
         mongo.db.users.update_one({
-            '_id': ObjectId(self.uid)
+            'user_id': self.user_id
         }, {
             '$set': {
                 'avatar_hash': self.avatar_hash
@@ -246,14 +247,13 @@ class User(UserMixin):
         status = self.status == 'active'
         return status
 
-    def can(self, permissions):
+    def can(self, permission):
         """
         判断用户是否拥有对应权限
-        :param permissions: 用户权限
+        :param permission: 权限
         :return: 拥有对应权限返回 True,否则返回False
         """
-        # TODO 待添加权限模型后更新
-        pass
+        return Role(role_id=self.role_id).can(permission)
 
     @property
     def is_administrator(self):
@@ -261,7 +261,7 @@ class User(UserMixin):
         判断用户是否管理员(网站拥有者也是管理员)
         :return: 是则返回 True,否则返回 False
         """
-        return self.role_id == 1 or self.role_id == 4
+        return self.role_id == 1 or self.role_id == 2
 
     @property
     def is_logged_in(self):
@@ -292,9 +292,9 @@ class User(UserMixin):
         self.last_login = int(time.time())
         try:
             result = mongo.db.users.update_one({
-                '_id': ObjectId(self.uid)
+                'user_id': self.user_id
             }, {
-                '$set':{
+                '$set': {
                     'last_login': self.last_login
                 }
             })
@@ -315,25 +315,25 @@ class User(UserMixin):
         :param value: 字段值
         :return: 用户实例 or None
         """
-        valid_fields = ['id', 'name', 'email']
+        valid_fields = ['id', 'user_id', 'name', 'email']
         if field not in valid_fields:
             return None
         if field == 'id':
-            field = '_id'
+            field = 'user_id'
             value = ObjectId(value)
         user = User(field=value)
-        if user.uid:
+        if user.user_id:
             return user
         return None
 
     @staticmethod
-    def get_user_by_id(uid):
+    def get_user_by_id(user_id):
         """
         通过用户 id 查询用户
-        :param uid: 用户 id,字符串类型
+        :param user_id: 用户 id,字符串类型
         :return: 用户实例 or None
         """
-        return User.get_user_by_field('id', uid)
+        return User.get_user_by_field('user_id', user_id)
 
     @staticmethod
     def get_user_by_email(email):
@@ -368,6 +368,7 @@ class User(UserMixin):
         user = mongo.db.users.find_one({'$or': [{'name': kwargs['name']}, {'email': kwargs['email']}]})
         if user:
             return False  # 邮箱或用户名被占用
+        kwargs['user_id'] = get_next_sequence('user_id')
         if 'nickname' not in kwargs:
             kwargs['nickname'] = kwargs['name']  # 昵称为空则用用户名替代
         kwargs['password'] = generate_password_hash(str(kwargs['password']))
@@ -385,15 +386,15 @@ class User(UserMixin):
             return False
 
     @staticmethod
-    def delete_user(uid):
+    def delete_user(user_id):
         """
         删除用户
-        :param uid: 用户 id 字符串
+        :param user_id: 用户 id 字符串
         :return: 删除成功返回 True,否则返回 False
         """
         try:
             # TODO 是否判断用户存在
-            result = mongo.db.users.delete_one({'_id': ObjectId(uid)})
+            result = mongo.db.users.delete_one({'user_id': user_id})
             if result.deleted_count > 0:
                 return True
             return False
@@ -401,15 +402,15 @@ class User(UserMixin):
             return False
 
     @staticmethod
-    def ban_user(uid):
+    def ban_user(user_id):
         """
         封禁用户
-        :param uid: 用户 id 字符串
+        :param user_id: 用户 id 字符串
         :return: 封禁成功返回 True,否则返回 False
         """
         try:
             result = mongo.db.users.update_one({
-                '_id': ObjectId(uid)
+                'user_id': user_id
             }, {
                 '$set': {
                     'status': 'banned',
@@ -423,15 +424,15 @@ class User(UserMixin):
             return False
 
     @staticmethod
-    def cancel_ban_user(uid):
+    def cancel_ban_user(user_id):
         """
         解禁用户
-        :param uid: 用户 id 字符串
+        :param user_id: 用户 id 字符串
         :return: 解禁成功返回 True,否则返回 False
         """
         try:
             result = mongo.db.users.update_one({
-                '_id': ObjectId(uid)
+                'user_id': user_id
             }, {
                 '$set': {
                     'status': 'active',
@@ -444,15 +445,15 @@ class User(UserMixin):
         except:
             return False
 
-    def set_user_role(self, uid, role):
+    def set_user_role(self, user_id, role):
         """
         设置用户角色 Administrator/Editor/Author, Owner不予提供,将在网站部署时自动分配给第一个注册用户,且数量限定1,该操作只能由等级
         更高的角色完成
-        :param uid: 用户 id 字符串
+        :param user_id: 用户 id 字符串
         :param role: 目标角色
         :return: 设置成功返回 True,否则返回 False
         """
-        if (self.role_id != 1 and self.role_id != 4) or (self.role_id == 1 and role == 'Administrator'):
+        if (self.role_id != 1 and self.role_id != 2) or (self.role_id == 2 and role == 'Administrator'):
             return False  # 当前用户无权限变更用户角色
         role_id = Role.get_role_id(role)
         if not role_id:
@@ -460,7 +461,7 @@ class User(UserMixin):
         try:
             self.update_at = int(time.time())
             result = mongo.db.users.update_one({
-                '_id': ObjectId(uid)
+                'user_id': user_id
             }, {
                 '$set': {
                     'role_id': role_id,
@@ -478,13 +479,13 @@ class User(UserMixin):
 
 
 @login_manager.user_loader
-def load_user(uid):
+def load_user(user_id):
     """
     加载用户
-    :param uid: 用户 id 字符串
+    :param user_id: 用户 id 字符串
     :return: 用户实例 or None
     """
-    return User.get_user_by_id(uid)
+    return User.get_user_by_id(user_id)
 
 
 class AnonymousUser(AnonymousUserMixin):

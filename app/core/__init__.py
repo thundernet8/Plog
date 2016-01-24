@@ -5,3 +5,7 @@ from .auth import auth
 from .models.roles import Role
 from .models.settings import Setting
 from .models.users import User
+from .models.posts import Post
+from .models.posts import Posts
+from .models.pages import Page
+from .models.pages import Pages

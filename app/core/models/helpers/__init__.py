@@ -1,3 +1,2 @@
-# coding=utf-8
-
-from .pagination import Pagination
+from . import pagination
+from . import slug_generator

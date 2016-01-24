@@ -10,22 +10,22 @@ from flask import abort
 from flask.ext.login import current_user
 
 from app import mongo
-from app import pagedown
 from .settings import Setting
-from .helpers import Pagination
+from .mongo_counter import get_next_sequence
+from .helpers.pagination import Pagination
 
 
 class Post(object):
     """
     文章模型
-    :pid 文章 id(alias _id)
+    :post_id 文章 id
     :title 文章标题
     :slug 文章别名
     :markdown 文章内容,markdown格式
     :html 文章内容,html格式
     :image 文章特色图片
     :featured 是否推荐文章
-    :page 是否页面,默认0
+    :type 文章类型,post/page,默认post
     :status 文章状态 trash/draft/pending/published
     :meta_title SEO 标题信息
     :meta_description SEO 描述信息
@@ -47,6 +47,7 @@ class Post(object):
         创建数据库若干字段唯一索引,程序部署初始化调用
         :return:
         """
+        mongo.db.settings.create_index([("post_id", flask_pymongo.ASCENDING)], unique=True)
         mongo.db.settings.create_index([("slug", flask_pymongo.ASCENDING)], unique=True)
         mongo.db.settings.create_index([("create_at", flask_pymongo.ASCENDING)])
         mongo.db.settings.create_index([("publish_at", flask_pymongo.ASCENDING)])
@@ -61,14 +62,14 @@ class Post(object):
         :param kwargs: 文章字段键值对
         :return:
         """
-        self.pid = str(kwargs.get('_id'))
+        self.post_id = kwargs.get('post_id')
         self.title = kwargs.get('title', None)
         self.slug = kwargs.get('slug', None)
         self.markdown = kwargs.get('markdown', None)
         self.html = kwargs.get('html', None)
         self.image = kwargs.get('image', None)
         self.featured = kwargs.get('featured', None)
-        self.page = 0
+        self.type = kwargs.get('type', 'post')
         self.status = kwargs.get('status', None)
         self.meta_title = kwargs.get('meta_title', None)
         self.meta_description = kwargs.get('meta_description', None)
@@ -87,13 +88,12 @@ class Post(object):
     def get_post_by_field(field, value):
         """
         根据文章字段获取文章对象
-        :param field: 文章字段(id/slug)
+        :param field: 文章字段(id/post_id/slug)
         :param value: 字段值
         :return: 文章对象 or None
         """
         if field == 'id':
-            field = '_id'
-            value = ObjectId(value)
+            field = 'post_id'
         try:
             result = mongo.db.posts.find_one({field: value})
             if result:
@@ -110,7 +110,7 @@ class Post(object):
         :param post_id: 文章 id
         :return: 文章对象 or None
         """
-        return Post.get_post_by_field('id', post_id)
+        return Post.get_post_by_field('post_id', post_id)
 
     @staticmethod
     def get_post_by_id(post_id):
@@ -119,7 +119,7 @@ class Post(object):
         :param post_id: 文章 id
         :return: 文章对象 or None
         """
-        return Post.get_post_by_field('id', post_id)
+        return Post.get_post_by_field('post_id', post_id)
 
     @staticmethod
     def get_post_by_slug(slug):
@@ -149,15 +149,16 @@ class Post(object):
             del set['create_at']
         try:
             result = mongo.db.posts.update_one({
-                '_id': post_id
+                'post_id': post_id
             }, {
                 '$set': set,
                 '$setOnInsert': {
+                    'post_id': get_next_sequence('post_id'),
                     'create_at': int(time.time())
                 }
             }, upsert=True)
             if result and result.modified_count > 0:
-                return str(result.get('_id'))
+                return str(result.get('post_id'))
             return False
         except:
             return False
@@ -186,15 +187,16 @@ class Post(object):
             del set['create_at']
         try:
             result = mongo.db.posts.update_one({
-                '_id': post_id
+                'post_id': post_id
             }, {
                 '$set': set,
                 '$setOnInsert': {
+                    'post_id': get_next_sequence('post_id'),
                     'create_at': int(time.time())
                 }
             })
             if result and result.modified_count > 0:
-                return str(result.get('_id'))
+                return str(result.get('post_id'))
             return False
         except:
             return False
@@ -217,12 +219,12 @@ class Post(object):
             del set['create_at']
         try:
             result = mongo.db.posts.update_one({
-                '_id': post_id
+                'post_id': post_id
             }, {
                 '$set': set
             })
             if result and result.modified_count > 0:
-                return str(result.get('_id'))
+                return str(result.get('post_id'))
             return False
         except:
             return False
@@ -236,7 +238,7 @@ class Post(object):
         """
         try:
             result = mongo.db.posts.update_one({
-                '_id': ObjectId(post_id)
+                'post_id': post_id
             }, {
                 'status': 'trash'
             })
@@ -255,7 +257,7 @@ class Post(object):
         """
         try:
             result = mongo.db.posts.delete_one({
-                '_id': ObjectId(post_id)
+                'post_id': post_id
             })
             if result and result.deleted_count > 0:
                 return True
@@ -291,44 +293,6 @@ class Post(object):
             return None
 
     @staticmethod
-    def get_pagination(posts_per_page, page=1, filters=None, order_by='publish_at', order=pymongo.DESCENDING, error_out=True):
-        """
-        获取文章分页模型
-        :param posts_per_page: 每页文章数
-        :param page: 分页页码
-        :param filters: 过滤器
-        :param order_by: 排序依据
-        :param order: 升/降序
-        :param error_out: 是否显示错误信息
-        :return: Pagination 对象 or None
-        """
-        if page < 1 and error_out:
-            abort(404)
-        if not posts_per_page:
-            posts_per_page = Setting.get_setting('posts_per_page', default=10)
-        count = 0
-        try:
-            results = mongo.db.posts.find(filters, skip=posts_per_page*(page-1), limit=posts_per_page)\
-                .sort({order_by: order})
-            count = results.count
-            if (not results or count == 0) and page != 1 and error_out:
-                abort(404)
-        except:
-            if error_out and page != 1:
-                abort(404)
-            return None
-        if page == 1 and count < posts_per_page:
-            total = count
-        else:
-            total = mongo.db.posts.count(filters)
-        posts = []
-        for result in results:
-            post = Post(**dict(result))
-            posts.append(post)
-
-        return Pagination(Post, posts_per_page, page, total, posts, filters, order_by, order)
-
-    @staticmethod
     def get_paged_posts(posts_per_page, page=1, filters=None, order_by='publish_at', order=pymongo.DESCENDING):
         """
         获取文章分页
@@ -354,3 +318,52 @@ class Post(object):
         except:
             return None
 
+
+class Posts(object):
+    """
+    文章对象数组模型,用于分页等集合查询
+    """
+
+    def __init__(self, **kwargs):
+        """
+        模型初始化,引入参数
+        :param kwargs: 文章集合查询参数
+        :return:
+        """
+        self.filters = kwargs.get('filters', dict())
+        self.filters['type'] = 'post'
+        self.order_by = kwargs.get('order_by', 'publish_at')
+        self.order = kwargs.get('order', pymongo.DESCENDING)
+
+    def pagination(self, posts_per_page, page=1, error_out=True):
+        """
+        获取文章分页模型
+        :param posts_per_page: 每页文章数
+        :param page: 分页页码
+        :param error_out: 是否显示错误信息
+        :return: Pagination 对象 or None
+        """
+        if page < 1 and error_out:
+            abort(404)
+        if not posts_per_page:
+            posts_per_page = Setting.get_setting('posts_per_page', default=10)
+        try:
+            results = mongo.db.posts.find(self.filters, skip=posts_per_page*(page-1), limit=posts_per_page)\
+                .sort({self.order_by: self.order})
+            count = results.count
+            if (not results or count == 0) and page != 1 and error_out:
+                abort(404)
+        except:
+            if error_out and page != 1:
+                abort(404)
+            return None
+        if page == 1 and count < posts_per_page:
+            total = count
+        else:
+            total = mongo.db.posts.count(self.filters)
+        posts = []
+        for result in results:
+            post = Post(**dict(result))
+            posts.append(post)
+
+        return Pagination(self, posts_per_page, page, total, posts)
