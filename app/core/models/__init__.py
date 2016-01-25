@@ -7,3 +7,4 @@ from . import permissions
 from . import permissions_roles
 from . import tags
 from . import comments
+from . import posts_tags

@@ -27,6 +27,6 @@ def get_next_sequence(field):
     ret = mongo.db.counters.find_one_and_update({
         {'table_field': field},
         {'$inc': {'seq': 1}}
-    }, return_document=pymongo.ReturnDocument.AFTER)
+    }, upsert=True, return_document=pymongo.ReturnDocument.AFTER)
 
     return ret.get('seq')

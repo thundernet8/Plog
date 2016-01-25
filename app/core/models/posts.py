@@ -2,8 +2,6 @@
 
 import time
 from datetime import datetime
-from bson.objectid import ObjectId
-import pymongo
 
 import flask_pymongo
 from flask import abort
@@ -270,7 +268,7 @@ class Post(object):
     # 文章集合
     #
     @staticmethod
-    def get_posts(filters, offset=0, limit=0, order_by='publish_at', order=pymongo.DESCENDING):
+    def get_posts(filters, offset=0, limit=0, order_by='publish_at', order=flask_pymongo.DESCENDING):
         """
         查询文章集合
         :param filters: 过滤器
@@ -293,7 +291,7 @@ class Post(object):
             return None
 
     @staticmethod
-    def get_paged_posts(posts_per_page, page=1, filters=None, order_by='publish_at', order=pymongo.DESCENDING):
+    def get_paged_posts(posts_per_page, page=1, filters=None, order_by='publish_at', order=flask_pymongo.DESCENDING):
         """
         获取文章分页
         :param posts_per_page: 每页文章数
@@ -333,7 +331,7 @@ class Posts(object):
         self.filters = kwargs.get('filters', dict())
         self.filters['type'] = 'post'
         self.order_by = kwargs.get('order_by', 'publish_at')
-        self.order = kwargs.get('order', pymongo.DESCENDING)
+        self.order = kwargs.get('order', flask_pymongo.DESCENDING)
 
     def pagination(self, posts_per_page, page=1, error_out=True):
         """

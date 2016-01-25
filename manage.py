@@ -19,6 +19,9 @@ from app.core.models.pages import Page
 from app.core.models.pages import Pages
 from app.core.models.permissions import Permission
 from app.core.models.permissions_roles import PermissionsRoles
+from app.core.models.tags import Tag
+from app.core.models.comments import Comment
+from app.core.models.mongo_counter import add_mongo_counters
 
 # 启用覆盖测试
 COV = None
@@ -44,7 +47,8 @@ manager = Manager(app)
 # Manager Script上下文
 def make_shell_context():
     return dict(app=app, mongo=mongo, login_manager=login_manager, mail=mail, Role=Role, Setting=Setting,
-                User=User, Post=Post, Posts=Posts, Page=Page, Pages=Pages)
+                User=User, Post=Post, Posts=Posts, Page=Page, Pages=Pages, Permission=Permission,
+                PermissionsRoles=PermissionsRoles, Tag=Tag, Comment=Comment)
 manager.add_command('shell', Shell(make_context=make_shell_context))
 
 
@@ -55,6 +59,8 @@ def deploy():
     :return:
     """
 
+    # 为MongoDB 添加专用自增序列尾值记录表
+    add_mongo_counters()
     # 默认角色添加
     Role.insert_default_roles()
     # 权限数据库索引与默认数据添加
@@ -69,11 +75,10 @@ def deploy():
     User.create_table_indexes()
     # 设置数据库索引与默认数据添加
     Setting.insert_default_settings()
-
-
-@manager.command
-def test():
-    pass
+    # 标签数据库索引
+    Tag.create_table_indexes()
+    # 评论数据库索引
+    Comment.create_table_indexes()
 
 
 if __name__ == '__main__':

@@ -9,3 +9,4 @@ from .models.posts import Post
 from .models.posts import Posts
 from .models.pages import Page
 from .models.pages import Pages
+from .models.comments import Comment

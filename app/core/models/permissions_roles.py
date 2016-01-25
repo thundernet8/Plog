@@ -7,7 +7,10 @@ from app import mongo
 
 class PermissionsRoles(object):
     """
-    权限角色配对模型
+    权限角色关系模型
+    :_id 自动 id
+    :role_id 角色 id
+    :permission_id 权限 id
     """
 
     def __init__(self):
