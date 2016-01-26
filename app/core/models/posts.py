@@ -11,6 +11,7 @@ from app import mongo
 from .settings import Setting
 from .mongo_counter import get_next_sequence
 from .helpers.pagination import Pagination
+from .helpers.slug_generator import slug_generator
 
 
 class Post(object):
@@ -34,6 +35,7 @@ class Post(object):
     :publish_at 文章发布时间戳
     :comment_status 文章评论状态
     :comment_count 文章评论数量
+    :view_count 阅读数量
     """
 
     ##
@@ -50,6 +52,7 @@ class Post(object):
         mongo.db.settings.create_index([("create_at", flask_pymongo.ASCENDING)])
         mongo.db.settings.create_index([("publish_at", flask_pymongo.ASCENDING)])
         mongo.db.settings.create_index([("comment_count", flask_pymongo.ASCENDING)])
+        mongo.db.settings.create_index([("view_count", flask_pymongo.ASCENDING)])
 
     ##
     # 文章实例
@@ -78,6 +81,7 @@ class Post(object):
         self.publish_at = datetime.fromtimestamp(int(kwargs.get('publish_at', 0)))
         self.comment_status = kwargs.get('comment_status', 1)
         self.comment_count = kwargs.get('comment_count', 0)
+        self.view_count = kwargs.get('view_count', 0)
 
     ##
     # 文章操作
@@ -95,7 +99,7 @@ class Post(object):
         try:
             result = mongo.db.posts.find_one({field: value})
             if result:
-                return Post(**result)
+                return Post(**dict(result))
             else:
                 return None
         except:
@@ -136,27 +140,33 @@ class Post(object):
         :param kwargs: 文章字段键值对
         :return: 成功返回文章 id,失败返回 False
         """
-        set = dict(kwargs)
-        set.update({
+        sets = dict(kwargs)
+        sets['slug'] = slug_generator(sets.get('name'))
+        slug_count = mongo.db.posts.count({'slug': sets.get('slug')})
+        if slug_count > 0:
+            sets['slug'] = '-'.join([sets.get('slug'), slug_count+1])
+        sets.update({
             'status': 'draft',
             'update_at': int(time.time())
         })
-        if not set.get('update_by'):
-            set['update_by'] = str(current_user.get_id())
-        if set.get('create_at'):
-            del set['create_at']
+        if not sets.get('update_by'):
+            sets['update_by'] = str(current_user.get_id())
+        if sets.get('create_at'):
+            del sets['create_at']
         try:
             result = mongo.db.posts.update_one({
                 'post_id': post_id
             }, {
-                '$set': set,
-                '$setOnInsert': {
+                '$set': sets,
+                '$setOnInsert': sets.update({
                     'post_id': get_next_sequence('post_id'),
                     'create_at': int(time.time())
-                }
+                })
             }, upsert=True)
             if result and result.modified_count > 0:
-                return str(result.get('post_id'))
+                return post_id
+            if result and result.upsert_id:
+                return mongo.db.posts.find_one({'_id': result.upsert_id}).get('post_id')
             return False
         except:
             return False
@@ -168,33 +178,35 @@ class Post(object):
         :param post_id: 文章 id
         :return: 成功返回 文章 id,失败返回 False
         """
-        set = dict(kwargs)
-        set.update({
+        sets = dict(kwargs)
+        sets.update({
             'status': 'published',
             'update_at': int(time.time())
         })
-        if not set.get('author_id'):
-            set['author_id'] = str(current_user.get_id())
-        if not set.get('update_by'):
-            set['update_by'] = str(current_user.get_id())
-        if not set.get('publish_at'):
-            set['publish_at'] = int(time.time())
-        if not set.get('comment_status'):
-            set['comment_status'] = 1
-        if set.get('create_at'):
-            del set['create_at']
+        if not sets.get('author_id'):
+            sets['author_id'] = str(current_user.get_id())
+        if not sets.get('update_by'):
+            sets['update_by'] = str(current_user.get_id())
+        if not sets.get('publish_at'):
+            sets['publish_at'] = int(time.time())
+        if not sets.get('comment_status'):
+            sets['comment_status'] = 1
+        if sets.get('create_at'):
+            del sets['create_at']
         try:
             result = mongo.db.posts.update_one({
                 'post_id': post_id
             }, {
-                '$set': set,
-                '$setOnInsert': {
+                '$set': sets,
+                '$setOnInsert': sets.update({
                     'post_id': get_next_sequence('post_id'),
                     'create_at': int(time.time())
-                }
-            })
+                })
+            }, upsert=True)
             if result and result.modified_count > 0:
-                return str(result.get('post_id'))
+                return post_id
+            if result and result.upsert_id:
+                return mongo.db.posts.find_one({'_id': result.upsert_id}).get('post_id')
             return False
         except:
             return False
@@ -207,22 +219,22 @@ class Post(object):
         :param kwargs: 文章字段键值对
         :return: 成功返回文章 id,失败返回 False
         """
-        set = dict(kwargs)
-        set.update({
+        sets = dict(kwargs)
+        sets.update({
             'update_at': int(time.time())
         })
-        if not set.get('update_by'):
-            set['update_by'] = str(current_user.get_id())
-        if set.get('create_at'):
-            del set['create_at']
+        if not sets.get('update_by'):
+            sets['update_by'] = str(current_user.get_id())
+        if sets.get('create_at'):
+            del sets['create_at']
         try:
             result = mongo.db.posts.update_one({
                 'post_id': post_id
             }, {
-                '$set': set
+                '$set': sets
             })
             if result and result.modified_count > 0:
-                return str(result.get('post_id'))
+                return post_id
             return False
         except:
             return False
@@ -251,7 +263,7 @@ class Post(object):
         """
         删除文章记录
         :param post_id: 文章 id
-        :return:
+        :return: 删除成功返回 True,否则False
         """
         try:
             result = mongo.db.posts.delete_one({
@@ -268,7 +280,7 @@ class Post(object):
     # 文章集合
     #
     @staticmethod
-    def get_posts(filters, offset=0, limit=0, order_by='publish_at', order=flask_pymongo.DESCENDING):
+    def get_posts(filters, offset=0, limit=10, order_by='publish_at', order=flask_pymongo.DESCENDING):
         """
         查询文章集合
         :param filters: 过滤器
@@ -276,7 +288,7 @@ class Post(object):
         :param limit: 最多返回的结果数量
         :param order_by: 排序依据
         :param order: 升/降序
-        :return: 文章对象数组 or None
+        :return: 文章对象列表 or None
         """
         try:
             results = mongo.db.posts.find(filters, skip=offset, limit=limit).sort({order_by: order})
@@ -296,7 +308,7 @@ class Post(object):
         获取文章分页
         :param posts_per_page: 每页文章数
         :param page: 分页页码
-        :param filters: 过滤器
+        :param filters: 过滤器(字典对象)
         :param order_by: 排序依据
         :param order: 升/降序
         :return: 文章数组 or None
@@ -319,7 +331,7 @@ class Post(object):
 
 class Posts(object):
     """
-    文章对象数组模型,用于分页等集合查询
+    文章对象列表模型,用于分页等集合查询
     """
 
     def __init__(self, **kwargs):
