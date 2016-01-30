@@ -47,12 +47,12 @@ class Post(object):
         创建数据库若干字段唯一索引,程序部署初始化调用
         :return:
         """
-        mongo.db.settings.create_index([("post_id", flask_pymongo.ASCENDING)], unique=True)
-        mongo.db.settings.create_index([("slug", flask_pymongo.ASCENDING)], unique=True)
-        mongo.db.settings.create_index([("create_at", flask_pymongo.ASCENDING)])
-        mongo.db.settings.create_index([("publish_at", flask_pymongo.ASCENDING)])
-        mongo.db.settings.create_index([("comment_count", flask_pymongo.ASCENDING)])
-        mongo.db.settings.create_index([("view_count", flask_pymongo.ASCENDING)])
+        mongo.db.posts.create_index([("post_id", flask_pymongo.ASCENDING)], unique=True)
+        mongo.db.posts.create_index([("slug", flask_pymongo.ASCENDING)], unique=True)
+        mongo.db.posts.create_index([("create_at", flask_pymongo.ASCENDING)])
+        mongo.db.posts.create_index([("publish_at", flask_pymongo.ASCENDING)])
+        mongo.db.posts.create_index([("comment_count", flask_pymongo.ASCENDING)])
+        mongo.db.posts.create_index([("view_count", flask_pymongo.ASCENDING)])
 
     ##
     # 文章实例

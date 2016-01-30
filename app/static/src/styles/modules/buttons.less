@@ -1,0 +1,81 @@
+//buttons
+.btn{
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 7px 13px;
+    font-size: 16px;
+    line-height: 2;
+    border-radius: 0px;
+    min-width: 120px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+    transition: background 0.15s,color 0.15s,border 0.15s;
+    -webkit-transition: background 0.15s,color 0.15s,border 0.15s;
+    -moz-transition: background 0.15s,color 0.15s,border 0.15s;
+    -ms-transition: background 0.15s,color 0.15s,border 0.15s;
+    -o-transition: background 0.15s,color 0.15s,border 0.15s;
+}
+
+.btn:focus{
+  outline: none;
+}
+
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.btn-block{
+  display: block;
+  width: 100%;
+}
+
+.btn-gray{
+  color: #fff;
+  background-color: #b8b8b8;
+  border-color: #b8b8b8;
+  opacity: 0.9;
+
+  &:hover{
+    opacity: 1.0;
+    background-color: #b8b8b8;
+  }
+
+  &[disabled], &[disabled]:hover{
+    color: #a6aeb3;
+    background-color: #f7f9fa;
+    border-color: #f7f9fa;
+  }
+}
+
+.btn-blue{
+  color: #fff;
+  background-color: #44bbff;
+  border-color: #44bbff;
+  opacity: 0.9;
+
+  &:hover{
+    opacity: 1.0;
+    background-color: #44bbff;
+  }
+
+  &[disabled], &[disabled]:hover{
+    color: #a6aeb3;
+    background-color: #f7f9fa;
+    border-color: #f7f9fa;
+  }
+}

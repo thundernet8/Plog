@@ -3,6 +3,9 @@
 import time
 import flask_pymongo
 from bson.objectid import ObjectId
+import json
+
+from flask import url_for
 
 from app import mongo
 
@@ -25,7 +28,7 @@ class Setting(object):
         :return: 一个设置项实例
         """
         self.setting_name = setting_name
-        return Setting.get_setting(setting_name)
+        self.setting_value = Setting.get_setting(setting_name)
 
     @staticmethod
     def insert_default_settings():
@@ -40,6 +43,16 @@ class Setting(object):
         Setting.update_setting('posts_per_page', 10, 'blog')
         # 每页评论数
         Setting.update_setting('comments_per_page', 20, 'blog')
+        # 默认导航
+        Setting.update_setting('navigation', json.dumps({'navigations': [{u'首页': url_for('main.index', _external=True)}]}))
+        # navigations structure #
+        # {'navigations': [
+        #     {'primary': {u'首页': '/'}},
+        #     {'primary': {u'文章': '/blog'}, 'sub': [
+        #         {'subTitle1': '/link1'},
+        #         {'subTitle2': '/link2'}
+        #     ]}
+        # ]}
 
     @staticmethod
     def update_setting(setting_name, setting_value, type='blog'):
@@ -53,7 +66,7 @@ class Setting(object):
         if not setting_value:
             return False
         try:
-            mongo.db.settings.update_one({
+            result = mongo.db.settings.update_one({
                 'setting_name': setting_name
             }, {'$set': {
                 'setting_value': setting_value,
@@ -62,7 +75,8 @@ class Setting(object):
             }, '$setOnInsert': {
                 'create_at': int(time.time())
             }}, upsert=True)
-            return True
+            if result and (result.modified_count or result.upserted_id):
+                return True
         except Exception:
             return False
         return False

@@ -1,0 +1,44 @@
+@import "utils/normalize";
+@import "utils/reset";
+@import "modules/forms";
+@import "modules/buttons";
+
+//register page
+@import "modules/auth-header";
+
+.text-center{
+  text-align: center;
+}
+
+.text-blue{
+  color: #178fe6;
+}
+
+.content-wrap{
+  .register-body{
+    padding: 0;
+    width: 320px;
+    margin: 0 auto;
+
+    h4{
+      font-size: 24px;
+      font-weight: normal;
+      margin-bottom: 16px;
+    }
+
+    #success-tip{
+      display: none;
+    }
+
+    .form-group{
+      margin-bottom: 16px;
+    }
+
+    .to-login{
+      margin-top: 48px;
+      padding: 32px 0;
+      font-size: 14px;
+      border-top: 1px solid #edf0f2;
+    }
+  }
+}

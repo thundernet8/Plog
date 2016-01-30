@@ -1,0 +1,37 @@
+@header_height: 62px;
+//header
+header.auth-header{
+  width: 100%;
+  height: @header_height;
+  z-index: 999;
+  position: relative;
+
+  a, a:focus, a:visited{
+    color: #333333;
+    text-decoration: none;
+  }
+
+  a:hover{
+    background-color: #f7f9fa;
+  }
+
+  .logo{
+    display: block;
+    width: 160px;
+    height: @header_height;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -ms-transition: all 0.2s;
+    -o-transition: all 0.2s;
+
+    img{
+      height: @header_height - 10px;
+      margin-top: 5px;
+    }
+  }
+}

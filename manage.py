@@ -10,6 +10,7 @@ from app import create_app
 from app import mongo
 from app import login_manager
 from app import mail
+from app import redis
 from app.core.models.roles import Role
 from app.core.models.settings import Setting
 from app.core.models.users import User
@@ -21,6 +22,7 @@ from app.core.models.permissions import Permission
 from app.core.models.permissions_roles import PermissionsRoles
 from app.core.models.tags import Tag
 from app.core.models.comments import Comment
+from app.core.models.comments import Comments
 from app.core.models.mongo_counter import add_mongo_counters
 
 # 启用覆盖测试
@@ -46,9 +48,9 @@ manager = Manager(app)
 
 # Manager Script上下文
 def make_shell_context():
-    return dict(app=app, mongo=mongo, login_manager=login_manager, mail=mail, Role=Role, Setting=Setting,
+    return dict(app=app, mongo=mongo, login_manager=login_manager, mail=mail, redis=redis, Role=Role, Setting=Setting,
                 User=User, Post=Post, Posts=Posts, Page=Page, Pages=Pages, Permission=Permission,
-                PermissionsRoles=PermissionsRoles, Tag=Tag, Comment=Comment)
+                PermissionsRoles=PermissionsRoles, Tag=Tag, Comment=Comment, Comments=Comments)
 manager.add_command('shell', Shell(make_context=make_shell_context))
 
 
@@ -79,6 +81,8 @@ def deploy():
     Tag.create_table_indexes()
     # 评论数据库索引
     Comment.create_table_indexes()
+    # 用户数据库索引
+    User.create_table_indexes()
 
 
 if __name__ == '__main__':

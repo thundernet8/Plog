@@ -1,0 +1,5 @@
+<header class="auth-header">
+    <div class="container">
+        <a class="logo" href="{{ url_for('main.index') }}"><img src="{{ Setting.get_setting('logo') or url_for('static', filename='dist/images/logo.png') }}" alt="Logo"></a>
+    </div>
+</header>

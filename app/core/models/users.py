@@ -50,9 +50,9 @@ class User(UserMixin):
         创建数据库若干字段唯一索引,程序部署初始化调用
         :return:
         """
-        mongo.db.settings.create_index([("user_id", flask_pymongo.ASCENDING)], unique=True)
-        mongo.db.settings.create_index([("name", flask_pymongo.ASCENDING)], unique=True)
-        mongo.db.settings.create_index([("email", flask_pymongo.ASCENDING)], unique=True)
+        mongo.db.users.create_index([("user_id", flask_pymongo.ASCENDING)], unique=True)
+        mongo.db.users.create_index([("name", flask_pymongo.ASCENDING)], unique=True)
+        mongo.db.users.create_index([("email", flask_pymongo.ASCENDING)], unique=True)
 
     ##
     # 用户实例

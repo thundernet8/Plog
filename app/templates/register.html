@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}
+注册 - {{ Setting.get_setting('blog_name', 'Plog') }}
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-register.css') }}">
+{% endblock %}
+
+{% block header %}
+{% include 'modules/auth_header.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="content-wrap">
+    <div class="login-box">
+        <div class="register-body" id="register-body">
+            <h4 class="text-center">注册</h4>
+            <p id="default-tip">{{ Setting.get_setting('blog_name', 'Plog') }} 将发送一封验证邮件至你的邮箱, 请正确填写以完成账号注册和激活</p>
+            <p id="success-tip"><a href="javascript:void(0)" id="tip-email"></a>
+                <br>
+                如果没有收到, 请检查垃圾邮件
+                <br>
+                如果还是没有收到, 请重新填写邮箱
+            </p>
+            <div class="form-group">
+                <input id="username" class="form-control" placeholder="用户名">
+            </div>
+            <div class="form-group">
+                <input id="email" class="form-control" placeholder="邮箱">
+            </div>
+            <div class="form-group">
+                <input id="password" class="form-control" placeholder="密码">
+            </div>
+            <div class="form-group">
+                <input id="password2" class="form-control" placeholder="重复密码">
+            </div>
+            <button disabled="disabled" id="register-btn" type="submit" class="btn btn-block btn-blue">发送注册邮件</button>
+            <div class="to-login text-center clearfix">
+                已有账号? <a href="{{ url_for('auth.login') }}" class="text-blue">点此登录</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

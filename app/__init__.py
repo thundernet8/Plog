@@ -5,6 +5,7 @@ from flask.ext.pymongo import PyMongo
 from flask.ext.login import LoginManager
 from flask.ext.pagedown import PageDown
 from flask.ext.mail import Mail
+from flask.ext.redis import FlaskRedis
 
 from config import config
 
@@ -15,13 +16,14 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 pagedown = PageDown()
 mail = Mail()
+redis = FlaskRedis()
 
 
 def create_app(config_name):
     """
     u根据配置创建 app
     :param config_name:
-    :return:
+    :return: flask app
     """
     app = Flask(__name__)
     app.config.from_object(config[config_name])
@@ -31,6 +33,7 @@ def create_app(config_name):
     login_manager.init_app(app)
     pagedown.init_app(app)
     mail.init_app(app)
+    redis.init_app(app)
 
     # 引入蓝本
     from .core.auth import auth as auth_blueprint

@@ -1,0 +1,133 @@
+@base_font: 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;;
+@code_font: Consolas, 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;;
+//reset
+*{
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  -webkit-font-smoothing: antialiased;
+}
+
+*, *:before, *:after{
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{
+  background: #FFFFFF;
+}
+
+input:focus{
+  outline: none;
+}
+
+html, body {
+    min-height: 100%;
+}
+
+//html { overflow-y: scroll; }
+body {
+    position: relative;
+    font-weight: normal;
+    font-family: @base_font;
+    -webkit-font-smoothing: antialiased;
+    background-origin: border-box;
+}
+
+body, h1, h2, h3, h4, h5, h6, hr, p, blockquote,
+dl, dt, dd, ul, ol, li,
+pre,
+fieldset, button, input, textarea, figure, figcaption,
+th, td {
+    margin: 0;
+    padding: 0;
+}
+
+body,
+button, input, select, textarea {
+    /* for IE */
+    font: 16px/2 'NotoSansHans-Regular',
+    'AvenirNext-Regular',
+    'proxima-nova',
+    'Hiragino Sans GB',
+    'Microsoft YaHei',
+    'WenQuanYi Micro Hei',
+    'Open Sans',
+    'Helvetica Neue',
+    Arial, 'sans-serif';
+    color: #0e2026;
+}
+
+h1 {
+    font-size: 32px;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+h4, h5, h6 {
+    font-size: 100%;
+}
+
+em {
+    font-style: normal;
+}
+
+code, pre {
+    font-family: @code_font;
+}
+
+/* 统一等宽字体 */
+small {
+    font-size: 12px;
+}
+
+/* 小于 12px 的中文很难阅读，让 small 正常化 */
+ul, ol {
+    list-style: none;
+}
+
+/* 重置表单元素 */
+button, input, select, textarea, figure, figcaption {
+    font-size: 100%; /* 使得表单元素在 ie 下能继承字体大小 */
+}
+
+/* 重置表格元素 */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+p {
+    margin: 16px 0;
+}
+
+img {
+    vertical-align: middle;
+    max-width: 100% !important;
+    border: 0;
+    page-break-inside: avoid;
+}
+
+a {
+    background: transparent;
+    text-decoration: none;
+    color: #0e2026;
+}
+
+//clearfix
+.clearfix:after{
+  clear: both;
+}
+
+.clearfix:before, .clearfix:after{
+  content: " ";
+  display: table;
+}

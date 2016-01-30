@@ -1,0 +1,239 @@
+@font: 'Lantinghei SC', 'Open Sans', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;
+.ddd-border{
+  border: 1px solid #dddddd;
+}
+
+//header
+header.common-header{
+  position: absolute;
+  font-family: @font;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 62px;
+  z-index: 999;
+  box-shadow: rgba(0, 0, 0, 0.0980392) 0px 1px 1px;
+  box-sizing: content-box;
+  background: #FFFFFF;
+
+  *{
+    font-size: 15px;
+    -webkit-transition: none;
+    transition: none;
+  }
+
+  input, button, textarea{
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .container{
+    max-width: 1170px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  a, a:focus, a:visited{
+    color: #333333;
+    text-decoration: none;
+  }
+
+  a:hover, a:active{
+    outline: none;
+  }
+
+  a:hover{
+    color: #178fe6;
+  }
+
+  .logo{
+    display: block;
+    width: 68px;
+    height: 46px;
+    position: absolute;
+    top: 8px;
+    left: 0;
+
+    img{
+      height: 100%;
+    }
+  }
+
+  nav{
+    padding-left: 102px;
+  }
+
+  ol, ul{
+    list-style: none;
+
+    @media (min-width: 820px){
+      li{
+        float: left;
+        position: relative;
+
+        a{
+          display: block;
+          padding: 0 15px;
+          margin: 0 5px;
+          line-height: 62px;
+          height: 62px;
+          overflow: hidden;
+          box-sizing: border-box;
+        }
+
+        &:hover, &.stay{
+          .pop-up{
+            visibility: visible;
+            opacity: 1;
+            -webkit-transform: scale(1);
+            -ms-transform: scale(1);
+            transform: scale(1);
+            z-index: 100;
+            -webkit-transition: all 0.3s cubic-bezier(0.31, 0.57, 0.68, 1.36);
+            transition: all 0.3s cubic-bezier(0.31, 0.57, 0.68, 1.36);
+            padding: 10px 14px;
+          }
+        }
+      }
+    }
+  }
+
+  @media (min-width: 820px) {
+    .pop-up{
+      -webkit-transition: none;
+      transition: none;
+      -webkit-transform: scale(0);
+      -ms-transform: scale(0);
+      transform: scale(0);
+      -webkit-transform-origin: 90% 0;
+      transform-origin: 90% 0;
+      visibility: hidden;
+      position: absolute;
+      min-width: 160px;
+      right: -25px;
+      top: 62.5px;
+      background: #FFFFFF;
+      .ddd-border;
+      padding: 20px;
+      box-shadow: rgba(0, 0, 0, 0.1) 0 2px 3px;
+
+      >div:before{
+        width: 10px;
+        height: 10px;
+        -webkit-transform: rotate(-45deg);
+        -ms-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        background: #FFFFFF;
+        .ddd-border;
+        border-width: 1px 1px 0 0;
+        position: absolute;
+        top: -6px;
+        right: 60px;
+        content: ' ';
+      }
+    }
+
+    .menu{
+      a{
+        display: block;
+        height: 36px;
+        line-height: 36px;
+        border-top: 1px solid #eeeeee;
+        padding: 0 6px;
+        font-size: 13px;
+
+        &:first-of-type{
+          border-top: 0;
+        }
+      }
+    }
+
+    .sub-nav{
+      float: right;
+      height: 62px;
+      margin-right: -20px;
+
+      > li{
+        float: left;
+        position: relative;
+        height: 62px;
+
+        > a{
+          padding: 17px 15px;
+          display: block;
+          line-height: 28px;
+
+          i{
+            font-size: 16px;
+            position: relative;
+            top: 0;
+            margin-right: 5px;
+            color: #666666;
+          }
+        }
+
+        &:hover{
+          color: #178fe6;
+
+          >a{
+            color: #178fe6;
+          }
+
+          >a i{
+            color: #178fe6;
+          }
+        }
+
+        .search-wrap{
+          right: -30px;
+          -webkit-transform-origin: 20% 0;
+          -ms-transform-origin: 20% 0;
+          transform-origin: 20% 0;
+          width: 270px;
+        }
+      }
+
+      .searchbar{
+        height: 32px;
+        overflow: hidden;
+        white-space: nowrap;
+        word-spacing: 0;
+
+        input{
+          width: 210px;
+          height: 30px;
+          float: left;
+          border: 1px solid #a1d8ff;
+          border-right: 0;
+          border-radius: 2px 0 0 2px;
+          background: #FFFFFF;
+          box-sizing: border-box;
+          overflow: hidden;
+          padding: 2px 10px;
+          line-height: 25px;
+          vertical-align: middle;
+
+          &:focus{
+            outline: none;
+          }
+        }
+
+        button{
+          width: 30px;
+          height: 30px;
+          box-sizing: border-box;
+          background: #40afff;
+          color: #FFFFFF;
+          vertical-align: middle;
+          border-radius: 0 2px 2px 0;
+          font-size: 18px;
+          speak: none;
+        }
+      }
+    }
+  }
+}
+
+
+

@@ -36,6 +36,8 @@ class DevConfig(Config):
     MONGO_USERNAME = 'root'
     MONGO_PASSWORD = 'root'
 
+    REDIS_URL = 'redis://:root@localhost:6379/0'
+
 
 class DistConfig(Config):
     """
@@ -49,6 +51,8 @@ class DistConfig(Config):
     MONGO_DBNAME = 'Plog'
     MONGO_USERNAME = None
     MONGO_PASSWORD = None
+
+    REDIS_URL = 'redis://:password@localhost:6379/0'
 
 
 config = {
