@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>{{ blog_title }}</title>
-    <meta name="description" content="{{ blog_description }}">
-    <meta name="keywords" content="{{ blog_keywords }}">
+    <title>升级你的浏览器 - {{ blog_name }}</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
     <style>
         /* reset样式 */
         html{color:#000;background:#fff;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}
@@ -46,7 +46,7 @@
           min-width: 990px;
         }
         .special-content {
-          padding-top: 137px;
+          padding-top: 75px;
         }
         .special-main h1 {
           font-size: 46px;
@@ -78,11 +78,11 @@
         }
         .ie {
           position: absolute;
-          background: url({{ url_for('static', filename='dist/styles/img/icon/ie.png') }}) center top no-repeat;
+          background: url({{ url_for('static', filename='dist/images/icon/ie.png') }}) center top no-repeat;
         }
         .chrome {
           position: absolute;
-          background: url({{ url_for('static', filename='dist/styles/img/icon/chrome.png') }}) center top no-repeat;
+          background: url({{ url_for('static', filename='dist/images/icon/chrome.png') }}) center top no-repeat;
         }
         .link-close-window, .link-close-window:link, .link-close-window:active{
           position: relative;
@@ -130,7 +130,9 @@
         <script>
               (function () {
                 document.getElementById("linkCloseWindow").onclick = function () {
-                    window.close();
+                    var opened=window.open('about:blank','_self');
+                    opened.opener=null;
+                    opened.close();
                 };
               })();
         </script>

@@ -24,14 +24,13 @@ def favicon():
     return send_file('static/dist/images/favicon.ico', as_attachment=False)
 
 
-# 首页
-@main.route('/')
-@redis_cached(timeout=30, key_prefix='aa')
-def index():
-    settings = Setting.get_setting('navigation')
-    if settings:
-        settings = (json.loads(settings)).get('navigations')
-    return render_template('home.html', Setting=Setting, nav_settings=settings)
+@main.route('/kill-ie.html')
+def kill_ie():
+    """
+    kill ie
+    :return:
+    """
+    return render_template('utils/kill-ie.html', blog_name=Setting.get_setting('blog_name', 'Plog'))
 
 
 # 搜索
@@ -43,6 +42,19 @@ def search():
     else:
         s = request.args.get('s')
     return s  # TODO search
+
+
+# 首页
+@main.route('/')
+@redis_cached(timeout=30, key_prefix='aa')
+def index():
+    settings = Setting.get_setting('navigation')
+    if settings:
+        settings = (json.loads(settings)).get('navigations')
+    return render_template('home.html', Setting=Setting, nav_settings=settings)
+
+
+
 
 
 

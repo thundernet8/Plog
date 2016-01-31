@@ -17,7 +17,7 @@
     <div class="login-box">
         <div class="register-body" id="register-body">
             <h4 class="text-center">注册</h4>
-            <p id="default-tip">{{ Setting.get_setting('blog_name', 'Plog') }} 将发送一封验证邮件至你的邮箱, 请正确填写以完成账号注册和激活</p>
+            <p id="default-tip"><!-- {{ Setting.get_setting('blog_name', 'Plog') }} -->我们将发送一封验证邮件至你的邮箱, 请正确填写以完成账号注册和激活</p>
             <p id="success-tip"><a href="javascript:void(0)" id="tip-email"></a>
                 <br>
                 如果没有收到, 请检查垃圾邮件
@@ -31,10 +31,10 @@
                 <input id="email" class="form-control" placeholder="邮箱">
             </div>
             <div class="form-group">
-                <input id="password" class="form-control" placeholder="密码">
+                <input id="password" type="password" class="form-control" placeholder="密码">
             </div>
             <div class="form-group">
-                <input id="password2" class="form-control" placeholder="重复密码">
+                <input id="password2" type="password" class="form-control" placeholder="重复密码">
             </div>
             <button disabled="disabled" id="register-btn" type="submit" class="btn btn-block btn-blue">发送注册邮件</button>
             <div class="to-login text-center clearfix">
@@ -43,4 +43,8 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/page-register.js') }}"></script>
 {% endblock %}

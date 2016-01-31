@@ -10,11 +10,13 @@ module.exports = {
     },
 
     entry: {
-        index: './src/scripts/index.js',
-        post_detail: './src/scripts/post-detail.js'
+        //index: './src/scripts/index.js',
+        //post_detail: './src/scripts/post-detail.js'
+        register: './src/scripts/page-register.js'
     },
 
     output: {
-        filename : '[hash].[name].js'
+        //filename : '[hash].[name].js'
+        filename : 'page-[name].js'
     },
 }

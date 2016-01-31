@@ -8,18 +8,18 @@
     <meta name="keywords" content="{% block keywords %}{% endblock %}">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="shortcut icon" href="{{ url_for('static', filename='dist/images/favicon.ico') }}" type="image/x-icon">
-    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
     {% block css %}{% endblock %}
     <!--[if lte IE 7]>
     <script type="text/javascript">
-        window.location.href = 'https://www.alipay.com/x/kill-ie.htm';
+        window.location.href = "{{ url_for('main.kill_ie', _external=True) }}";
     </script>
     <![endif]-->
     <!-- [if lt IE 9]>
     <script src="{{ url_for('static', filename='dist/scripts/plugins/html5shiv.min.js') }}"></script>
     <script src="{{ url_for('static', filename='dist/scripts/plugins/respond.min.js') }}"></script>
     <!-- [endif] -->
-    <script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script>
+    <!--script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script-->
 </head>
 <body>
 {% block header %}

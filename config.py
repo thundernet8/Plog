@@ -15,6 +15,8 @@ class Config:
     MAIL_USE_SSL = True
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+    MAIL_SUBJECT_PREFIX = '[Plog]'
+    MAIL_SENDER = '813920477@qq.com'
 
     PLOG_SLOW_DB_QUERY_TIME = 0.5
 
@@ -27,6 +29,9 @@ class DevConfig(Config):
     """
     开发配置
     """
+    def __init__(self):
+        pass
+
     DEBUG = True
 
     # db config
@@ -43,6 +48,9 @@ class DistConfig(Config):
     """
     生产配置
     """
+    def __init__(self):
+        pass
+
     DEBUG = False
 
     # db config
