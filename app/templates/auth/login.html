@@ -25,10 +25,14 @@
             </div>
             <div class="clearfix">
                 <button disabled="disabled" id="login-btn" type="submit" class="btn btn-block btn-blue">登 录</button>
-                <a href="{{ url_for('auth.find_pass') }}" class="retrieve">忘记密码</a>
-                <a href="{{ url_for('auth.register') }}" class="reg">注册账户</a>
+                <a href="{{ url_for('auth.find_pass') }}" class="retrieve text-blue">忘记密码</a>
+                <a href="{{ url_for('auth.register') }}" class="reg text-blue">注册账户</a>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/page-login.js') }}"></script>
 {% endblock %}

@@ -61,6 +61,9 @@ def deploy():
     :return:
     """
 
+    # 清空数据库
+    # TODO
+
     # 为MongoDB 添加专用自增序列尾值记录表
     add_mongo_counters()
     # 默认角色添加

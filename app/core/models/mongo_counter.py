@@ -24,9 +24,8 @@ def get_next_sequence(field):
     :param field: 自增字段
     :return: 序列数字
     """
-    ret = mongo.db.counters.find_one_and_update({
+    ret = mongo.db.counters.find_one_and_update(
         {'table_field': field},
-        {'$inc': {'seq': 1}}
-    }, upsert=True, return_document=pymongo.ReturnDocument.AFTER)
+        {'$inc': {'seq': 1}}, upsert=True, return_document=pymongo.ReturnDocument.AFTER)
 
     return ret.get('seq')

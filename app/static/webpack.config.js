@@ -12,6 +12,7 @@ module.exports = {
     entry: {
         //index: './src/scripts/index.js',
         //post_detail: './src/scripts/post-detail.js'
+        login: './src/scripts/page-login.js',
         register: './src/scripts/page-register.js'
     },
 

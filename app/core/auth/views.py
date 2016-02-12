@@ -13,7 +13,7 @@ def login():
     """ 登录页面 """
     if current_user.is_logged_in:
         return redirect('main.index')
-    return render_template('login.html', Setting=Setting)
+    return render_template('auth/login.html', Setting=Setting)
 
 
 @auth.route('/register.do')
@@ -21,9 +21,16 @@ def register():
     """" 注册页面 """
     if current_user.is_logged_in:
         return redirect('main.index')
-    return render_template('register.html', Setting=Setting)
+    return render_template('auth/register.html', Setting=Setting)
+
 
 @auth.route('/findPass.do')
 def find_pass():
     """ 找回密码页面 """
+    pass  # TODO
+
+
+@auth.route('/confirmEmail.do')
+def confirm_email():
+    """ 确认邮箱页面 """
     pass  # TODO

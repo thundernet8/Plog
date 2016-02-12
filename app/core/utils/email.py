@@ -29,8 +29,8 @@ def send_mail(to, subject, template, **kwargs):
     :param kwargs: 其他参数
     :return:
     """
-    app = current_app.get_current_object()
-    message = Message(app.config['MAIL_SUBJECT_PREFIX' + '' + subject], sender=app.config['MAIL_SENDER'],
+    app = current_app._get_current_object()
+    message = Message(app.config['MAIL_SUBJECT_PREFIX'] + '' + subject, sender=app.config['MAIL_SENDER'],
                       recipients=[to])
     message.body = render_template(template + '.txt', **kwargs)
     message.html = render_template(template + '.html', **kwargs)

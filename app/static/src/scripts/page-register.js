@@ -1,6 +1,9 @@
 "use strict";
 var $ = require('./libs/jquery/2.2.0/jquery.js');
 
+var siteUrl = window.location.protocol + '//' + window.location.host,
+    registerApiUrl = siteUrl + '/api/v1.0/register';
+
 //validate
 
 var usernameInput = $('input#username'),
@@ -31,7 +34,7 @@ function checkAll(){
         return false;
     }
     if(!validateEmail(emailInput.val())){
-        emailInput.focus();
+        //emailInput.focus();
         return false;
     }
     if(!validatePass(passInput.val())){
@@ -64,4 +67,34 @@ $(function(){
 
 //ajax register
 
+$(function () {
+   submitBtn.on('click', function () {
+       var username = usernameInput.val(),
+           email = emailInput.val(),
+           password = passInput.val();
+       $.ajax({
+           method: 'POST',
+           url: registerApiUrl,
+           data: {username: username, email: email, password: password},
+           dataType: 'json',
+           timeout: 60,
+           beforeSend: function(){
+               submitBtn.prop('disabled', true).text('注册中...');
+           },
+           success: function(data){
+               if(data.success && data.success==1){
+                   alert('注册成功');
+                   window.location.href = siteUrl;
+               }else{
+                   passInput.val('');
+                   pass2Input.val('');
+                   alert(data.message);
+               }
+           },
 
+       }).done(function(){
+           submitBtn.text('发送注册邮件');
+       })
+
+   }) ;
+});

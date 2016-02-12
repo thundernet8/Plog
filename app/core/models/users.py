@@ -372,7 +372,10 @@ class User(UserMixin):
         if 'nickname' not in kwargs:
             kwargs['nickname'] = kwargs['name']  # 昵称为空则用用户名替代
         kwargs['password'] = generate_password_hash(str(kwargs['password']))
-        kwargs['role_id'] = 3  # 不允许接收注册表单传值,使用默认角色,要改变角色则由管理员以上等级用户更新用户属性
+        if not mongo.db.users.find_one():
+            kwargs['role_id'] = 1  # 首个用户为网站拥有者
+        else:
+            kwargs['role_id'] = 3  # 不允许接收注册表单传值,使用默认角色,要改变角色则由管理员以上等级用户更新用户属性
         kwargs['avatar_hash'] = hashlib.md5(kwargs['email'].encode('utf-8')).hexdigest()
         kwargs['status'] = 'active'
         kwargs['confirmed'] = 0
@@ -380,8 +383,8 @@ class User(UserMixin):
         kwargs['update_at'] = int(time.time())
 
         try:
-            mongo.db.users.insert_one(kwargs)
-            return True
+            result = mongo.db.users.insert_one(kwargs)
+            return User(_id=result.inserted_id)
         except:
             return False
 
