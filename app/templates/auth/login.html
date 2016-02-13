@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-login.css') }}">
 {% endblock %}
 
 {% block header %}
@@ -18,10 +18,11 @@
         <div class="login-body" id="login-body">
             <h4 class="text-center">登录</h4>
             <div class="form-group">
-                <input id="username" class="form-control" placeholder="用户名或邮箱">
+                <input style="display:none" type="text" name="fakeusernameremembered" /><!-- for disable autocomplete on chrome -->
+                <input id="username" class="form-control" placeholder="用户名或邮箱" autocomplete="off" />
             </div>
             <div class="form-group">
-                <input id="password" type="password" class="form-control" placeholder="密码">
+                <input id="password" type="password" class="form-control" placeholder="密码" autocomplete="off" />
             </div>
             <div class="clearfix">
                 <button disabled="disabled" id="login-btn" type="submit" class="btn btn-block btn-blue">登 录</button>

@@ -6,6 +6,7 @@ from flask.ext.login import LoginManager
 from flask.ext.pagedown import PageDown
 from flask.ext.mail import Mail
 from flask.ext.redis import FlaskRedis
+from flask.ext.compress import Compress
 
 from config import config
 
@@ -17,6 +18,7 @@ login_manager.login_view = 'auth.login'
 pagedown = PageDown()
 mail = Mail()
 redis = FlaskRedis()
+compress = Compress()
 
 
 def create_app(config_name):
@@ -29,6 +31,7 @@ def create_app(config_name):
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 
+    compress.init_app(app)
     mongo.init_app(app)
     login_manager.init_app(app)
     pagedown.init_app(app)
