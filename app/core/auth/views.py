@@ -27,10 +27,12 @@ def register():
 @auth.route('/findPass.do')
 def find_pass():
     """ 找回密码页面 """
+    return 'blank'
     pass  # TODO
 
 
 @auth.route('/confirmEmail.do')
 def confirm_email():
     """ 确认邮箱页面 """
+    return 'blank'
     pass  # TODO

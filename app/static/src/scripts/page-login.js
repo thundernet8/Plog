@@ -2,7 +2,7 @@
 var $ = require('./libs/jquery/2.2.0/jquery.js');
 
 var siteUrl = window.location.protocol + '//' + window.location.host,
-    loginApiUrl = siteUrl + '/api/v1.0/register';
+    loginApiUrl = siteUrl + '/api/v1.0/login';
 
 //validate
 
@@ -50,6 +50,43 @@ $(function(){
 $(document).ready(function(){
     setTimeout(function () {
         passInput.val('');//清除自动填充的密码等
-    }, 300);
+    }, 100);
 });
 
+
+//Ajax login request
+$(function () {
+   submitBtn.on('click', function () {
+     var username = usernameInput.val(),
+         password = passInput.val();
+       $.ajax({
+           method: 'POST',
+           url: loginApiUrl,
+           data: {username: username, password: password},
+           dataType: 'json',
+           timeout: 30000,
+           beforeSend: function(){
+             submitBtn.prop('disabled', true).text('登录中...');
+           },
+           error: function(){
+             passInput.val('');
+             submitBtn.text('登录').prop('disabled', true);
+           },
+           success: function(data){
+               console.log(data);
+             if(data.success && data.success==1){
+                  submitBtn.text('登录成功');
+                  setTimeout(function () {
+                      window.location.href = siteUrl;
+                  }, 1500);
+             }else{
+                 passInput.val('');
+                 submitBtn.text('登录').prop('disabled', true);
+                 alert(data.message);
+             }
+           },
+       }).done(function () {
+           submitBtn.text('登录');
+       });
+   });
+});

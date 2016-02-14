@@ -9,7 +9,6 @@
     height: 48px;
     padding: 11px 16px;
     font-size: 16px;
-    line-height: 1;
     line-height: 1.5;
     color: #404040;
     background-color: #fff;
@@ -27,4 +26,9 @@
 .form-control:focus {
     border-color: #44bbff;
     outline: 0;
+}
+
+input:-webkit-autofill, textarea:-webkit-autofill{
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+  transition: background-color 5000s ease-in-out 0s;
 }

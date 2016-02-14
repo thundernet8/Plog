@@ -66,7 +66,7 @@ class User(UserMixin):
         # super(User, self).__init__(**kwargs)
         user = mongo.db.users.find_one(dict(kwargs))
         if user:
-            self.user_id = str(user.get('user_id'))
+            self.user_id = user.get('user_id')
             self.name = user.get('name')
             self.nickname = user.get('nickname')
             self.email = user.get('email')
@@ -311,7 +311,7 @@ class User(UserMixin):
     def get_user_by_field(field, value):
         """
         通过字段值获取用户实例
-        :param field: 用户数据库字段(id/email/name)
+        :param field: 用户数据库字段(id/user_id/email/name)
         :param value: 字段值
         :return: 用户实例 or None
         """
@@ -320,8 +320,8 @@ class User(UserMixin):
             return None
         if field == 'id':
             field = 'user_id'
-            value = ObjectId(value)
-        user = User(field=value)
+            # value = ObjectId(value)
+        user = User(**{field: value})
         if user.user_id:
             return user
         return None
@@ -488,7 +488,7 @@ def load_user(user_id):
     :param user_id: 用户 id 字符串
     :return: 用户实例 or None
     """
-    return User.get_user_by_id(user_id)
+    return User.get_user_by_id(int(user_id))
 
 
 class AnonymousUser(AnonymousUserMixin):

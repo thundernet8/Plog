@@ -25,15 +25,15 @@ def register():
     password = request.form.get('password')
     if not username or not email or not password:
         # parameters are invalid
-        raise value_error(u"无效的用户名,邮箱或密码")
+        return value_error(u"无效的用户名,邮箱或密码")
     try:
         user = User.add_user(name=username, email=email, password=password)
         if user:
             # 异步发送邮件
-            # send_mail(email, Setting.get_setting('blog_name', 'Plog')+u'注册确认邮件', 'auth/emails/register_confirm',
-            #           username=username,
-            #           blogname=Setting.get_setting('blog_name', 'Plog'),
-            #           token=user.generate_confirmation_token())
+            send_mail(email, Setting.get_setting('blog_name', 'Plog')+u'注册确认邮件', 'auth/emails/register_confirm',
+                      username=username,
+                      blogname=Setting.get_setting('blog_name', 'Plog'),
+                      token=user.generate_confirmation_token())
             # ajax response
             response = jsonify({'success': 1, 'message': u'注册成功'})
             response.status_code = 200

@@ -39,9 +39,15 @@
                         </div>
                     </div>
                 </li>
+                {% if current_user.is_logged_in %}
+                <li class="">
+                    <a href="/me" class=""><i class="fa fa-user"></i>{{ current_user.nickname or current_user.name }} </a>
+                </li>
+                {% else %}
                 <li class="login-actions">
                     <a href="{{ url_for('auth.login') }}" class="login-link"><i class="fa fa-user"></i>登录/注册</a>
                 </li>
+                {% endif %}
             </ul>
         </div>
 

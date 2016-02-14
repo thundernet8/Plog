@@ -65,7 +65,7 @@ $(function(){
 });
 
 
-//ajax register
+//ajax register request
 
 $(function () {
    submitBtn.on('click', function () {
@@ -77,9 +77,14 @@ $(function () {
            url: registerApiUrl,
            data: {username: username, email: email, password: password},
            dataType: 'json',
-           timeout: 60,
+           timeout: 30000,
            beforeSend: function(){
                submitBtn.prop('disabled', true).text('注册中...');
+           },
+           error: function () {
+             passInput.val('');
+             pass2Input.val('');
+             submitBtn.text('发送注册邮件').prop('disabled', true);
            },
            success: function(data){
                if(data.success && data.success==1){

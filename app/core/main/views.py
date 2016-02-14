@@ -9,6 +9,7 @@ from flask import request
 from flask import render_template
 from flask import session
 from flask import redirect
+from flask.ext.login import current_user
 
 from . import main
 from app.core.models.helpers.redis_cache_decorator import redis_cached
