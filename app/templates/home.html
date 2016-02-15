@@ -12,3 +12,9 @@
 {% block header %}
 {% include 'modules/common_header.html' %}
 {% endblock %}
+
+{% block body_class %}abs-header{% endblock %}
+
+{% block content %}
+{{ super() }}
+{% endblock %}

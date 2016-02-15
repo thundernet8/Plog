@@ -6,6 +6,7 @@ from flask.ext.login import current_user
 from flask.ext.login import login_required
 from flask import url_for
 from flask import request
+from flask import flash
 
 from . import auth
 from app.core.models.settings import Setting
@@ -20,7 +21,7 @@ def login():
     """ 登录页面 """
     if current_user.is_logged_in:
         return redirect(url_for('main.index'))
-    return render_template('auth/login.html', Setting=Setting)
+    return render_template('auth/login.html')
 
 
 @auth.route('/register.do')
@@ -28,7 +29,7 @@ def register():
     """" 注册页面 """
     if current_user.is_logged_in:
         return redirect(url_for('main.index'))
-    return render_template('auth/register.html', Setting=Setting)
+    return render_template('auth/register.html')
 
 
 @auth.route('/findPass.do', methods=['GET', 'POST'])
@@ -48,8 +49,8 @@ def find_pass():
             message = u"我们已经发送一封密码重置邮件至您提供的邮箱, 请登录你的邮箱点击密码重置链接设置你的账户新密码"
         else:
             message = u"您提供的邮箱不存在, 请重新提交"
-        return render_template('utils/pure.html', Setting=Setting, message=message)  # TODO post redirect
-    return render_template('auth/find_pass.html', Setting=Setting, form=form)
+        return render_template('utils/pure.html', message=message)  # TODO post redirect
+    return render_template('auth/find_pass.html', form=form)
 
 
 @auth.route('/resetPass.do', methods=['GET', 'POST'])
@@ -63,11 +64,12 @@ def reset_pass():
         token = request.args.get('token', '')
         if User.reset_user_password(token, password):
             # TODO flask message
+            flash(u'您的密码已经重设, 请使用新密码登录')
             return redirect('auth.login')
         else:
             message = u"重设密码失败, 您的链接有误或者已过期, 请重新申请"
-            return render_template('utils/pure.html', Setting=Setting, message=message)  # TODO post redirect
-    return render_template('auth/reset_pass.html', Setting=Setting, form=form)
+            return render_template('utils/pure.html', message=message)  # TODO post redirect
+    return render_template('auth/reset_pass.html', form=form)
 
 
 @auth.route('/confirmEmail.do')
@@ -78,7 +80,7 @@ def confirm_email():
         message = u"邮箱验证成功, 您的账户现在已激活"
     else:
         message = u"验证失败,您的链接有误或者已过期, 请重新申请验证邮箱"
-    return render_template('utils/pure.html', Setting=Setting, message=message)
+    return render_template('utils/pure.html', message=message)
 
 
 @auth.route('/resendConfirmEmail.do')
@@ -93,4 +95,4 @@ def resend_confirm_email():
         message = u"我们已经重新发送一封确认邮件至您的邮箱, 请登录你的邮箱点击确认链接完成账户激活"
     else:
         message = u"请求失败, 请重新尝试, 或清除 cookie 重新登录后再进行操作"
-    return render_template('utils/pure.html', Setting=Setting, message=message)
+    return render_template('utils/pure.html', message=message)

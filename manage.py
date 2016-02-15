@@ -43,6 +43,10 @@ if os.path.exists('.env'):
 
 # 创建App
 app = create_app(os.getenv('PLOG_CONFIG') or 'default')
+
+# jinja_env
+app.jinja_env.globals['Setting'] = Setting
+
 manager = Manager(app)
 
 
