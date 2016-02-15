@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+确认邮箱 - {{ Setting.get_setting('blog_name', 'Plog') }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-pure.css') }}">
+{% endblock %}
+
+{% block header %}
+{% include 'modules/auth_header.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="content-wrap">
+    <div class="info-box">
+        <div class="info-body" id="info-body">
+            <p class="text-center" id="message">{{ message }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

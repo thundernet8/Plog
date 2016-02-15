@@ -1,0 +1,6 @@
+<p>请点击以下链接进行密码重设: <a href="{{ url_for('auth.reset_pass', token=token, _external=True) }}">重设密码</a>(本链接10分钟内有效).</p>
+<p>如果以上链接无法点击, 请复制以下链接文字至浏览器地址栏访问:</p>
+<p>{{ url_for('auth.reset_pass', token=token, _external=True) }}</p>
+
+<p>--{{ blogname }}</p>
+<p><small>Note: 请不要直接回复本邮件, 所有回复内容不会被检阅.</small></p>

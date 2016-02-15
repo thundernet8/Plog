@@ -1,0 +1,8 @@
+<p>尊敬的{{ username }}:</p>
+<p>您好, 请再次确认您的邮箱。</p>
+<p>请点击以下链接完成确认: <a href="{{ url_for('auth.confirm_email', token=token, _external=True) }}">点击确认</a>.</p>
+<p>如果以上链接无法点击, 请复制以下链接文字至浏览器地址栏访问:</p>
+<p>{{ url_for('auth.confirm_email', token=token, _external=True) }}</p>
+
+<p>--{{ blogname }}</p>
+<p><small>Note: 请不要直接回复本邮件, 所有回复内容不会被检阅.</small></p>

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+重设密码 - {{ Setting.get_setting('blog_name', 'Plog') }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-password.css') }}">
+{% endblock %}
+
+{% block header %}
+{% include 'modules/auth_header.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="content-wrap">
+    <div class="form-wrap">
+        <h4 class="text-center page-header">重设密码</h4>
+        <p class="info text-center">
+            请填写您的新密码
+        </p>
+        <form class="form" id="reset-pass" method="post">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+            {% if form.password.errors %}
+            {{ form.password(id='password', class='form-control has-error', placeholder='密码', required='') }}
+            {% else %}
+            {{ form.password(id='password', class='form-control', placeholder='密码', required='') }}
+            {% endif %}
+            {% if form.password.errors %}
+                {%- for error in form.password.errors %}
+                    <p class="help-block has-error">{{ error }}</p>
+                {%- endfor %}
+            {% endif %}
+            </div>
+            <div class="form-group">
+            {% if form.password2.errors %}
+            {{ form.password2(id='password2', class='form-control has-error', placeholder='重复密码', required='') }}
+            {% else %}
+            {{ form.password2(id='password2', class='form-control', placeholder='重复密码', required='') }}
+            {% endif %}
+            {% if form.password2.errors %}
+                {%- for error in form.password2.errors %}
+                    <p class="help-block has-error">{{ error }}</p>
+                {%- endfor %}
+            {% endif %}
+            </div>
+            <div class="form-group">
+            {{ form.submit(class='input-blue', value='提交') }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

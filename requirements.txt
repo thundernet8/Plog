@@ -9,6 +9,7 @@ Flask-PageDown==0.2.1
 Flask-PyMongo==0.4.0
 Flask-Redis==0.1.0
 Flask-Script==2.0.5
+Flask-WTF==0.12
 html5lib==0.9999999
 itsdangerous==0.24
 jieba==0.38

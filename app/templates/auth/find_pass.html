@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+找回密码 - {{ Setting.get_setting('blog_name', 'Plog') }}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-password.css') }}">
+{% endblock %}
+
+{% block header %}
+{% include 'modules/auth_header.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="content-wrap">
+    <div class="form-wrap">
+        <h4 class="text-center">找回密码</h4>
+        <p class="info text-center">
+            请提供您账户的邮箱地址, 我们将发送一封密码重置邮件至该邮箱
+        </p>
+        <form class="form" id="find-pass" method="post">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+            {% if form.email.errors %}
+            {{ form.email(id='email', class='form-control has-error', placeholder='邮箱', required='') }}
+            {% else %}
+            {{ form.email(id='email', class='form-control', placeholder='邮箱', required='') }}
+            {% endif %}
+            {% if form.email.errors %}
+                {%- for error in form.email.errors %}
+                    <p class="help-block has-error">{{ error }}</p>
+                {%- endfor %}
+            {% endif %}
+            </div>
+            <div class="form-group">
+            {{ form.submit(class='input-blue', value='提交') }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

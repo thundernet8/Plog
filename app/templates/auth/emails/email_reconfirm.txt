@@ -1,0 +1,8 @@
+尊敬的{{ username }}:
+您好, 请再次确认您的邮箱。
+请复制以下链接文字至浏览器地址栏访问以完成注册:
+{{ url_for('auth.confirm_email', token=token, _external=True) }}
+--{{ blogname }}
+
+
+Note: 请不要直接回复本邮件, 所有回复内容不会被检阅.

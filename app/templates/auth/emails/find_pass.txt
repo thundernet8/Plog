@@ -1,0 +1,5 @@
+请复制以下链接文字至浏览器地址栏访问以重设你的账户密码, 本链接10分钟内有效:</p>
+{{ url_for('auth.reset_pass', token=token, _external=True) }}
+
+<p>--{{ blogname }}</p>
+<p><small>Note: 请不要直接回复本邮件, 所有回复内容不会被检阅.</small></p>

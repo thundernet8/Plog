@@ -170,9 +170,10 @@ class User(UserMixin):
         :return: token 字符串
         """
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
-        return s.dumps({'reset_uid': self.user_id}).decode('ascii')
+        return s.dumps({'reset_uid': self.user_id, 'email': self.email}).decode('ascii')
 
-    def reset_user_password(self, token, new_password):
+    @staticmethod
+    def reset_user_password(token, new_password):
         """
         重置用户密码
         :param token: 用于验证的 token
@@ -184,14 +185,17 @@ class User(UserMixin):
             data = s.loads(token)
         except:
             return False
-        if data.get('reset_uid') != self.user_id:
+        user = User(data.get('email'))
+        if not user:
             return False
-        self.raw_password = new_password
+        if data.get('reset_uid') != user.user_id:
+            return False
+        user.raw_password = new_password
         mongo.db.users.update_one({
-            'user_id': self.user_id
+            'user_id': user.user_id
         }, {
             '$set': {
-                'password': self.password
+                'password': user.password
             }
         })
         return True
