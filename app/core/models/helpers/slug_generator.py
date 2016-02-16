@@ -13,7 +13,7 @@ re_chinese = re.compile(ur'([\u2e80-\u9fff]+)')
 re_all_chinese = re.compile(ur'^([\u2e80-\u9fff]+)$')
 
 
-def slug_generator(text, delimiter=u"-"):
+def get_slug(text, delimiter=u"-"):
     """
     别名生成器,将中文等字符转成拼音等 url 友好的字符串,英文保持不变
     :param text 待转换文本

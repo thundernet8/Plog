@@ -84,7 +84,7 @@ $(function () {
                  submitBtn.text('登录').prop('disabled', true);
                  alert(data.message);
              }
-           },
+           }
        }).done(function () {
            submitBtn.text('登录');
        });

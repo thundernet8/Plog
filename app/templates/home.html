@@ -6,6 +6,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-home.css') }}">
 {% endblock %}
 
@@ -13,8 +14,57 @@
 {% include 'modules/common_header.html' %}
 {% endblock %}
 
-{% block body_class %}abs-header{% endblock %}
+{% block body_class %}home abs-header{% endblock %}
 
 {% block content %}
-{{ super() }}
+<div class="container col-2">
+    {{ super() }}
+    <div class="wrap-left pull-left">
+        <!-- Banner L1 -->
+        <div class="big-banner hover-scale">
+            <div class="back-img">
+                <img src="http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg" alt="#todo">
+            </div>
+            <a href="/#todo" target="_blank">
+                <div class="banner-content">
+                    <h1 class="banner-h1">微信提现收费罪在银行？抱歉，这锅弱势群体不背</h1>
+                </div>
+            </a>
+        </div>
+        <!-- Banner L2 -->
+        <div class="big-banner2 hover-scale pull-left">
+            <div class="back-img">
+                <img src="http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg" alt="#todo">
+            </div>
+            <a href="#todo" target="_blank">
+                <div class="banner-content">
+                    <h2 class="banner-h2">微信提现收费罪在银行</h2>
+                </div>
+            </a>
+        </div>
+        <div class="big-banner2 hover-scale pull-right">
+            <div class="back-img">
+                <img src="http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg" alt="#todo">
+            </div>
+            <a href="#todo" target="_blank">
+                <div class="banner-content">
+                    <h2 class="banner-h2">微信提现收费罪在银行</h2>
+                </div>
+            </a>
+        </div>
+        <!-- 文章列表 -->
+        <section class="article-list index-article-list">
+            {% import 'macros/index_article.html' as article_render %}
+            {% for post in posts %}
+                {{ article_render.render_article_item(post) }}
+            {% endfor %}
+        </section>
+        <!-- End 文章列表 -->
+    </div>
+    <!-- Sidebar -->
+    <div class="wrap-right pull-right sidebar" id="sidebar">
+        this is sidebar
+    </div>
+    <!-- End Sidebar -->
+</div>
 {% endblock %}

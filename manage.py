@@ -46,6 +46,7 @@ app = create_app(os.getenv('PLOG_CONFIG') or 'default')
 
 # jinja_env
 app.jinja_env.globals['Setting'] = Setting
+app.jinja_env.globals['User'] = User
 
 manager = Manager(app)
 

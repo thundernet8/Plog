@@ -1,0 +1,35 @@
+{% macro render_article_item(post) %}
+    <div class="article mod-article" data-aid="{{ post.post_id }}">
+        <div class="mod-thumb">
+            <a class="transition" href="{{ url_for('main.article_detail', post_id=post.post_id) }}" target="_blank">
+                <img class="lazy" data-original="{{ post.image }}" src="{{ url_for('static', filename='dist/images/default-thumb.png') }}" alt="{{ post.title }}">
+            </a>
+        </div>
+        <div class="mod-word">
+            <h2 class="title">
+                <a href="{{ url_for('main.article_detail', post_id=post.post_id) }}" target="_blank">
+                    {{ post.title }}
+                </a>
+            </h2>
+            <div class="des">
+                {{ post.excerpt }}
+            </div>
+            <div class="meta">
+                <div class="author">
+                    <a rel="nofollow" href="{{ url_for('main.user_homepage', user_id=post.author_id) }}" target="_blank">
+                        <img class="avatar" src="{{ User(user_id=post.author_id).get_avatar(size=30) }}">
+                        <span>{{ User(user_id=post.author_id).nickname or User(user_id=post.author_id).name }}</span>
+                    </a>
+                </div>
+                <div class="time">
+                    <i class="fa fa-clock"></i>
+                    <span>{{ post.create_at.strftime('%Y/%m/%d %H:%M') }}</span>
+                </div>
+                <a class="comment" rel="nofollow" href="{{ url_for('main.article_detail', post_id=post.post_id) }}#comments" target="_blank">
+                    <i class="fa fa-comment"></i>
+                    <span>{{ post.comment_count }}</span>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

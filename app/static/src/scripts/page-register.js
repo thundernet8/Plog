@@ -95,7 +95,7 @@ $(function () {
                    pass2Input.val('');
                    alert(data.message);
                }
-           },
+           }
 
        }).done(function(){
            submitBtn.text('发送注册邮件');

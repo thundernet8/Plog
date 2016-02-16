@@ -1,17 +1,40 @@
 body{
     position: relative;
     color: #0e2026;
-    background-color: #e9eaec;
     font-weight: normal;
     -webkit-font-smoothing: antialiased;
     background-origin: border-box;
     box-sizing: border-box;
 
     &.abs-header{
-        padding-top: 62px;
+        padding-top: 90px;
     }
 }
 
 body, button, input, select, textarea {
-  font: 14px/1.5 'Open Sans', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;
+    //font: 14px/1.5 'Open Sans', Arial, 'Hiragino Sans GB', 'Microsoft YaHei', STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;
+    font: 14px/1.5 Arial, 'Microsoft yahei', 'Hiragino Sans GB', '冬青黑体简体中文 w3', 'Microsoft Yahei', 'Hiragino Sans GB', '冬青黑体简体中文 w3', STXihei, '华文细黑', '微软雅黑', SimSun, '宋体', Heiti, '黑体', sans-serif;
+}
+
+img{
+    max-width: 100%;
+}
+
+.hover-scale{
+
+    img{
+        -webkit-transition: all .5s ease-out;
+        -moz-transition: all .5s ease-out;
+        -ms-transition: all .5s ease-out;
+        -o-transition: all .5s ease-out;
+        transition: all .5s ease-out;
+    }
+
+    &:hover img{
+        -webkit-transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+        -moz-transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+        -ms-transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+        -o-transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+        transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+    }
 }

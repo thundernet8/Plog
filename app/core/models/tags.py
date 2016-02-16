@@ -7,7 +7,7 @@ import flask_pymongo
 from app import mongo
 from pymongo.errors import DuplicateKeyError
 from .mongo_counter import get_next_sequence
-from .helpers.slug_generator import slug_generator
+from .helpers.slug_generator import get_slug
 
 
 class Tag(object):

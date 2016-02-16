@@ -11,7 +11,8 @@ from app import mongo
 from .settings import Setting
 from .mongo_counter import get_next_sequence
 from .helpers.pagination import Pagination
-from .helpers.slug_generator import slug_generator
+from .helpers.slug_generator import get_slug
+from .helpers.excerpt_generator import get_excerpt
 
 
 class Post(object):
@@ -68,8 +69,10 @@ class Post(object):
         self.slug = kwargs.get('slug', None)
         self.markdown = kwargs.get('markdown', None)
         self.html = kwargs.get('html', None)
+        self.excerpt = kwargs.get('excerpt', get_excerpt(self.html.encode('utf-8'),
+                                                         count=Setting.get_setting('excerpt_length', 120), wrapper=u''))
         self.image = kwargs.get('image', None)
-        self.featured = kwargs.get('featured', None)
+        self.featured = kwargs.get('featured', False)
         self.type = kwargs.get('type', 'post')
         self.status = kwargs.get('status', None)
         self.meta_title = kwargs.get('meta_title', None)
@@ -141,7 +144,9 @@ class Post(object):
         :return: 成功返回文章 id,失败返回 False
         """
         sets = dict(kwargs)
-        sets['slug'] = slug_generator(sets.get('name'))
+        sets['slug'] = get_slug(sets.get('name'))
+        sets['excerpt'] = get_excerpt(sets.get('html', u'').encode('utf-8'),
+                                      count=Setting.get_setting('excerpt_length', 120), wrapper=u'')
         slug_count = mongo.db.posts.count({'slug': sets.get('slug')})
         if slug_count > 0:
             sets['slug'] = '-'.join([sets.get('slug'), slug_count+1])
@@ -345,7 +350,7 @@ class Posts(object):
         self.order_by = kwargs.get('order_by', 'publish_at')
         self.order = kwargs.get('order', flask_pymongo.DESCENDING)
 
-    def pagination(self, posts_per_page, page=1, error_out=True):
+    def pagination(self, posts_per_page=0, page=1, error_out=True):
         """
         获取文章分页模型
         :param posts_per_page: 每页文章数

@@ -2,3 +2,118 @@
 @import "utils/common";
 
 @import "modules/common-header";
+
+
+//home page
+body{
+  background-color: #e9eaec;
+}
+
+a:hover {
+    color: #3ca5f6;
+}
+
+.container{
+  padding: 0;
+
+  &.col-2{
+    padding-right: 360px;
+
+    .wrap-left{
+      margin-right: 25px;
+
+      .big-banner{
+        position: relative;
+        width: 100%;
+        height: auto;
+        margin-bottom: 30px;
+        overflow: hidden;
+
+        .back-img{
+          width: 100%;
+        }
+
+        .banner-content{
+
+          h1{
+            position: absolute;
+            bottom: 22px;
+            margin: 0 30px;
+            word-break: break-all;
+            line-height: 42px;
+            font-size: 28px;
+            color: #FFFFFF;
+          }
+        }
+      }
+
+      .big-banner2{
+        position: relative;
+        width: e("-webkit-calc(50% - 12px)");
+        width: e("-moz-calc(50% - 12px)");
+        width: e("calc(50% - 12px)");
+        height: auto;
+        overflow: hidden;
+
+        .banner-content{
+
+          h2{
+            position: absolute;
+            bottom: 22px;
+            margin: 0 30px;
+            font-size: 18px;
+            line-height: 1.5;
+            font-weight: 400;
+            color: #FFFFFF;
+          }
+        }
+      }
+
+      .big-banner, .big-banner2{
+        &:before{
+          content: " ";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+          opacity: 1;
+          -webkit-transition: all .3s ease;
+          transition: all .3s ease;
+          background: -webkit-gradient(linear, 0 50%, 0 100%, from(rgba(0, 0, 0, 0)), to(#000000));
+          background: -moz-linear-gradient(top, rgba(0, 0, 0, 0), #000000);
+          background: -ms-linear-gradient(top, rgba(0, 0, 0, 0), #000000);
+          background: -o-linear-gradient(top, rgba(0, 0, 0, 0), #000000);
+        }
+
+        &:hover:before{
+          opacity: .9;
+        }
+
+        a{
+          position: absolute;
+          top: 0;
+          width: 100%;
+          height: 100%;
+
+          .banner-content{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            cursor: pointer;
+          }
+        }
+
+      }
+    }
+  }
+
+  #sidebar{
+    position: relative;
+    margin-right: -360px;
+    width: 360px;
+
+    background-color: #fff6de;
+    height: 1000px;
+  }
+}
