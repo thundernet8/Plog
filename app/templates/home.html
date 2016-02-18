@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
 <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-home.css') }}">
 {% endblock %}
@@ -17,7 +17,7 @@
 {% block body_class %}home abs-header{% endblock %}
 
 {% block content %}
-<div class="container col-2">
+<div class="container main col-2">
     {{ super() }}
     <div class="wrap-left pull-left">
         <!-- Banner L1 -->
@@ -48,7 +48,7 @@
             </div>
             <a href="#todo" target="_blank">
                 <div class="banner-content">
-                    <h2 class="banner-h2">微信提现收费罪在银行</h2>
+                    <h2 class="banner-h2">这次弱势群体有话说</h2>
                 </div>
             </a>
         </div>
@@ -60,6 +60,20 @@
             {% endfor %}
         </section>
         <!-- End 文章列表 -->
+        <!-- 分页 -->
+        <div class="pagination clearfix">
+            {% if pagenation.has_prev %}
+            <a href="{{ url_for('main.index_paged', page=pagenation.prev_num) }}" class="prev transition">上一页</a>
+            {% else %}
+            <a href="javascript:void(0)" class="prev disabled">上一页</a>
+            {% endif %}
+            {% if pagenation.has_next %}
+            <a href="{{ url_for('main.index_paged', page=pagenation.next_num) }}" class="next transition">下一页</a>
+            {% else %}
+            <a href="javascript:void(0)" class="next disabled">下一页</a>
+            {% endif %}
+        </div>
+        <!-- End 分页 -->
     </div>
     <!-- Sidebar -->
     <div class="wrap-right pull-right sidebar" id="sidebar">
@@ -67,4 +81,8 @@
     </div>
     <!-- End Sidebar -->
 </div>
+{% endblock %}
+
+{% block footer %}
+{% include 'modules/common_footer.html' %}
 {% endblock %}

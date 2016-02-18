@@ -23,6 +23,7 @@ class Post(object):
     :slug 文章别名
     :markdown 文章内容,markdown格式
     :html 文章内容,html格式
+    :excerpt 文章摘要
     :image 文章特色图片
     :featured 是否推荐文章
     :type 文章类型,post/page,默认post
@@ -136,7 +137,7 @@ class Post(object):
         return Post.get_post_by_field('slug', slug)
 
     @staticmethod
-    def draft_post(post_id, **kwargs):
+    def draft_post(post_id=None, **kwargs):
         """
         保存文章草稿或创建新文章草稿
         :param post_id: 文章 id,新草稿为None
@@ -144,12 +145,19 @@ class Post(object):
         :return: 成功返回文章 id,失败返回 False
         """
         sets = dict(kwargs)
-        sets['slug'] = get_slug(sets.get('name'))
-        sets['excerpt'] = get_excerpt(sets.get('html', u'').encode('utf-8'),
+        if not sets.get('type'):
+            sets['type'] = 'post'
+        if not sets.get('slug'):
+            sets['slug'] = get_slug(sets.get('title'))
+        sets['excerpt'] = get_excerpt(sets.get('html', u''),
                                       count=Setting.get_setting('excerpt_length', 120), wrapper=u'')
         slug_count = mongo.db.posts.count({'slug': sets.get('slug')})
         if slug_count > 0:
-            sets['slug'] = '-'.join([sets.get('slug'), slug_count+1])
+            new_slug = '-'.join([sets.get('slug'), str(slug_count+1)])
+            while mongo.db.posts.count({'slug': new_slug}):
+                slug_count += 1
+                new_slug = '-'.join([sets.get('slug'), str(slug_count+1)])
+            sets['slug'] = new_slug
         sets.update({
             'status': 'draft',
             'update_at': int(time.time())
@@ -163,15 +171,15 @@ class Post(object):
                 'post_id': post_id
             }, {
                 '$set': sets,
-                '$setOnInsert': sets.update({
+                '$setOnInsert': {
                     'post_id': get_next_sequence('post_id'),
                     'create_at': int(time.time())
-                })
+                }
             }, upsert=True)
             if result and result.modified_count > 0:
                 return post_id
-            if result and result.upsert_id:
-                return mongo.db.posts.find_one({'_id': result.upsert_id}).get('post_id')
+            if result and result.upserted_id:
+                return mongo.db.posts.find_one({'_id': result.upserted_id}).get('post_id')
             return False
         except:
             return False
@@ -188,6 +196,8 @@ class Post(object):
             'status': 'published',
             'update_at': int(time.time())
         })
+        if not sets.get('type'):
+            sets['type'] = 'post'
         if not sets.get('author_id'):
             sets['author_id'] = str(current_user.get_id())
         if not sets.get('update_by'):
@@ -203,15 +213,15 @@ class Post(object):
                 'post_id': post_id
             }, {
                 '$set': sets,
-                '$setOnInsert': sets.update({
+                '$setOnInsert': {
                     'post_id': get_next_sequence('post_id'),
                     'create_at': int(time.time())
-                })
+                }
             }, upsert=True)
             if result and result.modified_count > 0:
                 return post_id
-            if result and result.upsert_id:
-                return mongo.db.posts.find_one({'_id': result.upsert_id}).get('post_id')
+            if result and result.upserted_id:
+                return mongo.db.posts.find_one({'_id': result.upserted_id}).get('post_id')
             return False
         except:
             return False
@@ -363,9 +373,9 @@ class Posts(object):
         if not posts_per_page:
             posts_per_page = Setting.get_setting('posts_per_page', default=10)
         try:
-            results = mongo.db.posts.find(self.filters, skip=posts_per_page*(page-1), limit=posts_per_page)\
-                .sort({self.order_by: self.order})
-            count = results.count
+            results = mongo.db.posts.find(filter=self.filters, skip=posts_per_page*(page-1), limit=posts_per_page)\
+                .sort([(self.order_by, self.order)])
+            count = results.count()
             if (not results or count == 0) and page != 1 and error_out:
                 abort(404)
         except:

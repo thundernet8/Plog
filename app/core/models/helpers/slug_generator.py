@@ -19,8 +19,11 @@ def get_slug(text, delimiter=u"-"):
     :param text 待转换文本
     :param delimiter 文本连接符
     """
+    if not text:
+        return ''
     if not type(text) == unicode:
-        raise ValueError('should be unicode')
+        text = text.decode('utf-8')
+        # raise ValueError('should be unicode')
     slug_list = []
     segments_split_by_space = text.split()
     segments_split_by_chinese = []

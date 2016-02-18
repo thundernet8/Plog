@@ -2,6 +2,7 @@
 # coding=utf-8
 
 import os
+from datetime import datetime
 
 from flask.ext.script import Manager
 from flask.ext.script import Shell
@@ -47,6 +48,7 @@ app = create_app(os.getenv('PLOG_CONFIG') or 'default')
 # jinja_env
 app.jinja_env.globals['Setting'] = Setting
 app.jinja_env.globals['User'] = User
+app.jinja_env.globals['datetime'] = datetime
 
 manager = Manager(app)
 
@@ -91,6 +93,32 @@ def deploy():
     Comment.create_table_indexes()
     # 用户数据库索引
     User.create_table_indexes()
+
+
+@manager.command
+def test(coverage=False):
+    """
+    测试
+    :param coverage 是否启用覆盖测试
+    :return:
+    """
+    if coverage and not os.environ.get('PG_COVERAGE'):
+        import sys
+        os.environ['PG_COVERAGE'] = '1'
+        os.execvp(sys.executable, [sys.executable] + sys.argv)
+    import unittest
+    tests = unittest.TestLoader().discover('tests')
+    unittest.TextTestRunner(verbosity=2).run(tests)
+    if COV:
+        COV.stop()
+        COV.save()
+        print('Coverage Summary:')
+        COV.report()
+        basedir = os.path.abspath(os.path.dirname(__file__))
+        covdir = os.path.join(basedir, 'tests/coverage')
+        COV.html_report(directory=covdir)
+        print('HTML version: file://%s/index.html' % covdir)
+        COV.erase()
 
 
 if __name__ == '__main__':

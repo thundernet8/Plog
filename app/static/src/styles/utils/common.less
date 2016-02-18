@@ -16,10 +16,18 @@ body, button, input, select, textarea {
     font: 14px/1.5 Arial, 'Microsoft yahei', 'Hiragino Sans GB', '冬青黑体简体中文 w3', 'Microsoft Yahei', 'Hiragino Sans GB', '冬青黑体简体中文 w3', STXihei, '华文细黑', '微软雅黑', SimSun, '宋体', Heiti, '黑体', sans-serif;
 }
 
+::selection{
+    //background: #fe917b;
+    background: #3ca5f6;
+    color: #fff;
+}
+
 img{
     max-width: 100%;
 }
 
+
+//animation
 .hover-scale{
 
     img{
@@ -36,5 +44,48 @@ img{
         -ms-transform: matrix(1.04, 0, 0, 1.04, 0, 0);
         -o-transform: matrix(1.04, 0, 0, 1.04, 0, 0);
         transform: matrix(1.04, 0, 0, 1.04, 0, 0);
+    }
+}
+
+.transition {
+    -webkit-transition: all .2s ease-out;
+    -moz-transition: all .2s ease-out;
+    -ms-transition: all .2s ease-out;
+    -o-transition: all .2s ease-out;
+    transition: all .2s ease-out;
+}
+
+//sprite icons
+.icon{
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url("../images/icon/icons.png");
+    background-repeat: no-repeat;
+    vertical-align: text-bottom;
+}
+
+.icon-weibo{
+    background-position: 10px -104px;
+
+    &:hover{
+        background-position: 9px -144px;
+    }
+}
+
+.icon-weixin{
+    background-position: -49px -105px;
+
+    &:hover{
+        background-position: -50px -145px;
+    }
+}
+
+.icon-rss{
+    background-position: -109px -185px;
+
+    &:hover{
+        background-position: -109px -226px;
     }
 }

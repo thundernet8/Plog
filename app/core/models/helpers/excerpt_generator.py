@@ -12,7 +12,11 @@ def get_excerpt(text, count, suffix=u'', wrapper=u'p'):
     :param wrapper: 摘要外包裹标签
     :return: 摘要
     """
-    assert(isinstance(text, unicode))
+    if not text:
+        return ''
+    # assert(isinstance(text, unicode))
+    if not type(text) == unicode:
+        text = text.decode('utf-8')
     excerpt = re.sub(r'<.*?>', u'', text)
     excerpt = u''.join(excerpt.split())[0:count]
     return u'<{0}>{1}{2}</{0}>'.format(wrapper, excerpt, suffix)

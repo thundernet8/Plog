@@ -9,7 +9,8 @@
                         <a href="{{ nav_setting['primary'].values()[0] or 'javascript:void(0)' }}">
                             {{ nav_setting['primary'].keys()[0] }}
                             {% if nav_setting.get('sub') %}
-                            <i class="fa fa-angle-down"></i>
+                            <!--i class="fa fa-angle-down"></i-->
+                            <span class="glyphicon glyphicon-menu-down"></span>
                             {% endif %}
                         </a>
                         {% if nav_setting.get('sub') %}
@@ -29,7 +30,7 @@
         <div class="right-col right-nav-wrapper">
             <ul class="sub-nav">
                 <li class="search-item">
-                    <a href="javascript:void(0)"><i class="fa fa-search"></i>搜索 </a>
+                    <a href="javascript:void(0)"><span class="glyphicon glyphicon-search"></span>搜索 </a>
                     <div class="search-wrap pop-up">
                         <div class="searchbar">
                             <form action="search" class="search-form" method="post">
@@ -45,7 +46,7 @@
                 </li>
                 {% else %}
                 <li class="login-actions">
-                    <a href="{{ url_for('auth.login') }}" class="login-link"><i class="fa fa-user"></i>登录/注册</a>
+                    <a href="{{ url_for('auth.login') }}" class="login-link"><span class="glyphicon glyphicon-user"></span>登录/注册</a>
                 </li>
                 {% endif %}
             </ul>

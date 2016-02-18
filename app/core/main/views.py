@@ -48,36 +48,47 @@ def search():
 
 # 首页
 @main.route('/')
-@redis_cached(timeout=300, key_prefix='home_html')  # TODO 缓存时间
+@redis_cached(timeout=30, key_prefix='home_html')  # TODO 缓存时间
 def index():
     settings = Setting.get_setting('navigation')
     if settings:
         settings = (json.loads(settings)).get('navigations')
-    posts = Posts(filters={'status': 'published'}).pagination().items
-    return render_template('home.html', nav_settings=settings, posts=posts)
+    pagenation = Posts(filters={'status': 'published'}).pagination()
+    posts = pagenation.items if pagenation else []
+    return render_template('home.html', nav_settings=settings, posts=posts, pagenation=pagenation)
 
 
 # 首页(带分页)
 @main.route('/page/<int:page>')
-@redis_cached(timeout=300, key_prefix='home_html')
-def index(page):
+@redis_cached(timeout=300, key_prefix='home_html_%s')
+def index_paged(page):
     settings = Setting.get_setting('navigation')
     if settings:
         settings = (json.loads(settings)).get('navigations')
-    posts = Posts(filters={'status': 'published'}).pagination(page=page).items
-    return render_template('home.html', nav_settings=settings, posts=posts)
+    pagenation = Posts(filters={'status': 'published'}).pagination(page=page, posts_per_page=2)
+    posts = pagenation.items if pagenation else []
+    return render_template('home.html', nav_settings=settings, posts=posts, pagenation=pagenation)
 
 
 # 文章详情页
 @main.route('/article/<int:post_id>.html')
+@redis_cached(timeout=300, key_prefix='article_%s')
 def article_detail(post_id):
-    return 'post detail'+post_id  # TODO
+    return 'post detail'+str(post_id)  # TODO
 
 
 # 用户/作者主页
 @main.route('/author/<int:user_id>')
+@redis_cached(timeout=300, key_prefix='author_%s')
 def user_homepage(user_id):
-    return 'user homepage'+user_id  # TODO /考虑使用用户名或昵称替代用户 id 作为链接标识
+    return 'user homepage'+str(user_id)  # TODO /考虑使用用户名或昵称替代用户 id 作为链接标识
+
+
+# RSS
+@main.route('/rss')
+@redis_cached(timeout=600, key_prefix='rss')
+def rss():
+    return 'rss'  # TODO rss
 
 
 
