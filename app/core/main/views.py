@@ -60,7 +60,7 @@ def index():
 
 # 首页(带分页)
 @main.route('/page/<int:page>')
-@redis_cached(timeout=300, key_prefix='home_html_%s')
+@redis_cached(timeout=30, key_prefix='home_html_%s')
 def index_paged(page):
     settings = Setting.get_setting('navigation')
     if settings:
@@ -72,9 +72,14 @@ def index_paged(page):
 
 # 文章详情页
 @main.route('/article/<int:post_id>.html')
-@redis_cached(timeout=300, key_prefix='article_%s')
+@redis_cached(timeout=30, key_prefix='article_%s')
 def article_detail(post_id):
-    return 'post detail'+str(post_id)  # TODO
+    settings = Setting.get_setting('navigation')
+    if settings:
+        settings = (json.loads(settings)).get('navigations')
+    pagenation = Posts(filters={'status': 'published'}).pagination(page=1, posts_per_page=2)
+    posts = pagenation.items if pagenation else []
+    return render_template('article.html', nav_settings=settings, posts=posts, pagenation=pagenation)
 
 
 # 用户/作者主页

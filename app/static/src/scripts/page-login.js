@@ -1,5 +1,11 @@
 "use strict";
-var $ = require('./libs/jquery/2.2.0/jquery.js');
+
+/**
+ * 登录页脚本
+ */
+
+var $ = require('jquery');
+var common = require('./utils/common');
 
 var siteUrl = window.location.protocol + '//' + window.location.host,
     loginApiUrl = siteUrl + '/api/v1.0/login';
@@ -74,10 +80,13 @@ $(function () {
            },
            success: function(data){
                console.log(data);
+               console.log(common.getUrlPara('redirect'));
              if(data.success && data.success==1){
                   submitBtn.text('登录成功');
                   setTimeout(function () {
-                      window.location.href = siteUrl;
+                      var href = common.getUrlPara('redirect') ? siteUrl + decodeURIComponent(common.getUrlPara('next')) : siteUrl;
+                      //console.log(href);
+                      window.location.href = href;
                   }, 1500);
              }else{
                  passInput.val('');

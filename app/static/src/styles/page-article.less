@@ -27,14 +27,32 @@ a:focus{
   outline: none;
 }
 
+body{
+  &.single{
+    background-color: #e9eaec;
+
+    .container{
+      &.col-2{
+        padding-left: 360px;
+        padding-right: 0;
+
+        .wrap-right{
+          margin-left: 25px;
+          background-color: #FFFFFF;
+        }
+      }
+    }
+  }
+}
+
 .container{
   padding: 0;
 
   &.col-2{
     padding-right: 360px;
 
-    .wrap-left{
-      margin-right: 25px;
+    .wrap-right{
+      margin-left: 25px;
 
       .big-banner{
         position: relative;
@@ -266,7 +284,3 @@ a:focus{
     }
   }
 }
-
-
-
-

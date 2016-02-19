@@ -1,5 +1,10 @@
 "use strict";
-var $ = require('./libs/jquery/2.2.0/jquery.js');
+
+/**
+ * 注册页脚本
+ */
+
+var $ = require('jquery');
 
 var siteUrl = window.location.protocol + '//' + window.location.host,
     registerApiUrl = siteUrl + '/api/v1.0/register';

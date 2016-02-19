@@ -7,19 +7,19 @@
 {% block css %}
 <!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
 <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-home.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-article.css') }}">
 {% endblock %}
 
 {% block header %}
 {% include 'modules/common_header.html' %}
 {% endblock %}
 
-{% block body_class %}home abs-header{% endblock %}
+{% block body_class %}single single-article abs-header{% endblock %}
 
 {% block content %}
 <div class="container main col-2">
     {{ super() }}
-    <div class="wrap-left pull-left">
+    <div class="wrap-right pull-right">
         <!-- Banner L1 -->
         <div class="big-banner hover-scale">
             <div class="back-img">
@@ -76,7 +76,7 @@
         <!-- End 分页 -->
     </div>
     <!-- Sidebar -->
-    {% include 'modules/common_sidebar.html' %}
+    {% include 'modules/article_sidebar.html' %}
     <!-- End Sidebar -->
 </div>
 {% endblock %}
@@ -88,5 +88,5 @@
 {% block script %}
 <!--script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script-->
 <script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/libs/jquery/2.2.0/jquery.min.js') }}"></script>
-<scrip type="text/javascript" src="{{ url_for('static', filename='dist/scripts/page-home.js') }}"></scrip>
+<script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/page-article.js') }}"></script>
 {% endblock %}

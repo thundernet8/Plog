@@ -46,6 +46,7 @@
 </div>
 {% endblock %}
 
-{% block footer %}
+{% block script %}
+<script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/libs/jquery/2.2.0/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/page-register.js') }}"></script>
 {% endblock %}
