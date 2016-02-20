@@ -1,0 +1,59 @@
+<h2>文章评论
+{%- if post.comment_count %}<span class="comment-count">({{- post.comment_count -}})</span>{% endif %}
+</h2>
+<div class="comment-reply">
+{% if current_user.is_logged_in %}
+    <div class="comment-form-wrap">
+        <form action="{{ url_for('api.article_comment', post_id=post.post_id) }}" class="comment-form" method="post">
+            {{ comment_form.hidden_tag() }}
+            <textarea class="textarea" id="comment-text" placeholder="说点什么吧..." data-focus="#comment-tip" required></textarea>
+            <span class="focus-tips textarea-focus-tips" id="comment-tip" style="display: none;">请回复有价值的信息, 无意义的评论将被过滤或删除</span>
+        </form>
+    </div>
+{% endif %}
+    <div class="clearfix"></div>
+    <div class="meta-wrap">
+        {% if not current_user.is_logged_in %}
+        <div class="meta pull-left">
+            <a class="login-to-reply" href="{{ url_for('auth.login') }}">登录</a>后参与讨论
+        </div>
+        {% endif %}
+        {% if current_user.is_logged_in %}
+        <div class="meta pull-left">
+            <img class="avatar" src="{{ current_user.get_avatar(30) }}" />
+            <span><a href="javascript:void(0)">{{- current_user.nickname or current_user.name -}}</a></span>
+        </div>
+        <button class="btn btn-blue comment-submit-btn pull-right" data-aid="{{ post.post_id }}">发表评论</button>
+        {% endif %}
+        <div class="clearfix"></div>
+    </div>
+</div>
+<hr>
+
+<!-- 异步加载评论 -->
+<ul class="comments-list" async="true" async-url="{{ url_for('api.article_comment', post_id=post.post_id) }}" data-aid="{{ post.post_id }}">
+    <li class="comment-detail" data-comment-id="1">
+        <div class="avatar-wrap pull-left">
+            <a href="javascript:void(0)">
+                <img class="avatar" src="https://krplus-pic.b0.upaiyun.com/780a94920cb4671e17cd849028363a03" /> <!-- TODO comment -->
+            </a>
+        </div>
+        <div class="comment-wrap">
+            <div class="meta">
+                <a class="comment-author-name" href="javascript:void(0)">
+                    小梦雨 Raina
+                </a>
+                <abbr title="{{ post.create_at.strftime('%Y-%m-%d %H:%M:%S +0800') }}">{{- ' • ' + post.create_at.strftime('%Y/%m/%d %H:%M') -}}</abbr> <!-- TODO comment -->
+            </div>
+            <div class="comment-text">
+                {{ Markup(post.html) }}
+            </div>
+            <div class="actions clearfix">
+                <a class="like pull-left transition" href="javascript:void(0)" data-cid="1">
+                    <span class="glyphicon glyphicon-heart-empty"></span>&nbsp;喜欢<span class="count">(10)</span>
+                </a>
+                <a class="reply pull-right transition" href="javascript:void(0)" data-cid="1">回复</a>
+            </div>
+        </div>
+    </li>
+</ul>

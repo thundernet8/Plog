@@ -3,8 +3,8 @@
         <a class="logo" href="{{ url_for('main.index') }}"><img src="{{ Setting.get_setting('logo') or url_for('static', filename='dist/images/logo.png') }}" alt="Logo"></a>
         <nav>
             <ul class="nav-list">
-                {% if nav_settings %}
-                {% for nav_setting in nav_settings %}
+                {% if Setting.get_setting('navigation') and (json.loads(Setting.get_setting('navigation'))).get('navigations') %}
+                {% for nav_setting in (json.loads(Setting.get_setting('navigation'))).get('navigations') %}
                     <li name="{{ nav_setting['primary'].keys()[0] }}" class="">
                         <a href="{{ nav_setting['primary'].values()[0] or 'javascript:void(0)' }}">
                             {{ nav_setting['primary'].keys()[0] }}

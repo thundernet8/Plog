@@ -1,0 +1,22 @@
+{% macro render_author_articles(articles, author) %}
+{% if articles %}
+    <div class="latest-articles">
+        <h3>最新文章<i></i></h3>
+        {%- for article in articles %}
+        <article class="clearfix">
+            <a class="thumb-wrap pull-left hover-scale" href="{{ article.get_permalink() }}" target="_blank">
+                <img class="mod-thumb" src="{{ article.get_thumb() }}" />
+            </a>
+            <div class="desc">
+                <a class="title transition" href="{{ article.get_permalink() }}" target="_blank">
+                    {{- article.title -}}
+                </a>
+            </div>
+        </article>
+        {%- endfor %}
+        <div class="more-article">
+            <a href="{{ author.get_homepage() }}" target="_blank">更多 ></a>
+        </div>
+    </div>
+{% endif %}
+{% endmacro %}

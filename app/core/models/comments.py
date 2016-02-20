@@ -11,6 +11,7 @@ from app import mongo
 from .mongo_counter import get_next_sequence
 from .settings import Setting
 from .helpers.pagination import Pagination
+from .helpers.redis_cache_decorator import redis_cached
 
 
 class Comment(object):
@@ -194,10 +195,10 @@ class Comment(object):
     # 评论集合
     ##
     @staticmethod
-    def get_comments(approved=True, offset=0, limit=20, order_by='create_at', order=flask_pymongo.DESCENDING):
+    def get_comments(filters, offset=0, limit=20, order_by='create_at', order=flask_pymongo.DESCENDING):
         """
         获取评论
-        :param approved: 评论状态
+        :param filters: 过滤器 //post_id/user_id/parent/approved
         :param offset: 偏移量
         :param limit: 最多返回的结果数量
         :param order_by: 排序依据
@@ -205,7 +206,7 @@ class Comment(object):
         :return: 评论对象列表 or None
         """
         try:
-            results = mongo.db.comments.find({'post_id': post_id, 'approved': int(approved)}, skip=offset,
+            results = mongo.db.comments.find(filters, skip=offset,
                                              limit=limit).sort({order_by: order})
             if results:
                 comments = []
@@ -216,6 +217,24 @@ class Comment(object):
             return None
         except:
             return None
+
+    @staticmethod
+    @redis_cached(timeout=300, key_prefix='method-comments_count')
+    def get_comments_count(filters):
+        """
+        获取评论数量
+        :param filters: 过滤器
+        :return: 评论数量
+        """
+        if not isinstance(filters, dict):
+            return 0
+        if not filters.get('approved'):
+            filters['approved'] = 1  # 默认只选择已审核评论
+        try:
+            count = mongo.db.comments.count(filters)
+            return count
+        except:
+            return 0
 
     @staticmethod
     def get_post_comments(post_id, approved=True, offset=0, limit=20, order_by='create_at', order=flask_pymongo.DESCENDING):

@@ -1,4 +1,43 @@
 <div class="wrap-left pull-left sidebar sidebar-left" id="sidebar">
+    <!-- 作者信息 -->
+    <div class="widget widget-author">
+        <div class="author">
+            <a href="{{ author.get_homepage() }}" target="_blank">
+                <img class="avatar" src="{{ author.get_avatar(60) }}" />
+            </a>
+            <div class="meta">
+                <a href="{{ author.get_homepage() }}" target="_blank">
+                    <span class="name">{{ author.nickname }}</span>
+                </a>
+                <span class="badge">
+                    {{- author.get_role().description -}}
+                </span>
+                <div class="bio">
+                    {% if author.bio %}
+                    {{- author.bio -}}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="author-stat">
+                <div class="inner pull-left">
+                    <div class="article-total">
+                        <span>{{ author.get_user_posts(count=True) }}</span>篇
+                    </div>文章总数
+                </div>
+                <div class="inner pull-left">
+                    <div class="comment-total">
+                        <span>{{ author.get_user_comments(count=True) }}</span>条
+                    </div>评论总数
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!-- 作者近期文章 -->
+        {% import 'macros/author_latest_articles.html' as author_articles_render %}
+        {{ author_articles_render.render_author_articles(author.get_user_posts(limit=5), author) }}
+        <!-- End 作者近期文章 -->
+    </div>
+    <!-- End 作者信息 -->
     <!-- Ad -->
     <div class="widget widget-gg">
         <div class="widget-body">

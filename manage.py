@@ -3,7 +3,9 @@
 
 import os
 from datetime import datetime
+import json
 
+from flask import Markup
 from flask.ext.script import Manager
 from flask.ext.script import Shell
 
@@ -49,6 +51,9 @@ app = create_app(os.getenv('PLOG_CONFIG') or 'default')
 app.jinja_env.globals['Setting'] = Setting
 app.jinja_env.globals['User'] = User
 app.jinja_env.globals['datetime'] = datetime
+app.jinja_env.globals['json'] = json
+app.jinja_env.globals['str'] = str
+app.jinja_env.globals['Markup'] = Markup
 
 manager = Manager(app)
 

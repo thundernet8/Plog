@@ -9,3 +9,4 @@ var common = require('./utils/common');
 
 var siteUrl = window.location.protocol + '//' + window.location.host;
 
+window.Plog = 'Plog'; //暴露全局变量/方法

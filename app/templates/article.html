@@ -14,66 +14,78 @@
 {% include 'modules/common_header.html' %}
 {% endblock %}
 
-{% block body_class %}single single-article abs-header{% endblock %}
+{% block body_class %}single abs-header{% endblock %}
 
 {% block content %}
 <div class="container main col-2">
     {{ super() }}
     <div class="wrap-right pull-right">
-        <!-- Banner L1 -->
-        <div class="big-banner hover-scale">
-            <div class="back-img">
-                <img src="http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg" alt="#todo">
-            </div>
-            <a href="/#todo" target="_blank">
-                <div class="banner-content">
-                    <h1 class="banner-h1">微信提现收费罪在银行？抱歉，这锅弱势群体不背</h1>
-                </div>
-            </a>
+        <!-- 文章 -->
+        <div class="article-section" id="{{ 'article-section-'+str(post.post_id) }}" data-aid="{{ post.post_id }}" data-url="{{ post.get_permalink(external=True) }}">
+            <article class="single-article">
+                <section class="single-article-header">
+                    <h1>{{ post.title }}</h1>
+                    <div class="meta">
+                        <a href="{{ author.get_homepage() }}">
+                            <img class="avatar" src="{{ author.get_avatar(size=30) }}" />
+                            <span class="name">{{ author.nickname or author.name }}</span>
+                        </a>
+                        <span class="time">
+                            <abbr title="{{ post.create_at.strftime('%Y-%m-%d %H:%M:%S +0800') }}">{{- ' • ' + post.create_at.strftime('%Y/%m/%d %H:%M') -}}</abbr>
+                        </span>
+                    </div>
+                    <div class="head-thumb">
+                        {% if post.image %}
+                        <img src="post.image" />
+                        {% endif %}
+                        <img src="http://b.36krcnd.com/nil_class/6e456c38-eed9-411f-8b88-664280fe39b9/QQ20160218-5.png!heading" /> <!-- TODO clear -->
+                    </div>
+                </section>
+                <br>
+                <section class="article content">
+                    {{ Markup(post.html) }}
+                </section>
+                <!-- AD -->
+                <section class="gg">
+                <!-- TODO AD -->
+                </section>
+                <!-- 打赏 -->
+                <section class="donate">
+                    <div class="inner">
+                        <a class="pay" href="javascript:void(0)">赏
+                            <span class="qr-wrap">
+                                <img src="https://mobilecodec.alipay.com/show.htm?code=rex034926uxjbccnlfyygc3" alt="" /> <!-- TODO donate -->
+                                <b>支付宝 扫一扫</b>
+                            </span>
+                        </a>
+                    </div>
+                </section>
+                <!-- 标签 -->
+                <section class="tags">
+                    <span class="tag-tip">标签: </span>
+                    <!-- TODO article tags -->
+                    <span class="tag-item">
+                        <a href="#" target="_blank">标签1</a>
+                    </span>
+                    <span class="tag-item">
+                        <a href="#" target="_blank">标签2</a>
+                    </span>
+                </section>
+                <!-- 分享 -->
+                <section class="share">
+                    <!-- TODO share -->
+                </section>
+            </article>
+            <!-- 相关文章 -->
+            <section class="single-article-relate">
+                <!-- TODO relate -->
+            </section>
+            <!-- 评论 -->
+            <section class="single-article-comments" id="comments" data-aid="{{ post.post_id }}">
+                {% include 'modules/comments.html' %}
+            </section>
         </div>
-        <!-- Banner L2 -->
-        <div class="big-banner2 hover-scale pull-left">
-            <div class="back-img">
-                <img src="http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg" alt="#todo">
-            </div>
-            <a href="#todo" target="_blank">
-                <div class="banner-content">
-                    <h2 class="banner-h2">微信提现收费罪在银行</h2>
-                </div>
-            </a>
-        </div>
-        <div class="big-banner2 hover-scale pull-right">
-            <div class="back-img">
-                <img src="http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg" alt="#todo">
-            </div>
-            <a href="#todo" target="_blank">
-                <div class="banner-content">
-                    <h2 class="banner-h2">这次弱势群体有话说</h2>
-                </div>
-            </a>
-        </div>
-        <!-- 文章列表 -->
-        <section class="article-list index-article-list">
-            {% import 'macros/index_article.html' as article_render %}
-            {% for post in posts %}
-                {{ article_render.render_article_item(post) }}
-            {% endfor %}
-        </section>
-        <!-- End 文章列表 -->
-        <!-- 分页 -->
-        <div class="pagination clearfix">
-            {% if pagenation.has_prev %}
-            <a href="{{ url_for('main.index_paged', page=pagenation.prev_num) }}" class="prev transition">上一页</a>
-            {% else %}
-            <a href="javascript:void(0)" class="prev disabled">上一页</a>
-            {% endif %}
-            {% if pagenation.has_next %}
-            <a href="{{ url_for('main.index_paged', page=pagenation.next_num) }}" class="next transition">下一页</a>
-            {% else %}
-            <a href="javascript:void(0)" class="next disabled">下一页</a>
-            {% endif %}
-        </div>
-        <!-- End 分页 -->
+        <!-- End 文章 -->
     </div>
     <!-- Sidebar -->
     {% include 'modules/article_sidebar.html' %}

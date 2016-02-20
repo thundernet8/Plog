@@ -2,9 +2,11 @@
 
 import time
 from datetime import datetime
+from random import randint
 
 import flask_pymongo
 from flask import abort
+from flask import url_for
 from flask.ext.login import current_user
 
 from app import mongo
@@ -13,6 +15,7 @@ from .mongo_counter import get_next_sequence
 from .helpers.pagination import Pagination
 from .helpers.slug_generator import get_slug
 from .helpers.excerpt_generator import get_excerpt
+from .helpers.redis_cache_decorator import redis_cached
 
 
 class Post(object):
@@ -70,12 +73,12 @@ class Post(object):
         self.slug = kwargs.get('slug', None)
         self.markdown = kwargs.get('markdown', None)
         self.html = kwargs.get('html', None)
-        self.excerpt = kwargs.get('excerpt', get_excerpt(self.html.encode('utf-8'),
+        self.excerpt = kwargs.get('excerpt', get_excerpt(self.html,
                                                          count=Setting.get_setting('excerpt_length', 120), wrapper=u''))
         self.image = kwargs.get('image', None)
         self.featured = kwargs.get('featured', False)
         self.type = kwargs.get('type', 'post')
-        self.status = kwargs.get('status', None)
+        self.status = kwargs.get('status', None)  # trash/draft/pending/published
         self.meta_title = kwargs.get('meta_title', None)
         self.meta_description = kwargs.get('meta_description', None)
         self.author_id = kwargs.get('author_id', 0)
@@ -305,8 +308,9 @@ class Post(object):
         :param order: 升/降序
         :return: 文章对象列表 or None
         """
+        filters['type'] = 'post'
         try:
-            results = mongo.db.posts.find(filters, skip=offset, limit=limit).sort({order_by: order})
+            results = mongo.db.posts.find(filters, skip=offset, limit=limit).sort([(order_by, order)])
             if results:
                 posts = []
                 for result in results:
@@ -314,8 +318,23 @@ class Post(object):
                     posts.append(post)
                 return posts
             return None
-        except:
+        except Exception, e:
+            print(e)
             return None
+
+    @staticmethod
+    @redis_cached(timeout=300, key_prefix='method-posts_count')
+    def get_posts_count(filters):
+        """
+        统计文章数量
+        :param filters: 过滤器
+        :return: 文章数量
+        """
+        try:
+            count = mongo.db.posts.count(filters)
+            return count
+        except:
+            return 0
 
     @staticmethod
     def get_paged_posts(posts_per_page, page=1, filters=None, order_by='publish_at', order=flask_pymongo.DESCENDING):
@@ -328,13 +347,14 @@ class Post(object):
         :param order: 升/降序
         :return: 文章数组 or None
         """
+        filters['type'] = 'post'
         if page < 1:
             return None
         if not posts_per_page:
             posts_per_page = Setting.get_setting('posts_per_page', default=10)
         try:
             results = mongo.db.posts.find(filters, skip=posts_per_page*(page-1), limit=posts_per_page)\
-                .sort({order_by: order})
+                .sort([(order_by, order)])
             posts = []
             for result in results:
                 post = Post(**dict(result))
@@ -342,6 +362,38 @@ class Post(object):
             return posts
         except:
             return None
+
+    ##
+    # 辅助
+    #
+    @staticmethod
+    def get_random_thumb(start=1, end=40):
+        """
+        获取随机缩略图
+        :param start: 起始图像 id
+        :param end: 结束图像 id
+        :return: 图像链接
+        """
+        id = randint(start, end)
+        return url_for('static', filename='dist/images/thumbs/'+str(id)+'.jpg')
+
+    def get_thumb(self, use_rand=True):
+        """
+        获取文章的特色图
+        :param use_rand: 当无特色图时,是否采用随机缩略图
+        :return: 缩略图或None
+        """
+        if not self.image and not use_rand:
+            return None
+        return self.image or Post.get_random_thumb()
+
+    def get_permalink(self, external=False):
+        """
+        获取文章的固定链接
+        :param external 是否显示完整链接
+        :return: 文章固定链接
+        """
+        return url_for('main.article_detail', post_id=self.post_id, _external=external)
 
 
 class Posts(object):

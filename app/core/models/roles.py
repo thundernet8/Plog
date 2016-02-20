@@ -21,10 +21,12 @@ class Role(object):
         :return: 角色实例
         """
         result = mongo.db.roles.find_one(kwargs)
-        if result and result.count():
+        if result:
             self.role_id = result.get('role_id', 5)
             self.name = result.get('name', 'Reader')
             self.description = result.get('description', u'读者')
+        else:
+            self.role_id = 0
 
     @staticmethod
     def insert_default_roles():

@@ -7,6 +7,7 @@ import hashlib
 
 import flask_pymongo
 from flask import current_app
+from flask import url_for
 from flask.ext.login import UserMixin
 from flask.ext.login import AnonymousUserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -16,6 +17,8 @@ from werkzeug.security import check_password_hash
 from app import mongo
 from app import login_manager
 from .roles import Role
+from .posts import Post
+from .comments import Comment
 from .mongo_counter import get_next_sequence
 
 
@@ -68,7 +71,7 @@ class User(UserMixin):
         if user:
             self.user_id = user.get('user_id')
             self.name = user.get('name')
-            self.nickname = user.get('nickname')
+            self.nickname = user.get('nickname') or self.name
             self.email = user.get('email')
             self.password = user.get('password')
             self.role_id = user.get('role_id') or 5
@@ -288,6 +291,46 @@ class User(UserMixin):
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(url=url, hash=hash, size=size, default=default,
                                                                      rating=rating)
 
+    def get_role(self):
+        """
+        获取用户的 Role 模型
+        :return: Role 模型
+        """
+        role = Role(role_id=self.role_id)
+        if role and role.role_id:
+            return role
+        return None
+
+    def get_user_posts(self, count=False, limit=10, offset=0):
+        """
+        获取用户的文章或者文章数量
+        :param count: 是否返回文章数量
+        :param limit: 最多返回文章数
+        :param offset: 偏移量
+        :return: 文章或者文章数量
+        """
+        filters = dict(author_id=self.user_id, status='published')
+        if count:
+            user_posts_count = Post.get_posts_count(filters)
+            return user_posts_count
+        posts = Post.get_posts(filters, limit=limit, offset=offset)
+        return posts
+
+    def get_user_comments(self, count=False, limit=20, offset=0):
+        """
+        获取用户的评论或者评论数量
+        :param count: 是否返回评论数量
+        :param limit: 最多返回评论数
+        :param offset: 偏移量
+        :return: 评论或者评论数量
+        """
+        filters = dict(user_id=self.user_id, approved=1)
+        if count:
+            user_comments_count = Comment.get_comments_count(filters)
+            return user_comments_count
+        comments = Comment.get_comments(filters, offset=offset, limit=limit, order_by='comment_id')
+        return comments
+
     def update_user_login_time(self):
         """
         更新用户登录时间
@@ -480,6 +523,17 @@ class User(UserMixin):
             return False
         except:
             return False
+
+    ##
+    # 辅助
+    #
+    def get_homepage(self, external=False):
+        """
+        获取文章的固定链接
+        :param external 是否显示完整链接
+        :return: 文章固定链接
+        """
+        return url_for('main.user_homepage', user_id=self.user_id, _external=external)
 
     def __repr__(self):
         return '<User instance: %r>' % self.name

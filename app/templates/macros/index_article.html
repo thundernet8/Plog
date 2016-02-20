@@ -2,7 +2,8 @@
     <div class="article mod-article" data-aid="{{ post.post_id }}">
         <div class="mod-thumb hover-scale">
             <a class="transition" href="{{ url_for('main.article_detail', post_id=post.post_id) }}" target="_blank">
-                <img class="lazy" data-original="{{ post.image }}" src="{{ url_for('static', filename='dist/images/default-thumb.png') }}" alt="{{ post.title }}">
+                <!--img class="lazy" data-original="{{ post.image }}" src="{{ url_for('static', filename='dist/images/default-thumb.png') }}" alt="{{ post.title }}"-->
+                <img src="{{ post.get_thumb() }}" /> <!-- TODO recover -->
             </a>
         </div>
         <div class="mod-word">

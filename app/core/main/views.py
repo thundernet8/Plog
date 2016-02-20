@@ -9,12 +9,16 @@ from flask import request
 from flask import render_template
 from flask import session
 from flask import redirect
+from flask import abort
 from flask.ext.login import current_user
 
 from . import main
 from app.core.models.helpers.redis_cache_decorator import redis_cached
 from app.core.models.settings import Setting
+from app.core.models.posts import Post
 from app.core.models.posts import Posts
+from app.core.models.users import User
+from .forms import CommentForm
 
 
 @main.route('/favicon.ico')
@@ -50,36 +54,30 @@ def search():
 @main.route('/')
 @redis_cached(timeout=30, key_prefix='home_html')  # TODO 缓存时间
 def index():
-    settings = Setting.get_setting('navigation')
-    if settings:
-        settings = (json.loads(settings)).get('navigations')
     pagenation = Posts(filters={'status': 'published'}).pagination()
     posts = pagenation.items if pagenation else []
-    return render_template('home.html', nav_settings=settings, posts=posts, pagenation=pagenation)
+    return render_template('home.html', posts=posts, pagenation=pagenation)
 
 
 # 首页(带分页)
 @main.route('/page/<int:page>')
 @redis_cached(timeout=30, key_prefix='home_html_%s')
 def index_paged(page):
-    settings = Setting.get_setting('navigation')
-    if settings:
-        settings = (json.loads(settings)).get('navigations')
     pagenation = Posts(filters={'status': 'published'}).pagination(page=page, posts_per_page=2)
     posts = pagenation.items if pagenation else []
-    return render_template('home.html', nav_settings=settings, posts=posts, pagenation=pagenation)
+    return render_template('home.html', posts=posts, pagenation=pagenation)
 
 
 # 文章详情页
 @main.route('/article/<int:post_id>.html')
 @redis_cached(timeout=30, key_prefix='article_%s')
 def article_detail(post_id):
-    settings = Setting.get_setting('navigation')
-    if settings:
-        settings = (json.loads(settings)).get('navigations')
-    pagenation = Posts(filters={'status': 'published'}).pagination(page=1, posts_per_page=2)
-    posts = pagenation.items if pagenation else []
-    return render_template('article.html', nav_settings=settings, posts=posts, pagenation=pagenation)
+    post = Post.get_post(post_id)
+    if not post or not post.post_id:
+        abort(404)
+    author = User(user_id=post.author_id)
+    comment_form = CommentForm()
+    return render_template('article.html', post=post, author=author, comment_form=comment_form)
 
 
 # 用户/作者主页
@@ -94,6 +92,12 @@ def user_homepage(user_id):
 @redis_cached(timeout=600, key_prefix='rss')
 def rss():
     return 'rss'  # TODO rss
+
+
+# 404
+@main.errorhandler(404)
+def main_404(e):
+    return render_template('error_pages/404.html'), 404
 
 
 

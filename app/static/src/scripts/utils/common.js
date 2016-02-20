@@ -1,12 +1,20 @@
-"use strict"
+"use strict";
 var $ = require('jquery');
 
 $(function () {
+    //跳转登录页添加 redirect 链接
    $('a.login-link').on('click', function (e) {
         e.preventDefault();
         var loginLink = $(this).attr('href');
         loginLink = loginLink + '?redirect=' + encodeURIComponent(window.location.pathname);
         window.location.href = loginLink;
+    });
+
+    //输入框等聚焦提示
+    $('[data-focus]').on('focus', function () {
+        $($(this).data('focus')).slideDown();
+    }).on('blur', function () {
+        $($(this).data('focus')).slideUp();
     });
 });
 
