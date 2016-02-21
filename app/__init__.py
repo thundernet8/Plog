@@ -20,6 +20,9 @@ mail = Mail()
 redis = FlaskRedis()
 compress = Compress()
 
+from core.models.helpers.redis_cache_decorator import JinjaCache
+jinja_cache_ext = JinjaCache()
+
 
 def create_app(config_name):
     """
@@ -37,6 +40,7 @@ def create_app(config_name):
     pagedown.init_app(app)
     mail.init_app(app)
     redis.init_app(app)
+    jinja_cache_ext.init_app(app)
 
     # 引入蓝本
     from .core.auth import auth as auth_blueprint

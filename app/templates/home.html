@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{ Setting.get_setting('blog_name', 'Plog') }}
+{{- Setting.get_setting('blog_name', 'Plog') -}}{{- ' - ' -}}{{- Setting.get_setting('blog_subtitle', 'Another Plog Site') -}}
 {% endblock %}
 
 {% block css %}
@@ -62,6 +62,7 @@
         <!-- End 文章列表 -->
         <!-- 分页 -->
         <div class="pagination clearfix">
+        {% if pagenation.has_prev or pagenation.has_next %}
             {% if pagenation.has_prev %}
             <a href="{{ url_for('main.index_paged', page=pagenation.prev_num) }}" class="prev transition">上一页</a>
             {% else %}
@@ -72,6 +73,7 @@
             {% else %}
             <a href="javascript:void(0)" class="next disabled">下一页</a>
             {% endif %}
+        {% endif %}
         </div>
         <!-- End 分页 -->
     </div>
@@ -80,7 +82,6 @@
     <!-- End Sidebar -->
 </div>
 {% endblock %}
-
 {% block footer %}
 {% include 'modules/common_footer.html' %}
 {% endblock %}

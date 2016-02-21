@@ -50,6 +50,7 @@ app = create_app(os.getenv('PLOG_CONFIG') or 'default')
 # jinja_env
 app.jinja_env.globals['Setting'] = Setting
 app.jinja_env.globals['User'] = User
+app.jinja_env.globals['Post'] = Post
 app.jinja_env.globals['datetime'] = datetime
 app.jinja_env.globals['json'] = json
 app.jinja_env.globals['str'] = str

@@ -11,11 +11,13 @@ from flask.ext.login import current_user
 
 from app import mongo
 from .settings import Setting
+#from .comments import Comment
+import comments
 from .mongo_counter import get_next_sequence
 from .helpers.pagination import Pagination
 from .helpers.slug_generator import get_slug
 from .helpers.excerpt_generator import get_excerpt
-from .helpers.redis_cache_decorator import redis_cached
+from .helpers.redis_cache_decorator import redis_memoize
 
 
 class Post(object):
@@ -237,6 +239,8 @@ class Post(object):
         :param kwargs: 文章字段键值对
         :return: 成功返回文章 id,失败返回 False
         """
+        if not current_user.is_logged_in:
+            return False
         sets = dict(kwargs)
         sets.update({
             'update_at': int(time.time())
@@ -256,6 +260,34 @@ class Post(object):
             return False
         except:
             return False
+
+    @staticmethod
+    def update_post_comment_count(post_id):
+        """
+        更新文章评论数量
+        :param post_id: 文章 id
+        :return: 更新成功返回文章 id,失败返回 False
+        """
+        count = Post.get_post_comment_count(post_id, approved=1)
+        return Post.update_post(post_id, comment_count=count)
+
+    @staticmethod
+    @redis_memoize(timeout=60)
+    def get_post_comment_count(post_id, approved=1):
+        """
+        获取文章评论数
+        :param post_id: 文章 id
+        :param approved: 评论审核状态, 0表示统计未通过评论,1表示统计已审核评论,all表示统计所有评论
+        :return: 文章的评论数
+        """
+        filters = dict(post_id=post_id)
+        if approved == 0 or approved == 1:
+            filters['approved'] = approved
+        try:
+            count = mongo.db.comments.count(filters)
+            return count
+        except:
+            return 0
 
     @staticmethod
     def trash_post(post_id):
@@ -293,7 +325,6 @@ class Post(object):
         except:
             return False
 
-
     ##
     # 文章集合
     #
@@ -323,7 +354,27 @@ class Post(object):
             return None
 
     @staticmethod
-    @redis_cached(timeout=300, key_prefix='method-posts_count')
+    def get_top_viewed_posts(limit=5):
+        """
+        获取热门文章(基于浏览数排序)
+        :param limit: 最多返回的文章数量
+        :return: 文章对象列表
+        """
+        posts = Post.get_posts(dict(status='published'), limit=limit, order_by='view_count')
+        return posts
+
+    @staticmethod
+    def get_top_discussed_posts(limit=5):
+        """
+        获取热门文章(基于评论数排序)
+        :param limit: 最多返回的文章数量
+        :return: 文章对象列表
+        """
+        posts = Post.get_posts(dict(status='published'), limit=limit, order_by='comment_count')
+        return posts
+
+    @staticmethod
+    @redis_memoize(timeout=60)
     def get_posts_count(filters):
         """
         统计文章数量

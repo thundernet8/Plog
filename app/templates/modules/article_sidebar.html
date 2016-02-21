@@ -16,6 +16,7 @@
                     {% if author.bio %}
                     {{- author.bio -}}
                     {% endif %}
+                    少壮不努力，老大做编辑<!-- TODO clear -->
                 </div>
             </div>
             <div class="author-stat">
@@ -33,8 +34,8 @@
             </div>
         </div>
         <!-- 作者近期文章 -->
-        {% import 'macros/author_latest_articles.html' as author_articles_render %}
-        {{ author_articles_render.render_author_articles(author.get_user_posts(limit=5), author) }}
+        {% import 'macros/widget_articles.html' as widget_articles_render %}
+        {{ widget_articles_render.render_author_articles(author.get_user_posts(limit=5), author) }}
         <!-- End 作者近期文章 -->
     </div>
     <!-- End 作者信息 -->
@@ -47,4 +48,9 @@
         </div>
     </div>
     <!-- End Ad -->
+    <!-- 热门文章 -->
+    <div class="widget widget-hot-articles">
+        {{ widget_articles_render.render_hot_articles(Post.get_top_viewed_posts(5)) }}
+    </div>
+    <!-- End 热门文章 -->
 </div>

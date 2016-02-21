@@ -4,7 +4,6 @@
   margin-right: -360px;
   width: 360px;
   //background-color: #fff6de;
-  height: 1000px;
 
   .widget{
     margin-bottom: 20px;
@@ -12,6 +11,9 @@
   }
 
   .widget-gg{
+    border-radius: 2px;
+    overflow: hidden;
+
     img{
       width: 100%;
     }
@@ -64,9 +66,9 @@
           margin-top: 5px;
           color: #666666;
           max-height: 42px;
-          -webkit-text-overflow: ellipsis;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          //-webkit-text-overflow: ellipsis;
+          //text-overflow: ellipsis;
+          //white-space: nowrap;
           overflow: hidden;
         }
       }
@@ -87,6 +89,10 @@
           .article-total, .comment-total{
             font-size: 28px;
             color: #333333;
+
+            &>span{
+              margin-right: 5px;
+            }
           }
         }
       }
@@ -94,54 +100,61 @@
     }
 
     .latest-articles{
-      padding: 20px 25px;
-      border-radius: 2px;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-      background-color: #FFFFFF;
-
-      h3{
-        font-size: 13px;
-        font-weight: 600;
-
-        i{
-          position: relative;
-          margin-left: 62px;
-          bottom: 10px;
-          border-bottom: 1px solid #efefef;
-          display: block;
-          width: 100%;
-        }
-      }
-
-      article{
-        margin-top: 20px;
-
-        .thumb-wrap{
-          margin-right: 10px;
-          width: 80px;
-          height: 60px;
-          overflow: hidden;
-        }
-
-        .desc{
-          overflow: hidden;
-
-          .title{
-            display: inline-block;
-            max-height: 60px;
-            line-height: 20px;
-            font-weight: 300;
-            overflow: hidden;
-          }
-        }
-      }
 
       .more-article{
         display: block;
         padding: 10px 0;
         text-align: right;
         font-size: 14px;
-        color: @hover_color;
+
+        a{
+          color: @hover_color;
+        }
+      }
+    }
+  }
+
+  .latest-articles, .widget-hot-articles{
+    padding: 20px 25px;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+    background-color: #FFFFFF;
+
+    h3{
+      font-size: 13px;
+      font-weight: 600;
+      overflow: hidden;
+
+      i{
+        position: relative;
+        margin-left: 62px;
+        bottom: 10px;
+        border-bottom: 1px solid #efefef;
+        display: block;
+        width: 100%;
+      }
+    }
+
+    article{
+      margin-top: 20px;
+
+      .thumb-wrap{
+        margin-right: 10px;
+        width: 80px;
+        height: 60px;
+        overflow: hidden;
+      }
+
+      .desc{
+        overflow: hidden;
+
+        .title{
+          display: inline-block;
+          max-height: 60px;
+          line-height: 20px;
+          font-weight: 300;
+          overflow: hidden;
+        }
       }
     }
   }
@@ -151,6 +164,17 @@
 
     .widget{
       background-color: #FFFFFF;
+    }
+  }
+}
+
+//首页 sidebar 特殊样式
+body{
+  &.home{
+    #sidebar{
+      .widget{
+        background-color: #f5f6f8;
+      }
     }
   }
 }

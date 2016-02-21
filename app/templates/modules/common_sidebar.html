@@ -8,4 +8,10 @@
         </div>
     </div>
     <!-- End Ad -->
+    <!-- 热门文章 -->
+    {% import 'macros/widget_articles.html' as widget_articles_render %}
+    <div class="widget widget-hot-articles">
+        {{ widget_articles_render.render_hot_articles(Post.get_top_viewed_posts(5)) }}
+    </div>
+    <!-- End 热门文章 -->
 </div>

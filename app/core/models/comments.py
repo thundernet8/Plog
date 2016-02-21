@@ -4,14 +4,16 @@ import time
 from datetime import datetime
 
 from flask import abort
+from flask import request
 from flask.ext.login import current_user
 import flask_pymongo
 
 from app import mongo
+import posts
 from .mongo_counter import get_next_sequence
 from .settings import Setting
 from .helpers.pagination import Pagination
-from .helpers.redis_cache_decorator import redis_cached
+from .helpers.redis_cache_decorator import redis_memoize
 
 
 class Comment(object):
@@ -56,8 +58,8 @@ class Comment(object):
         self.comment_id = kwargs.get('comment_id')
         self.post_id = kwargs.get('post_id')
         self.user_id = kwargs.get('user_id')
-        self.ip = kwargs.get('ip')
-        self.agent = kwargs.get('agent')
+        self.ip = kwargs.get('ip', '')
+        self.agent = kwargs.get('agent', '')
         self.create_at = datetime.fromtimestamp(int(kwargs.get('create_at', 0)))
         self.content = kwargs.get('content')
         self.approved = kwargs.get('approved', 0)
@@ -106,6 +108,8 @@ class Comment(object):
                 'approved': 1
             })
             if result and result.modified_count > 0:
+                comment = Comment.get_comment(comment_id)
+                posts.Post.update_post_comment_count(comment.comment_id)
                 return True
             return False
         except:
@@ -125,6 +129,8 @@ class Comment(object):
                 'approved': 0
             })
             if result and result.modified_count > 0:
+                comment = Comment.get_comment(comment_id)
+                posts.Post.update_post_comment_count(comment.comment_id)
                 return True
             return False
         except:
@@ -137,15 +143,23 @@ class Comment(object):
         :param kwargs: 评论字段键值对
         :return: 成功返回评论 id,失败返回 False
         """
+        if not current_user.is_logged_in:  # 禁止匿名用户评论
+            return False
         sets = dict(kwargs)
         sets['user_id'] = current_user.user_id
         sets['create_at'] = int(time.time())
         sets['approved'] = 1
         sets['mail_notify'] = 1
         sets['comment_id'] = get_next_sequence('comment_id')
+        if not sets.get('ua'):
+            sets['ua'] = request.user_agent.string
+        if not sets.get('ip'):
+            sets['ip'] = request.remote_addr
         try:
             result = mongo.db.comments.insert_one(sets)
             if result and result.inserted_id:
+                if sets.get('post_id'):
+                    posts.Post.update_post_comment_count(sets.get('post_id'))
                 return sets['comment_id']
             return False
         except:
@@ -168,7 +182,9 @@ class Comment(object):
             }, {
                 '$set': sets
             })
-            if result and result.modified_count >0:
+            if result and result.modified_count > 0:
+                comment = Comment.get_comment(comment_id)
+                posts.Post.update_post_comment_count(comment.comment_id)
                 return True
             return False
         except:
@@ -186,6 +202,8 @@ class Comment(object):
                 'comment_id': comment_id
             })
             if result and result.deleted_count > 0:
+                comment = Comment.get_comment(comment_id)
+                posts.Post.update_post_comment_count(comment.comment_id)
                 return True
             return False
         except:
@@ -219,7 +237,7 @@ class Comment(object):
             return None
 
     @staticmethod
-    @redis_cached(timeout=300, key_prefix='method-comments_count')
+    @redis_memoize(timeout=60)
     def get_comments_count(filters):
         """
         获取评论数量

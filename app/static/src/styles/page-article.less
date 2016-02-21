@@ -8,11 +8,7 @@
 //vars
 @hover_color: #3ca5f6;
 @hover_dark_blue_color: #3798de;
-
-//home page
-body{
-  //background-color: #e9eaec;
-}
+@body_bg_color: #f5f6f8;
 
 a, a:link{
   color: #333333;
@@ -28,9 +24,10 @@ a:focus{
   outline: none;
 }
 
+//single article
 body{
   &.single{
-    background-color: #e9eaec;
+    background-color: @body_bg_color;
 
     .container{
       &.col-2{
@@ -39,21 +36,8 @@ body{
 
         .wrap-right{
           margin-left: 25px;
-          background-color: #FFFFFF;
         }
       }
-    }
-  }
-}
-
-.container{
-  padding: 0;
-
-  &.col-2{
-    padding-right: 360px;
-
-    .wrap-right{
-      margin-left: 25px;
     }
   }
 }
@@ -252,6 +236,7 @@ body{
 
 .single-article-relate{
   margin-top: 15px;
+  border-radius: 2px;
 }
 
 .single-article-comments{
