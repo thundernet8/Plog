@@ -84,7 +84,7 @@ $(function () {
              if(data.success && data.success==1){
                   submitBtn.text('登录成功');
                   setTimeout(function () {
-                      var href = common.getUrlPara('redirect') ? siteUrl + decodeURIComponent(common.getUrlPara('next')) : siteUrl;
+                      var href = common.getUrlPara('redirect') ? (decodeURIComponent(common.getUrlPara('redirect')).indexOf("http") == 0 ? decodeURIComponent(common.getUrlPara('redirect')) : siteUrl + '/' + decodeURIComponent(common.getUrlPara('redirect'))) : siteUrl;
                       //console.log(href);
                       window.location.href = href;
                   }, 1500);

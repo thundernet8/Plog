@@ -268,7 +268,23 @@ class User(UserMixin):
         判断用户是否管理员(网站拥有者也是管理员)
         :return: 是则返回 True,否则返回 False
         """
-        return self.role_id == 1 or self.role_id == 2
+        return (self.role_id == 1 or self.role_id == 2) and self.status == 'active'
+
+    @property
+    def is_editor(self):
+        """
+        判断用户是否编辑(广义的,更高权限的也符合)
+        :return: 是则返回 True,否则返回 False
+        """
+        return (self.role_id in [1, 2, 3]) and self.status == 'active'
+
+    @property
+    def is_author(self):
+        """
+        判断用户是否作者(广义的,更高权限的也符合)
+        :return: 是则返回 True,否则返回 False
+        """
+        return (self.role_id in [1, 2, 3, 4]) and self.status == 'active'
 
     @property
     def is_logged_in(self):

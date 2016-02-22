@@ -6,6 +6,7 @@ from datetime import datetime
 import json
 
 from flask import Markup
+from flask import render_template
 from flask.ext.script import Manager
 from flask.ext.script import Shell
 
@@ -46,6 +47,17 @@ if os.path.exists('.env'):
 
 # 创建App
 app = create_app(os.getenv('PLOG_CONFIG') or 'default')
+
+
+# 错误处理
+@app.errorhandler(404)
+def app_404(e):
+    return render_template('error_pages/404.html')
+
+
+@app.errorhandler(500)
+def app_500(e):
+    return render_template('error_pages/500.html')
 
 # jinja_env
 app.jinja_env.globals['Setting'] = Setting

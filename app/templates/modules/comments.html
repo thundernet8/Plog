@@ -15,7 +15,7 @@
     <div class="meta-wrap">
         {% if not current_user.is_logged_in %}
         <div class="meta pull-left">
-            <a class="login-to-reply" href="{{ url_for('auth.login') }}">登录</a>后参与讨论
+            <a class="login-to-reply bind-redirect" href="{{ url_for('auth.login') }}">登录</a>后参与讨论
         </div>
         {% endif %}
         {% if current_user.is_logged_in %}

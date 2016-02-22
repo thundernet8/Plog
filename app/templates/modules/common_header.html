@@ -7,7 +7,7 @@
                 {% for nav_setting in (json.loads(Setting.get_setting('navigation'))).get('navigations') %}
                     <li name="{{ nav_setting['primary'].keys()[0] }}" class="">
                         <a href="{{ nav_setting['primary'].values()[0] or 'javascript:void(0)' }}">
-                            {{ nav_setting['primary'].keys()[0] }}
+                            {{- nav_setting['primary'].keys()[0] -}}
                             {% if nav_setting.get('sub') %}
                             <!--i class="fa fa-angle-down"></i-->
                             <span class="glyphicon glyphicon-menu-down"></span>
@@ -17,7 +17,7 @@
                             <div class="pop-up">
                                 <div class="menu">
                                     {% for sub_item in nav_setting.get('sub') %}
-                                    <a href="{{ sub_item.keys()[0] }}" class="mobile-hide">{{ sub_item.values()[0] }}</a>
+                                    <a href="{{ sub_item.keys()[0] }}" class="mobile-hide">{{- sub_item.values()[0] -}}</a>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -41,12 +41,27 @@
                     </div>
                 </li>
                 {% if current_user.is_logged_in %}
-                <li class="">
-                    <a href="/me" class=""><i class="fa fa-user"></i>{{ current_user.nickname or current_user.name }} </a>
+                <li class="dropdown user-profile">
+                    <a href="javascript:void(0)" class="abc" data-toggle="dropdown">
+                        <img class="avatar" src="{{ current_user.get_avatar(30) }}">
+                        <span class="name">{{- current_user.nickname or current_user.name -}}</span>
+                        <span class="glyphicon glyphicon-menu-down"></span>
+                    </a>
+                    <ul class="dropdown-menu user-profile-menu list-unstyled">
+                        <li>
+                            <a href="{{ url_for('dashboard.new_post') }}"><span class="glyphicon glyphicon-edit"></span>发布文章</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('dashboard.my_profile') }}"><span class="glyphicon glyphicon-user"></span>个人资料</a>
+                        </li>
+                        <li class="last">
+                            <a href="{{ url_for('auth.logout') }}"><span class="glyphicon glyphicon-log-out"></span>登出</a>
+                        </li>
+                    </ul>
                 </li>
                 {% else %}
                 <li class="login-actions">
-                    <a href="{{ url_for('auth.login') }}" class="login-link"><span class="glyphicon glyphicon-user"></span>登录/注册</a>
+                    <a href="{{ url_for('auth.login') }}" class="login-link bind-redirect"><span class="glyphicon glyphicon-user"></span>登录/注册</a>
                 </li>
                 {% endif %}
             </ul>

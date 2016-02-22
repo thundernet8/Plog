@@ -4,6 +4,7 @@ from flask import render_template
 from flask import redirect
 from flask.ext.login import current_user
 from flask.ext.login import login_required
+from flask.ext.login import logout_user
 from flask import url_for
 from flask import request
 from flask import flash
@@ -30,6 +31,14 @@ def register():
     if current_user.is_logged_in:
         return redirect(url_for('main.index'))
     return render_template('auth/register.html')
+
+
+@auth.route('/logout.do')
+def logout():
+    """ 注销登录 """
+    if current_user.is_logged_in:
+        logout_user()
+    return redirect(request.args.get('redirect') or url_for('main.index'))
 
 
 @auth.route('/findPass.do', methods=['GET', 'POST'])

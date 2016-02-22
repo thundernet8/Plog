@@ -3,7 +3,7 @@ var $ = require('jquery');
 
 $(function () {
     //跳转登录页添加 redirect 链接
-   $('a.login-link').on('click', function (e) {
+   $('.bind-redirect').on('click', function (e) {
         e.preventDefault();
         var loginLink = $(this).attr('href');
         loginLink = loginLink + '?redirect=' + encodeURIComponent(window.location.pathname);
@@ -16,6 +16,14 @@ $(function () {
     }).on('blur', function () {
         $($(this).data('focus')).slideUp();
     });
+});
+
+//dropdown菜单
+$(function () {
+   $("a[data-toggle='dropdown']").on('click', function () {
+       var toggle = $(this).data('toggle');
+      $(this).closest('.'+toggle).toggleClass('open');
+   });
 });
 
 //获取 url 中的 get 参数

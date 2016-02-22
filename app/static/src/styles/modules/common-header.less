@@ -240,6 +240,94 @@ header.common-header{
           speak: none;
         }
       }
+
+      .user-profile{
+        border-left: 1px solid #FFFFFF;
+        border-right: 1px solid #FFFFFF;
+
+        &>a{
+          position: relative;
+          top: 1px;
+          margin: 0;
+        }
+
+        &.open{
+
+          border-left-color: #dddddd;
+          border-right-color: #dddddd;
+          z-index: 15;
+          color: #606161;
+
+          &>a{
+            border-bottom: 1px solid #FFFFFF;
+            z-index: 5;
+          }
+
+          .dropdown-menu{
+            width: 200px;
+            left: initial;
+            right: -1px;
+            margin-left: -1px;
+            border-radius: 0;
+            border-color: #dddddd;
+            z-index: 3;
+          }
+        }
+
+        .avatar{
+          margin-right: 5px;
+          width: 28px;
+          height: 28px;
+        }
+
+        .glyphicon-menu-down{
+          font-size: 8px;
+          color: #979898;
+        }
+
+        .dropdown-menu{
+          padding-top: 0;
+          padding-bottom: 0;
+
+          li{
+            position: relative;
+            margin: 0;
+            padding: 15px 20px 0;
+            line-height: 100%;
+            float: none;
+
+            &>a{
+              position: relative;
+              top: 1px;
+              height: 35px;
+              line-height: 20px;
+              display: block;
+              padding: 0 0 15px;
+              border-bottom: 1px solid #eeeeee;
+
+              &:hover{
+                background-color: transparent;
+              }
+
+              &>span{
+                display: inline-block;
+                margin-right: 8px;
+                color: inherit;
+              }
+            }
+
+            &.last{
+              background-color: #fafafa;
+              border-top: 1px solid #eeeeee;
+
+              &>a{
+                border-bottom: 0;
+              }
+            }
+          }
+        }
+
+      }
     }
   }
 }
