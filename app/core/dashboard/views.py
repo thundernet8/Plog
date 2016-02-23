@@ -45,19 +45,24 @@ def dashboard_home():
 
 
 # 文章
-@dashboard.route('/posts')
+@dashboard.route('/post')
 def posts():
     return redirect(url_for('dashboard.all_posts'))
 
 
-@dashboard.route('/posts/all')
+@dashboard.route('/post/all')
 def all_posts():
     return 'all posts'
 
 
-@dashboard.route('/posts/new')
+@dashboard.route('/post/new')
 def new_post():
     return 'add post'
+
+
+@dashboard.route('/post/editor/<int:post_id>')
+def edit_post():
+    return 'edit post'
 
 
 # 标签

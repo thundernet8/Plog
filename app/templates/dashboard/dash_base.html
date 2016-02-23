@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="shortcut icon" href="{{ url_for('static', filename='dist/images/favicon.ico') }}" type="image/x-icon">
     <!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
-    <link href="//cdn.bootcss.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-dashboard.css') }}">
     {% block css %}{% endblock %}
     <!--[if lte IE 7]>
@@ -27,7 +27,52 @@
     <div class="page-container">
         <!-- 边栏 -->
         <div class="sidebar-menu fixed">
-
+            <div class="sidebar-menu-inner ps-container">
+                <header class="logo-env">
+                    <div class="logo pull-left">
+                        <a href="{{ url_for('main.index') }}" class="logo-expanded"><span class="glyphicon glyphicon-home"></span>Plog</a>
+                        <a href="{{ url_for('main.index') }}" class="logo-collapsed"><span class="glyphicon glyphicon-home"></span></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </header>
+                <ul class="main-menu list-unstyled" id="main-menu">
+                    {% import 'macros/dash_sidemenu.html' as menu_class_render %}
+                    <li class="has-sub {{- menu_class_render.get_menu_class('dashboard.posts') -}}">
+                        <a href="javascript:void(0)"><span class="glyphicon glyphicon-file"></span>文章</a>
+                        <ul class="sub-menu">
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.all_posts', 'sub') -}}"><a href="{{ url_for('dashboard.all_posts') }}">所有文章</a> </li>
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.new_post', 'sub') -}}"><a href="{{ url_for('dashboard.new_post') }}">新文章</a> </li>
+                        </ul>
+                    </li>
+                    <li class="has-sub {{- menu_class_render.get_menu_class('dashboard.users') -}}">
+                        <a href="javascript:void(0)"><span class="glyphicon glyphicon-user"></span>用户</a>
+                        <ul class="sub-menu">
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.all_users', 'sub') -}}"><a href="{{ url_for('dashboard.all_users') }}">用户列表</a> </li>
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.new_user', 'sub') -}}"><a href="{{ url_for('dashboard.new_user') }}">添加用户</a> </li>
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.my_profile', 'sub') -}}"><a href="{{ url_for('dashboard.my_profile') }}">个人资料</a> </li>
+                        </ul>
+                    </li>
+                    <li class="">
+                        <a href="javascript:void(0)"><span class="glyphicon glyphicon-tags"></span>标签</a>
+                    </li>
+                    <li class="has-sub {{- menu_class_render.get_menu_class('dashboard.appearance') -}}">
+                        <a href="javascript:void(0)"><span class="glyphicon glyphicon-eye-open"></span>外观</a>
+                        <ul class="sub-menu">
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.navigations', 'sub') -}}"><a href="{{ url_for('dashboard.navigations') }}">顶部菜单</a> </li>
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.footer_navigations', 'sub') -}}"><a href="{{ url_for('dashboard.footer_navigations') }}">页脚导航</a> </li>
+                        </ul>
+                    </li>
+                    <li class="has-sub {{- menu_class_render.get_menu_class('dashboard.settings') -}}">
+                        <a href="javascript:void(0)"><span class="glyphicon glyphicon-cog"></span>设置</a>
+                        <ul class="sub-menu">
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.general_setting', 'sub') -}}"><a href="{{ url_for('dashboard.general_setting') }}">常规</a> </li>
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.writing_setting', 'sub') -}}"><a href="{{ url_for('dashboard.writing_setting') }}">写作</a> </li>
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.reading_setting', 'sub') -}}"><a href="{{ url_for('dashboard.reading_setting') }}">阅读</a> </li>
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.discussion_setting', 'sub') -}}"><a href="{{ url_for('dashboard.discussion_setting') }}">讨论</a> </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
         <!-- End 边栏 -->
         <!-- 内容区 -->
@@ -103,16 +148,27 @@
             </nav>
             <!-- 页面标题区 -->
             {% block page_headtitle %}{% endblock %} <!-- TODO 根据页面确定是否需要 -->
-            
+            <!-- 内容 -->
+            {% block page_content %}{% endblock %}
+            <!-- 页脚 -->
+            <footer class="main-footer sticky">
+                <div class="inner">
+                    <div class="footer-text">
+                        &copy;&nbsp;2016&nbsp;<strong>{{ Setting.get_setting('blog_name', 'Plog') }}</strong>&nbsp;Powered by Plog.
+                    </div>
+                    <div class="go-top">
+                        <a href="javascript:void(0)" rel="go-top"><span class="glyphicon glyphicon-menu-up"></span></a>
+                    </div>
+                </div>
+            </footer>
         </div>
-        <!-- End 内容区 -->
+        <!-- End 主体 -->
     </div>
 
 
 <!--script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script-->
 <script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/libs/jquery/2.2.0/jquery.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/libs/tether/1.2.0/tether.min.js') }}"></script>
-<script src="//cdn.bootcss.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/page-dashboard.js') }}"></script>
 
 {% block script %}

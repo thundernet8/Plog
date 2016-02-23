@@ -1,0 +1,6 @@
+{%- macro get_menu_class(endpoint, level='pri') -%}
+{%- if level=='sub' and url_for(endpoint) == request.path -%}
+    {{- ' active' -}}
+{%- elif level=='pri' and request.path.find(url_for(endpoint)) >= 0 -%}{{- ' active' -}}
+{%- endif -%}
+{%- endmacro -%}
