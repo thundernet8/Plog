@@ -1,0 +1,8 @@
+{% extends 'dashboard/dash_base.html' %}
+
+{% block title %}阅读设置{{- ' - ' -}}{{- Setting.get_setting('blog_name', 'Plog') -}}{% endblock %}
+{% block body_class %}dashboard-setting dashboard-setting-reading{% endblock %}
+
+{% block page_content %}
+{{ request.path }}
+{% endblock %}

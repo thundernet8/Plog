@@ -1,6 +1,9 @@
 @import "utils/normalize";
 @import "utils/common";
 
+//scrollbar
+@import "utils/perfect-scrollbar";
+
 //dashboard
 .hide{
   display: none;
@@ -14,6 +17,11 @@ html, body {
 }
 
 a{
+
+  &:hover{
+    text-decoration: none;
+  }
+
   &:focus{
     outline: none;
   }
@@ -37,7 +45,7 @@ body{
 .sidebar-menu{
   display: table-cell;
   position: relative;
-  width: 340px;
+  width: 300px;
   background: #2c2e2f;
   z-index: 1;
 
@@ -127,6 +135,7 @@ body{
             color: #6d747a;
             font-family: 'Glyphicons Halflings';
             font-style: normal;
+            font-size: 10px;
             font-weight: 400;
             line-height: 1;
             -webkit-font-smoothing: antialiased;
@@ -152,6 +161,11 @@ body{
               -ms-transform: rotate(0deg);
               transform: rotate(0deg);
             }
+
+          }
+
+          &>.sub-menu{
+            display: block;
           }
         }
       }
@@ -188,5 +202,238 @@ body{
       }
     }
 
+  }
+}
+
+//top menu
+.page-container{
+
+  .main-content{
+    display: table-cell;
+    position: relative;
+    z-index: 1;
+    padding: 30px 30px 0;
+    vertical-align: top;
+    word-break: break-all;
+
+    .navbar{
+
+      position: relative;
+      border: 0;
+    }
+
+    .user-info-navbar{
+      min-height: 0;
+      padding: 0;
+      margin: -30px -30px 30px;
+      background-color: #FFFFFF;
+
+      .user-info-menu{
+        margin: 0;
+
+        &>li{
+          position: relative;
+          margin: 0;
+          padding: 0;
+          border: 1px solid #FFFFFF;
+          border-top: 0;
+          border-bottom: 0;
+          display: block;
+          line-height: 1;
+          float: left;
+
+          a{
+            position: relative;
+            display: block;
+            padding: 30px 20px;
+            color: #979898;
+            border-bottom: 1px solid #FFFFFF;
+            top: 1px;
+            z-index: 5;
+            line-height: 1;
+
+            &[data-toggle='sidebar']{
+              padding-left: 25px;
+            }
+
+            .badge{
+              font-size: 9px;
+              position: absolute;
+              top: 20px;
+              right: 10px;
+              padding: 4px;
+              min-width: 18px;
+              font-weight: 400;
+              line-height: 1;
+
+              &.badge-green, &.badge-success{
+                background-color: #8dc63f;
+              }
+
+              &.badge-purple{
+                background-color: #7c38bc;
+              }
+            }
+          }
+
+          .glyphicon{
+            font-size: 16px;
+            line-height: 1;
+          }
+
+          .dropdown-menu{
+            margin: 0 0 0 -1px;
+            padding: 0;
+            z-index: 3;
+            -webkit-box-shadow: 0 2px 8px rgba(0,1,1,.05);
+            -moz-box-shadow: 0 2px 8px rgba(0,1,1,.05);
+            box-shadow: 0 2px 8px rgba(0,1,1,.05);
+
+            &.messages, &.notifications{
+              width: 370px;
+            }
+
+            &.top{
+              padding: 20px 30px 0;
+            }
+
+            &>.external{
+              position: relative;
+
+              a{
+                display: block;
+                padding: 20px 30px;
+                color: #979898;
+                background-color: #f5f5f5;
+              }
+            }
+          }
+
+          &.hover-line{
+
+            &:hover{
+              &:before{
+                display: block;
+              }
+            }
+
+            &:before{
+              content: '';
+              position: absolute;
+              height: 2px;
+              top: 0;
+              left: 0;
+              right: 0;
+              background-color: #68b828;
+              display: none;
+            }
+          }
+        }
+
+        .user-profile{
+          margin-right: 20px;
+
+          &>a{
+            border-bottom: none;
+            text-decoration: none;
+          }
+
+          .avatar{
+            position: relative;
+            width: 28px;
+            height: 28px;
+            top: 8px;
+            margin-top: -17px;
+          }
+
+          .glyphicon{
+            font-size: 6px;
+          }
+
+          .dropdown-menu{
+            width: 200px;
+            left: auto;
+            right: -1px;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-left: -1px;
+            border-radius: 0;
+            border-color: #dddddd;
+            z-index: 3;
+
+            li{
+              position: relative;
+              margin: 0;
+              padding: 15px 20px 0;
+              line-height: 100%;
+              float: none;
+
+              &>a{
+                position: relative;
+                top: 1px;
+                height: 35px;
+                line-height: 20px;
+                display: block;
+                padding: 0 0 15px;
+                border-bottom: 1px solid #eeeeee;
+
+                &:hover{
+                  background-color: transparent;
+                  color: #606161;
+                }
+
+                &>span{
+                  display: inline-block;
+                  margin-right: 8px;
+                  color: inherit;
+                }
+              }
+
+              &.last{
+                background-color: #fafafa;
+                border-top: 1px solid #eeeeee;
+
+                &>a{
+                  border-bottom: 0;
+                }
+              }
+            }
+
+          }
+
+          &.open{
+
+            border-left-color: #dddddd;
+            border-right-color: #dddddd;
+            z-index: 15;
+            color: #606161;
+
+            &>a{
+              border-bottom: 1px solid #FFFFFF;
+              z-index: 5;
+            }
+
+          }
+        }
+      }
+    }
+
+    //footer
+    .main-footer{
+      margin: 10px -30px 0 -30px;
+      padding: 20px 30px;
+      border-top: 1px solid #dddddd;
+      font-size: 12px;
+      background-color: #eeeeee;
+
+      .go-top{
+        &>a{
+          display: inline-block;
+          padding: 2px 5px;
+          background-color: rgba(44, 46, 47, 0.05);
+          color: #373e4a;
+        }
+      }
+    }
   }
 }

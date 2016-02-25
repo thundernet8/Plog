@@ -79,7 +79,7 @@
         <div class="main-content">
             <!-- 顶部导航 -->
             <nav class="navbar user-info-navbar" role="navigation">
-                <ul class="user-info-menu left-links list-inline list-unstyled">
+                <ul class="user-info-menu left-links list-inline list-unstyled pull-left">
                     <li class="hidden-sm hidden-xs">
                         <a href="javascript:void(0)" data-toggle="sidebar"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
                     </li>
@@ -122,7 +122,7 @@
                         </ul>
                     </li>
                 </ul>
-                <ul class="user-info-menu right-links list-inline list-unstyled">
+                <ul class="user-info-menu right-links list-inline list-unstyled pull-right">
                     <li class="dropdown user-profile">
                         <a href="javascript:void(0)" data-toggle="dropdown">
                             <img class="avatar" src="{{ current_user.get_avatar(30) }}">
@@ -153,10 +153,10 @@
             <!-- 页脚 -->
             <footer class="main-footer sticky">
                 <div class="inner">
-                    <div class="footer-text">
+                    <div class="footer-text pull-left">
                         &copy;&nbsp;2016&nbsp;<strong>{{ Setting.get_setting('blog_name', 'Plog') }}</strong>&nbsp;Powered by Plog.
                     </div>
-                    <div class="go-top">
+                    <div class="go-top pull-right">
                         <a href="javascript:void(0)" rel="go-top"><span class="glyphicon glyphicon-menu-up"></span></a>
                     </div>
                 </div>

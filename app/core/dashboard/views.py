@@ -52,23 +52,23 @@ def posts():
 
 @dashboard.route('/post/all')
 def all_posts():
-    return 'all posts'
+    return render_template('dashboard/dash_post_list.html', request=request)
 
 
 @dashboard.route('/post/new')
 def new_post():
-    return 'add post'
+    return render_template('dashboard/dash_post_edit.html', request=request)
 
 
 @dashboard.route('/post/editor/<int:post_id>')
 def edit_post():
-    return 'edit post'
+    return render_template('dashboard/dash_post_edit.html', request=request)
 
 
 # 标签
 @dashboard.route('/tags')
 def tags():
-    return 'tags'
+    return render_template('dashboard/dash_tag_list.html', request=request)
 
 
 # 用户
@@ -79,22 +79,22 @@ def users():
 
 @dashboard.route('/users/all')
 def all_users():
-    return 'all users'
+    return render_template('dashboard/dash_user_list.html', request=request)
 
 
 @dashboard.route('/users/new')
 def new_user():
-    return 'add user'
+    return render_template('dashboard/dash_user_add.html', request=request)
 
 
 @dashboard.route('/users/edit/<int:user_id>')
 def edit_user(user_id):
-    return 'edit user'
+    return render_template('dashboard/dash_user_edit.html', request=request)
 
 
 @dashboard.route('/profile')
 def my_profile():
-    return 'my profile'
+    return render_template('dashboard/dash_user_me.html', request=request)
 
 
 # 外观
@@ -105,12 +105,12 @@ def appearance():
 
 @dashboard.route('/appearance/navigations')
 def navigations():
-    return 'navigations'
+    return render_template('dashboard/dash_appearance_navigation.html', request=request)
 
 
 @dashboard.route('/appearance/footer-navigations')
 def footer_navigations():
-    return 'footer navigations'
+    return render_template('dashboard/dash_appearance_footnavi.html', request=request)
 
 
 # 设置
@@ -126,14 +126,14 @@ def general_setting():
 
 @dashboard.route('/settings/writing')
 def writing_setting():
-    return 'writing settings'
+    return render_template('dashboard/dash_setting_writing.html', request=request)
 
 
 @dashboard.route('/settings/reading')
 def reading_setting():
-    return 'reading settings'
+    return render_template('dashboard/dash_setting_reading.html', request=request)
 
 
 @dashboard.route('/settings/discussion')
 def discussion_setting():
-    return 'discussion settings'
+    return render_template('dashboard/dash_setting_discussion.html', request=request)
