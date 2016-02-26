@@ -3,6 +3,33 @@
 {% block title %}我的资料{{- ' - ' -}}{{- Setting.get_setting('blog_name', 'Plog') -}}{% endblock %}
 {% block body_class %}dashboard-user dashboard-user-me{% endblock %}
 
+{% block page_headtitle %}
+<div class="page-title">
+    <div class="title-env">
+        <h1 class="title">我的资料</h1>
+        <p class="description">管理或编辑我的个人资料</p>
+    </div>
+    <div class="breadcrumb-env">
+        <ol class="breadcrumb">
+            <li>
+                <a href="{{ url_for('dashboard.dashboard_home') }}">
+                    <span class="glyphicon glyphicon-home"></span>控制板
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.users') }}">用户</a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.my_profile') }}">我的资料</a>
+            </li>
+        </ol>
+    </div>
+    <div class="clearfix"></div>
+</div>
+{% endblock %}
+
 {% block page_content %}
+<section class="content">
 {{ request.path }}
+</section>
 {% endblock %}

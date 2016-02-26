@@ -3,6 +3,31 @@
 {% block title %}新建文章{{- ' - ' -}}{{- Setting.get_setting('blog_name', 'Plog') -}}{% endblock %}
 {% block body_class %}dashboard-post dashboard-post-new{% endblock %}
 
+{% block page_headtitle %}
+<div class="page-title">
+    <div class="title-env">
+        <h1 class="title">文章编辑</h1>
+        <p class="description">发布新文章或编辑已有文章</p>
+    </div>
+    <div class="breadcrumb-env">
+        <ol class="breadcrumb">
+            <li>
+                <a href="{{ url_for('dashboard.dashboard_home') }}">
+                    <span class="glyphicon glyphicon-home"></span>控制板
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.posts') }}">文章</a>
+            </li>
+            <li>编辑</li>
+        </ol>
+    </div>
+    <div class="clearfix"></div>
+</div>
+{% endblock %}
+
 {% block page_content %}
+<section class="content">
 {{ request.path }}
+</section>
 {% endblock %}

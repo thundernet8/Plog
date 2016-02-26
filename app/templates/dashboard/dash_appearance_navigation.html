@@ -3,6 +3,67 @@
 {% block title %}站点导航{{- ' - ' -}}{{- Setting.get_setting('blog_name', 'Plog') -}}{% endblock %}
 {% block body_class %}dashboard-appearance dashboard-appearance-navigation{% endblock %}
 
+{% block page_headtitle %}
+<div class="page-title">
+    <div class="title-env">
+        <h1 class="title">导航菜单</h1>
+        <p class="description">网站顶部主导航菜单</p>
+    </div>
+    <div class="breadcrumb-env">
+        <ol class="breadcrumb">
+            <li>
+                <a href="{{ url_for('dashboard.dashboard_home') }}">
+                    <span class="glyphicon glyphicon-home"></span>控制板
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.appearance') }}">外观</a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.navigations') }}">导航菜单</a>
+            </li>
+        </ol>
+    </div>
+    <div class="clearfix"></div>
+</div>
+{% endblock %}
+
 {% block page_content %}
-{{ request.path }}
+<section class="content">
+    <form id="setting-navigations" class="">
+        {{ navi_form.hidden_tag() }}
+        {% if Setting.get_setting('navigation') and (json.loads(Setting.get_setting('navigation'))).get('navigations') %}
+            {% for nav_setting in (json.loads(Setting.get_setting('navigation'))).get('navigations') %}
+                <div class="ember-view nav-item primary-nav">
+                    <span class="icon-grab sort-handle glyphicon glyphicon-move"></span>
+                    <div class="nav-line">
+                        <span class="nav-label"><input class="form-control text-input ember-text-input" placeholder="标题" type="text" value="{{ nav_setting['primary'].keys()[0] }}" required></span>
+                        <span class="nav-url"><input class="form-control text-input ember-text-input" placeholder="{{ url_for('main.index', _external=True) }}" type="text" value="{{ nav_setting['primary'].values()[0] }}" required></span>
+                    </div>
+                    <button type="button" class="nav-delete"><span class="glyphicon glyphicon-trash"></span></button>
+                </div>
+                {% if nav_setting.get('sub') %}
+                    {% for sub_item in nav_setting.get('sub') %}
+                        <div class="ember-view nav-item sub-nav">
+                            <span class="icon-grab sort-handle glyphicon glyphicon-move"></span>
+                            <div class="nav-line">
+                                <span class="nav-label"><input class="form-control text-input ember-text-input" placeholder="标题" type="text" value="{{ sub_item.keys()[0] }}" required></span>
+                                <span class="nav-url"><input class="form-control text-input ember-text-input" placeholder="{{ url_for('main.index', _external=True) }}" type="text" value="{{ sub_item.values()[0] }}" required></span>
+                            </div>
+                            <button type="button" class="nav-delete"><span class="glyphicon glyphicon-trash"></span></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <div class="ember-view nav-item primary-nav">
+            <!--span class="icon-grab sort-handle glyphicon glyphicon-move"></span-->
+            <div class="nav-line">
+                <span class="nav-label"><input class="form-control text-input ember-text-input" placeholder="标题" type="text" required></span>
+                <span class="nav-url"><input class="form-control text-input ember-text-input" placeholder="{{ url_for('main.index', _external=True) }}" type="text" required></span>
+            </div>
+            <button type="button" class="nav-add"><span class="glyphicon glyphicon-plus"></span></button>
+        </div>
+    </form>
+</section>
 {% endblock %}

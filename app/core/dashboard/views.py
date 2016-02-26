@@ -9,6 +9,7 @@ from flask import abort
 from flask.ext.login import current_user
 
 from . import dashboard
+from .forms import EditTopNaviForm
 
 
 # 验证登录
@@ -92,7 +93,7 @@ def edit_user(user_id):
     return render_template('dashboard/dash_user_edit.html', request=request)
 
 
-@dashboard.route('/profile')
+@dashboard.route('/users/myprofile')
 def my_profile():
     return render_template('dashboard/dash_user_me.html', request=request)
 
@@ -105,7 +106,8 @@ def appearance():
 
 @dashboard.route('/appearance/navigations')
 def navigations():
-    return render_template('dashboard/dash_appearance_navigation.html', request=request)
+    form = EditTopNaviForm()
+    return render_template('dashboard/dash_appearance_navigation.html', navi_form=form)
 
 
 @dashboard.route('/appearance/footer-navigations')

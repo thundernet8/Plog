@@ -38,7 +38,7 @@
                 <ul class="main-menu list-unstyled" id="main-menu">
                     {% import 'macros/dash_sidemenu.html' as menu_class_render %}
                     <li class="has-sub {{- menu_class_render.get_menu_class('dashboard.posts') -}}">
-                        <a href="javascript:void(0)"><span class="glyphicon glyphicon-file"></span>文章</a>
+                        <a href="javascript:void(0)"><span class="glyphicon glyphicon-send"></span>文章</a>
                         <ul class="sub-menu">
                             <li class="{{- menu_class_render.get_menu_class('dashboard.all_posts', 'sub') -}}"><a href="{{ url_for('dashboard.all_posts') }}">所有文章</a> </li>
                             <li class="{{- menu_class_render.get_menu_class('dashboard.new_post', 'sub') -}}"><a href="{{ url_for('dashboard.new_post') }}">新文章</a> </li>

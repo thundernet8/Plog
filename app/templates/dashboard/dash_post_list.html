@@ -3,6 +3,33 @@
 {% block title %}所有文章{{- ' - ' -}}{{- Setting.get_setting('blog_name', 'Plog') -}}{% endblock %}
 {% block body_class %}dashboard-post dashboard-post-list{% endblock %}
 
+{% block page_headtitle %}
+<div class="page-title">
+    <div class="title-env">
+        <h1 class="title">文章列表</h1>
+        <p class="description">网站文章列表</p>
+    </div>
+    <div class="breadcrumb-env">
+        <ol class="breadcrumb">
+            <li>
+                <a href="{{ url_for('dashboard.dashboard_home') }}">
+                    <span class="glyphicon glyphicon-home"></span>控制板
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.posts') }}">文章</a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.all_posts') }}">文章列表</a>
+            </li>
+        </ol>
+    </div>
+    <div class="clearfix"></div>
+</div>
+{% endblock %}
+
 {% block page_content %}
+<section class="content">
 {{ request.path }}
+</section>
 {% endblock %}

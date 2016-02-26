@@ -3,6 +3,33 @@
 {% block title %}讨论设置{{- ' - ' -}}{{- Setting.get_setting('blog_name', 'Plog') -}}{% endblock %}
 {% block body_class %}dashboard-setting dashboard-setting-discussion{% endblock %}
 
+{% block page_headtitle %}
+<div class="page-title">
+    <div class="title-env">
+        <h1 class="title">讨论设置</h1>
+        <p class="description">网站用户讨论相关选项</p>
+    </div>
+    <div class="breadcrumb-env">
+        <ol class="breadcrumb">
+            <li>
+                <a href="{{ url_for('dashboard.dashboard_home') }}">
+                    <span class="glyphicon glyphicon-home"></span>控制板
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.settings') }}">设置</a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.discussion_setting') }}">讨论设置</a>
+            </li>
+        </ol>
+    </div>
+    <div class="clearfix"></div>
+</div>
+{% endblock %}
+
 {% block page_content %}
+<section class="content">
 {{ request.path }}
+</section>
 {% endblock %}
