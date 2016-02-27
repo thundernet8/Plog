@@ -1,6 +1,6 @@
 {% extends 'dashboard/dash_base.html' %}
 
-{% block title %}常规设置{{- ' - ' -}}{{- Setting.get_setting('blog_name', 'Plog') -}}{% endblock %}
+{% block title %}常规设置{{- ' - ' -}}{{- Setting.get_setting('blogtitle', 'Plog') -}}{% endblock %}
 {% block body_class %}dashboard-setting dashboard-setting-general{% endblock %}
 
 {% block page_headtitle %}
@@ -30,6 +30,55 @@
 
 {% block page_content %}
 <section class="content">
-{{ request.path }}
+    <form id="setting-general" class="" method="post">
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <div class="form-group">
+                <label for="blog-title">博客名称</label>
+                <input id="blog-title" name="general[blogtitle]" type="text" class="text-input ember-view form-control" value="{{ Setting.get_setting('blogtitle') }}">
+                <p class="help-block">为你的博客取一个响亮的名字</p>
+            </div>
+            <div class="form-group">
+                <label for="blog-subtitle">博客副标题</label>
+                <textarea id="blog-subtitle" name="general[subtitle]" type="text" class="text-input textarea ember-view form-control">{{ Setting.get_setting('subtitle') }}</textarea>
+                <p class="help-block">博客副标题,精简的描述博客内容类型</p>
+            </div>
+            <div class="form-group">
+                <label for="blog-keywords">博客关键词</label>
+                <textarea id="blog-keywords" name="general[keywords]" type="text" class="text-input textarea ember-view form-control">{{ Setting.get_setting('keywords') }}</textarea>
+                <p class="help-block">罗列一下博客的关注点,以半角逗号分隔</p>
+            </div>
+            <div class="form-group">
+                <label for="blog-description">博客描述</label>
+                <textarea id="blog-description" name="general[description]" type="text" class="text-input textarea ember-view form-control">{{ Setting.get_setting('description') }}</textarea>
+                <p class="help-block">简单介绍一下你的博客,120字以内</p>
+            </div>
+        </fieldset>
+        <!-- Logo/Favicon/封面图片 -->
+        <div class="form-group">
+            <label>博客 Logo</label>
+            <img class="blog-logo" alt="logo" role="button" src="{{ Setting.get_setting('logo') or url_for('static', filename='dist/images/logo.png') }}">
+            <input id="blog-logo" name="general[logo]" type="hidden" value="{{ Setting.get_setting('logo') or url_for('static', filename='dist/images/logo.png') }}">
+            <p class="help-block">为博客设置一个 Logo</p>
+        </div>
+        <div class="form-group">
+            <label>收藏夹图标</label>
+            <img class="blog-favicon" alt="favicon" role="button" src="{{ Setting.get_setting('favicon') or url_for('static', filename='dist/images/favicon.ico') }}">
+            <input id="blog-favicon" name="general[favicon]" type="hidden" value="{{ Setting.get_setting('favicon') or url_for('static', filename='dist/images/favicon.ico') }}">
+            <p class="help-block">为博客设置收藏夹图标</p>
+        </div>
+        <div class="form-group">
+            <label>博客封面</label>
+            <img class="blog-cover" alt="cover" role="button" src="{{ Setting.get_setting('cover') or url_for('static', filename='dist/images/cover.jpg') }}">
+            <input id="blog-cover" name="general[cover]" type="hidden" value="{{ Setting.get_setting('cover') or url_for('static', filename='dist/images/cover.jpg') }}">
+            <p class="help-block">为你的博客设置一个个性的封面图</p>
+        </div>
+        <fieldset>
+
+        </fieldset>
+        <div class="submit-btn-env">
+            {{ form.submit(class="btn btn-info", value="保存") }}
+        </div>
+    </form>
 </section>
 {% endblock %}

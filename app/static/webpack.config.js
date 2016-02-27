@@ -13,7 +13,8 @@ module.exports = {
         register: './src/scripts/page-register.js',
         home: './src/scripts/page-home.js',
         article: './src/scripts/page-article.js',
-        dashboard: './src/scripts/page-dashboard.js'
+        dashboard: './src/scripts/page-dashboard.js',
+        error: './src/scripts/page-error.js'
     },
 
     output: {

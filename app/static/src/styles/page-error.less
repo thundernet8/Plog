@@ -1,0 +1,46 @@
+@import "utils/normalize";
+@import "utils/common";
+
+@import "modules/common-header";
+
+//
+//错误页面专用样式
+//
+
+body{
+
+  a{
+    color: #178fe6;
+
+    &:hover{
+      color: #178fe6;
+      text-decoration: none;
+      border-bottom: 1px dotted;
+    }
+  }
+
+  &.error-404{
+    .error-inner{
+      text-align: center;
+
+      .error-tip{
+        margin: 20px 0;
+        font-size: 28px;
+
+        a{
+          margin-left: 3px;
+        }
+      }
+
+      .error-image-wrap{
+        text-align: center;
+
+        img{
+          width: 100%;
+          max-width: 600px;
+          margin: 0 auto;
+        }
+      }
+    }
+  }
+}

@@ -29,3 +29,13 @@ from wtforms.validators import Length
 class EditTopNaviForm(Form):
     """ 编辑导航菜单表单 """
     submit = SubmitField('Submit')
+
+
+class EditBottomNaviForm(Form):
+    """ 编辑底部链接菜单表单 """
+    submit = SubmitField('Submit')
+
+
+class GeneralSettingForm(Form):
+    """ 常规设置表单 """
+    submit = SubmitField('Submit')

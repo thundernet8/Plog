@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="shortcut icon" href="{{ url_for('static', filename='dist/images/favicon.ico') }}" type="image/x-icon">
     <!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/libs/bootstrap/3.3.5/bootstrap.min.css') }}"> <!-- TODO delete -->
     <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-dashboard.css') }}">
     {% block css %}{% endblock %}
@@ -30,8 +31,8 @@
             <div class="sidebar-menu-inner ps-container">
                 <header class="logo-env">
                     <div class="logo pull-left">
-                        <a href="{{ url_for('main.index') }}" class="logo-expanded"><span class="glyphicon glyphicon-home"></span>Plog</a>
-                        <a href="{{ url_for('main.index') }}" class="logo-collapsed"><span class="glyphicon glyphicon-home"></span></a>
+                        <a href="{{ url_for('main.index') }}" class="logo-expanded"><span class="glyphicon glyphicon-fire"></span>Plog</a>
+                        <a href="{{ url_for('main.index') }}" class="logo-collapsed"><span class="glyphicon glyphicon-fire"></span></a>
                     </div>
                     <div class="clearfix"></div>
                 </header>
@@ -52,8 +53,11 @@
                             <li class="{{- menu_class_render.get_menu_class('dashboard.my_profile', 'sub') -}}"><a href="{{ url_for('dashboard.my_profile') }}">个人资料</a> </li>
                         </ul>
                     </li>
-                    <li class="">
+                    <li class="has-sub {{- menu_class_render.get_menu_class('dashboard.tags') -}}">
                         <a href="javascript:void(0)"><span class="glyphicon glyphicon-tags"></span>标签</a>
+                        <ul class="sub-menu">
+                            <li class="{{- menu_class_render.get_menu_class('dashboard.all_tags', 'sub') -}}"><a href="{{ url_for('dashboard.all_tags') }}">标签列表</a> </li>
+                        </ul>
                     </li>
                     <li class="has-sub {{- menu_class_render.get_menu_class('dashboard.appearance') -}}">
                         <a href="javascript:void(0)"><span class="glyphicon glyphicon-eye-open"></span>外观</a>
@@ -154,7 +158,7 @@
             <footer class="main-footer sticky">
                 <div class="inner">
                     <div class="footer-text pull-left">
-                        &copy;&nbsp;2016&nbsp;<strong>{{ Setting.get_setting('blog_name', 'Plog') }}</strong>&nbsp;Powered by Plog.
+                        &copy;&nbsp;2016&nbsp;<strong>{{ Setting.get_setting('blogtitle', 'Plog') }}</strong>&nbsp;Powered by Plog.
                     </div>
                     <div class="go-top pull-right">
                         <a href="javascript:void(0)" rel="go-top"><span class="glyphicon glyphicon-menu-up"></span></a>

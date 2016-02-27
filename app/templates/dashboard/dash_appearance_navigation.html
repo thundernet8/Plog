@@ -1,6 +1,6 @@
 {% extends 'dashboard/dash_base.html' %}
 
-{% block title %}站点导航{{- ' - ' -}}{{- Setting.get_setting('blog_name', 'Plog') -}}{% endblock %}
+{% block title %}站点导航{{- ' - ' -}}{{- Setting.get_setting('blogtitle', 'Plog') -}}{% endblock %}
 {% block body_class %}dashboard-appearance dashboard-appearance-navigation{% endblock %}
 
 {% block page_headtitle %}
@@ -30,7 +30,7 @@
 
 {% block page_content %}
 <section class="content">
-    <form id="setting-navigations" class="">
+    <form id="setting-navigations" class="setting-nav-form" method="post">
         {{ navi_form.hidden_tag() }}
         {% if Setting.get_setting('navigation') and (json.loads(Setting.get_setting('navigation'))).get('navigations') %}
             {% for nav_setting in (json.loads(Setting.get_setting('navigation'))).get('navigations') %}
@@ -59,11 +59,15 @@
         <div class="ember-view nav-item primary-nav">
             <!--span class="icon-grab sort-handle glyphicon glyphicon-move"></span-->
             <div class="nav-line">
-                <span class="nav-label"><input class="form-control text-input ember-text-input" placeholder="标题" type="text" required></span>
-                <span class="nav-url"><input class="form-control text-input ember-text-input" placeholder="{{ url_for('main.index', _external=True) }}" type="text" required></span>
+                <span class="nav-label"><input class="form-control text-input ember-text-input" placeholder="标题" type="text"></span>
+                <span class="nav-url"><input class="form-control text-input ember-text-input" placeholder="{{ url_for('main.index', _external=True) }}" type="text"></span>
             </div>
             <button type="button" class="nav-add"><span class="glyphicon glyphicon-plus"></span></button>
         </div>
+        <div class="submit-btn-env">
+            {{ navi_form.submit(class="btn btn-info", value="保存") }}
+        </div>
+        <input id="setting-value" type="hidden" name="naviSettings" value="">
     </form>
 </section>
 {% endblock %}

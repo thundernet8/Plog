@@ -2,18 +2,18 @@
 <footer class="footer">
     <div class="container footer-inner">
         <div class="footer-nav">
-            {% if Setting.get_setting('navigation') and (json.loads(Setting.get_setting('navigation'))).get('navigations') %}
-                {% for nav_setting in (json.loads(Setting.get_setting('navigation'))).get('navigations') %}
-                    <a href="{{ nav_setting['primary'].values()[0] or 'javascript:void(0)' }}" class="transition">
-                        {{- nav_setting['primary'].keys()[0] -}}
+            {% if Setting.get_setting('link') and (json.loads(Setting.get_setting('link'))).get('links') %}
+                {% for link_setting in (json.loads(Setting.get_setting('link'))).get('links') %}
+                    <a href="{{ link_setting.values()[0] or 'javascript:void(0)' }}" class="transition">
+                        {{- link_setting.keys()[0] -}}
                     </a>
                 {% endfor %}
             {% endif %}
         </div>
         <div class="copy-right">
             Copyright &copy; {{ datetime.utcnow().strftime('%Y') }}
-            <a href="{{ url_for('main.index') }}">{{ Setting.get_setting('blog_name', 'Plog') }}</a>
-            &nbsp;沪ICP备14045138号-1&nbsp;-&nbsp;Powered by <a href="http://www.test.com/" target="_blank" title="Plog博客程序">Plog</a><!-- TODO change to formal link -->
+            <a href="{{ url_for('main.index') }}"><strong>{{ Setting.get_setting('blogtitle', 'Plog') }}</strong></a>
+            &nbsp;沪ICP备14045138号-1&nbsp;&nbsp;Powered by <a href="http://www.test.com/" target="_blank" title="Plog博客程序"><strong>Plog</strong></a><!-- TODO change to formal link -->
         </div>
         <div class="footer-icons pull-right">
             <!-- 新浪微博 -->

@@ -1,5 +1,7 @@
 # coding=utf-8
 
+import re
+
 from flask import request
 from flask import redirect
 from flask import url_for
@@ -10,6 +12,9 @@ from flask.ext.login import current_user
 
 from . import dashboard
 from .forms import EditTopNaviForm
+from .forms import EditBottomNaviForm
+from .forms import GeneralSettingForm
+from app.core.models.settings import Setting
 
 
 # 验证登录
@@ -26,17 +31,17 @@ def before_request():
 # 错误处理
 @dashboard.errorhandler(403)
 def error_403(e):
-    return render_template('error_pages/403.html')
+    return render_template('error_pages/403.html'), 403
 
 
 @dashboard.errorhandler(404)
 def error_404(e):
-    return render_template('error_pages/404.html')
+    return render_template('error_pages/404.html'), 404
 
 
 @dashboard.errorhandler(502)
 def error_502(e):
-    return render_template('error_pages/502.html')
+    return render_template('error_pages/502.html'), 502
 
 
 # 首页
@@ -69,6 +74,11 @@ def edit_post():
 # 标签
 @dashboard.route('/tags')
 def tags():
+    return redirect(url_for('dashboard.all_tags'))
+
+
+@dashboard.route('/tags/all')
+def all_tags():
     return render_template('dashboard/dash_tag_list.html', request=request)
 
 
@@ -104,15 +114,26 @@ def appearance():
     return redirect(url_for('dashboard.navigations'))
 
 
-@dashboard.route('/appearance/navigations')
+@dashboard.route('/appearance/navigations', methods=['GET', 'POST'])
 def navigations():
     form = EditTopNaviForm()
+    if form.validate_on_submit():
+        navs = request.form.get('naviSettings')
+        if navs and current_user.is_administrator:
+            Setting.update_setting('navigation', navs)
+        return redirect(url_for('dashboard.navigations'))
     return render_template('dashboard/dash_appearance_navigation.html', navi_form=form)
 
 
-@dashboard.route('/appearance/footer-navigations')
+@dashboard.route('/appearance/footer-navigations', methods=['GET', 'POST'])
 def footer_navigations():
-    return render_template('dashboard/dash_appearance_footnavi.html', request=request)
+    form = EditBottomNaviForm()
+    if form.validate_on_submit():
+        links = request.form.get('linkSettings')
+        if links and current_user.is_administrator:
+            Setting.update_setting('link', links)
+        return redirect(url_for('dashboard.footer_navigations'))
+    return render_template('dashboard/dash_appearance_footnavi.html', form=form)
 
 
 # 设置
@@ -121,9 +142,19 @@ def settings():
     return redirect(url_for('dashboard.general'))
 
 
-@dashboard.route('/settings/general')
+@dashboard.route('/settings/general', methods=['GET', 'POST'])
 def general_setting():
-    return render_template('dashboard/dash_setting_general.html', request=request)
+    form = GeneralSettingForm()
+    if form.validate_on_submit():
+        # print(request.form)
+        if current_user.is_administrator:
+            reg = re.compile('general\[([a-zA-Z0-9_]+)\]')
+            for key, value in request.form.iteritems():
+                options = reg.findall(key)
+                if options:
+                    Setting.update_setting(options[0], value)
+        return redirect(url_for('dashboard.general_setting'))
+    return render_template('dashboard/dash_setting_general.html', form=form)
 
 
 @dashboard.route('/settings/writing')

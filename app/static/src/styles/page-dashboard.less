@@ -16,6 +16,18 @@ html, body {
   border: none;
 }
 
+textarea{
+  &.form-control{
+    min-height: 100px;
+  }
+}
+
+fieldset{
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 a{
 
   &:hover{
@@ -83,6 +95,7 @@ body{
 
       .glyphicon{
         margin-right: 5px;
+        top: 4px;
       }
     }
   }
@@ -597,7 +610,7 @@ body{
   }
 }
 
-//content
+//content - appearance - navigations/links
 .page-container{
 
   .main-content{
@@ -606,9 +619,9 @@ body{
       padding: 20px 10px;
       background-color: #FFFFFF;
 
-      #setting-navigations{
+      .setting-nav-form{
 
-        .nav-item{
+        .nav-item, .link-item{
           display: -webkit-flex;
           display: -ms-flexbox;
           display: flex;
@@ -632,27 +645,27 @@ body{
             color: #d1d1d1;
           }
 
-          .nav-line{
+          .nav-line, .link-line{
             display: -webkit-flex;
             display: -ms-flexbox;
             display: flex;
             width: 100%;
 
-            .nav-label{
+            .nav-label, .link-label{
               -webkit-flex-grow: 1;
               -ms-flex-positive: 1;
               flex-grow: 1;
               margin-right: 10px;
             }
 
-            .nav-url{
+            .nav-url, .link-url{
               -webkit-flex-grow: 3;
               -ms-flex-positive: 3;
               flex-grow: 3;
             }
           }
 
-          .nav-delete{
+          .nav-delete, .link-delete{
             padding: 8px 0 8px 10px;
             border: 0;
             color: #c1c1c1;
@@ -665,7 +678,7 @@ body{
             }
           }
 
-          .nav-add{
+          .nav-add, .link-add{
             width: 20px;
             height: 20px;
             padding: 3px;
@@ -678,6 +691,51 @@ body{
             line-height: 1;
           }
         }
+
+        .submit-btn-env{
+          margin-top: 20px;
+          text-align: right;
+          padding-right: 45px;
+        }
+      }
+    }
+  }
+}
+
+//content - setting - general
+.page-container{
+
+  .main-content{
+
+    .content{
+
+      #setting-general{
+        padding-left: 20px;
+        padding-right: 20px;
+
+        .form-group{
+          max-width: 500px;
+
+          &>label{
+            font-size: 13px;
+
+            &+img{
+              display: block;
+              margin-top: 10px;
+            }
+          }
+
+          .help-block{
+            font-size: 12px;
+          }
+        }
+
+        .submit-btn-env{
+          margin-top: 20px;
+          //text-align: right;
+          //padding-right: 45px;
+        }
+
       }
     }
   }

@@ -1,0 +1,61 @@
+{% extends 'dashboard/dash_base.html' %}
+
+{% block title %}站点链接{{- ' - ' -}}{{- Setting.get_setting('blogtitle', 'Plog') -}}{% endblock %}
+{% block body_class %}dashboard-appearance dashboard-appearance-footnavi{% endblock %}
+
+{% block page_headtitle %}
+<div class="page-title">
+    <div class="title-env">
+        <h1 class="title">页脚导航</h1>
+        <p class="description">网站底部导航链接</p>
+    </div>
+    <div class="breadcrumb-env">
+        <ol class="breadcrumb">
+            <li>
+                <a href="{{ url_for('dashboard.dashboard_home') }}">
+                    <span class="glyphicon glyphicon-home"></span>控制板
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.appearance') }}">外观</a>
+            </li>
+            <li>
+                <a href="{{ url_for('dashboard.footer_navigations') }}">页脚导航</a>
+            </li>
+        </ol>
+    </div>
+    <div class="clearfix"></div>
+</div>
+{% endblock %}
+
+{% block page_content %}
+<section class="content">
+    <form id="setting-links" class="setting-nav-form" method="post">
+        {{ form.hidden_tag() }}
+        {% if Setting.get_setting('link') and (json.loads(Setting.get_setting('link'))).get('links') %}
+            {% for nav_setting in (json.loads(Setting.get_setting('link'))).get('links') %}
+                <div class="ember-view link-item primary-link">
+                    <span class="icon-grab sort-handle glyphicon glyphicon-move"></span>
+                    <div class="link-line">
+                        <span class="link-label"><input class="form-control text-input ember-text-input" placeholder="标题" type="text" value="{{ nav_setting.keys()[0] }}" required></span>
+                        <span class="link-url"><input class="form-control text-input ember-text-input" placeholder="{{ url_for('main.index', _external=True) }}" type="text" value="{{ nav_setting.values()[0] }}" required></span>
+                    </div>
+                    <button type="button" class="link-delete"><span class="glyphicon glyphicon-trash"></span></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        <div class="ember-view link-item primary-link">
+            <!--span class="icon-grab sort-handle glyphicon glyphicon-move"></span-->
+            <div class="link-line">
+                <span class="link-label"><input class="form-control text-input ember-text-input" placeholder="标题" type="text"></span>
+                <span class="link-url"><input class="form-control text-input ember-text-input" placeholder="{{ url_for('main.index', _external=True) }}" type="text"></span>
+            </div>
+            <button type="button" class="link-add"><span class="glyphicon glyphicon-plus"></span></button>
+        </div>
+        <div class="submit-btn-env">
+            {{ form.submit(class="btn btn-info", value="保存") }}
+        </div>
+        <input id="setting-value" type="hidden" name="linkSettings" value="">
+    </form>
+</section>
+{% endblock %}

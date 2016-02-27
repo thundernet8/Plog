@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{{- Setting.get_setting('blog_name', 'Plog') -}}{{- ' - ' -}}{{- Setting.get_setting('blog_subtitle', 'Another Plog Site') -}}
+{{- Setting.get_setting('blogtitle', 'Plog') -}}{{- ' - ' -}}{{- Setting.get_setting('subtitle', 'Another Plog Site') -}}
+{% endblock %}
+
+{% block keywords %}
+{{- Setting.get_setting('keywords') -}}
+{% endblock %}
+
+{% block description %}
+{{- Setting.get_setting('description') -}}
 {% endblock %}
 
 {% block css %}
