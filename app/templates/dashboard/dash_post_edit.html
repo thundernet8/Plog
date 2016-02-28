@@ -1,7 +1,7 @@
 {% extends 'dashboard/dash_base.html' %}
 
-{% block title %}新建文章{{- ' - ' -}}{{- Setting.get_setting('blogtitle', 'Plog') -}}{% endblock %}
-{% block body_class %}dashboard-post dashboard-post-new{% endblock %}
+{% block title %}文章编辑{{- ' - ' -}}{{- Setting.get_setting('blogtitle', 'Plog') -}}{% endblock %}
+{% block body_class %}dashboard-post dashboard-post-edit{% endblock %}
 
 {% block page_headtitle %}
 <div class="page-title">
@@ -28,6 +28,49 @@
 
 {% block page_content %}
 <section class="content">
-{{ request.path }}
+    <!-- 编辑器头,包括标题和配置/保存按钮 -->
+    <header class="editor-header">
+        <h2 class="editor-title">
+            <input id="entry-title" class="text-input" type="text" tabindex="1" placeholder="文章标题">
+        </h2>
+        <section class="editor-actions">
+            <button type="button" class="post-settings"><span class="glyphicon glyphicon-cog"></span></button>
+            <section class="splitbtn post-actions">
+                <button type="button" class="btn btn-sm btn-info publish-button">保存草稿</button>
+                <button role="button" class="btn btn-sm btn-info dropdown-toggle closed"><span class="glyphicon glyphicon-menu-down"></span></button>
+                <div class="publish-options fade-out closed">
+                    <ul class="dropdown-menu dropdown-triangle-bottom-right">
+                        <li class="post-save-publish"><a href="javascript:void(0)">立即发布</a></li>
+                        <li class="post-save-draft"><a href="javascript:void(0)">保存草稿</a></li>
+                        {% if post %}
+                        <li class="divider delete"></li>
+                        <li class="post-delete"><a href="javascript:void(0)">删除文章</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </section>
+        </section>
+    </header>
+    <!-- 编辑器内容区,包括Markdown和HTML预览区 -->
+    <section class="editor-container">
+        <section class="entry-markdown active">
+            <section id="entry-markdown-content" class="entry-markdown-content">
+                <textarea spellcheck="true" tabindex="1" class="markdown-editor"></textarea>
+            </section>
+            <footer class="entry-markdown-footer">
+                <span class="desktop-tabs">Markdown</span>
+                <a class="markdown-help" href="javascript:void(0)"><span class="glyphicon glyphicon-question-sign"></span></a>
+            </footer>
+        </section>
+        <section class="entry-preview">
+            <section id="entry-preview-content" class="entry-preview-content">
+                <div class="rendered-markdown preview-area"></div>
+            </section>
+            <footer class="entry-markdown-footer">
+                <span class="desktop-tabs">预览</span>
+                <span class="entry-word-count">0 个字</span>
+            </footer>
+        </section>
+    </section>
 </section>
 {% endblock %}

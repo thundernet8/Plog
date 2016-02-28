@@ -76,6 +76,151 @@ img{
     transition: all .2s ease-out;
 }
 
+@-webkit-keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fade-in-snap {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-snap {
+  to {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    -webkit-transform: scale(0.95);
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    -webkit-transform: scale(0.95);
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+
+@-webkit-keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes keyboard-focus-style-fade-out {
+  from {
+    box-shadow: inset 0 0 30px 1px rgb(180, 186, 187);
+  }
+
+  to {
+    box-shadow: none;
+  }
+}
+
+@keyframes keyboard-focus-style-fade-out {
+  from {
+    box-shadow: inset 0 0 30px 1px rgb(180, 186, 187);
+  }
+
+  to {
+    box-shadow: none;
+  }
+}
+
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+.fade-in{
+    -webkit-animation: fade-in .2s;
+    animation: fade-in .2s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.fade-in-scale{
+    -webkit-animation: fade-in-scale .2s;
+    animation: fade-in-scale .2s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+.fade-out{
+    -webkit-animation: fade-out .5s;
+    animation: fade-out .5s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
 //sprite icons
 .icon{
     position: relative;

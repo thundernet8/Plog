@@ -474,7 +474,7 @@ class Posts(object):
         if page < 1 and error_out:
             abort(404)
         if not posts_per_page:
-            posts_per_page = Setting.get_setting('posts_per_page', default=10)
+            posts_per_page = int(Setting.get_setting('posts_per_page', default=10))
         try:
             results = mongo.db.posts.find(filter=self.filters, skip=posts_per_page*(page-1), limit=posts_per_page)\
                 .sort([(self.order_by, self.order)])

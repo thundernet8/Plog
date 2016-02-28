@@ -14,6 +14,8 @@ from . import dashboard
 from .forms import EditTopNaviForm
 from .forms import EditBottomNaviForm
 from .forms import GeneralSettingForm
+from .forms import ReadingSettingForm
+from .forms import DiscussionSettingForm
 from app.core.models.settings import Setting
 
 
@@ -61,7 +63,7 @@ def all_posts():
     return render_template('dashboard/dash_post_list.html', request=request)
 
 
-@dashboard.route('/post/new')
+@dashboard.route('/post/editor')
 def new_post():
     return render_template('dashboard/dash_post_edit.html', request=request)
 
@@ -159,14 +161,33 @@ def general_setting():
 
 @dashboard.route('/settings/writing')
 def writing_setting():
+    pass  # TODO
     return render_template('dashboard/dash_setting_writing.html', request=request)
 
 
-@dashboard.route('/settings/reading')
+@dashboard.route('/settings/reading', methods=['GET', 'POST'])
 def reading_setting():
-    return render_template('dashboard/dash_setting_reading.html', request=request)
+    form = ReadingSettingForm()
+    if form.validate_on_submit():
+        if current_user.is_administrator:
+            reg = re.compile('reading\[([a-zA-Z0-9_]+)\]')
+            for key, value in request.form.iteritems():
+                options = reg.findall(key)
+                if options:
+                    Setting.update_setting(options[0], value)
+        return redirect(url_for('dashboard.reading_setting'))
+    return render_template('dashboard/dash_setting_reading.html', form=form)
 
 
-@dashboard.route('/settings/discussion')
+@dashboard.route('/settings/discussion', methods=['GET', 'POST'])
 def discussion_setting():
-    return render_template('dashboard/dash_setting_discussion.html', request=request)
+    form = DiscussionSettingForm()
+    if form.validate_on_submit():
+        if current_user.is_administrator:
+            reg = re.compile('discussion\[([a-zA-Z0-9_]+)\]')
+            for key, value in request.form.iteritems():
+                options = reg.findall(key)
+                if options:
+                    Setting.update_setting(options[0], value)
+        return redirect(url_for('dashboard.discussion_setting'))
+    return render_template('dashboard/dash_setting_discussion.html', form=form)

@@ -30,6 +30,18 @@
 
 {% block page_content %}
 <section class="content">
-{{ request.path }}
+    <form id="setting-discussion" class="" method="post">
+        {{ form.hidden_tag() }}
+        <fieldset>
+            <div class="form-group">
+                <label for="comments-per-page">每页显示评论数</label>
+                <input id="comments-per-page" name="discussion[comments_per_page]" type="number" pattern="[0-9]*" class="num-input ember-view form-control" value="{{ Setting.get_setting('comments_per_page', 20) }}">
+                <p class="help-block">设置每页显示用户评论的数量</p>
+            </div>
+        </fieldset>
+        <div class="submit-btn-env">
+            {{ form.submit(class="btn btn-info", value="保存") }}
+        </div>
+    </form>
 </section>
 {% endblock %}

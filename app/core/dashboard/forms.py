@@ -39,3 +39,13 @@ class EditBottomNaviForm(Form):
 class GeneralSettingForm(Form):
     """ 常规设置表单 """
     submit = SubmitField('Submit')
+
+
+class ReadingSettingForm(Form):
+    """ 阅读设置表单 """
+    submit = SubmitField('Submit')
+
+
+class DiscussionSettingForm(Form):
+    """ 讨论设置表单 """
+    submit = SubmitField('Submit')

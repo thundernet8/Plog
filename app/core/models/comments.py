@@ -332,7 +332,7 @@ class Comments(object):
         if page < 1 and error_out:
             abort(404)
         if not comments_per_page:
-            comments_per_page = Setting.get_setting('comments_per_page', default=20)
+            comments_per_page = int(Setting.get_setting('comments_per_page', default=20))
         try:
             results = mongo.db.comments.find(self.filters, skip=comments_per_page*(page-1), limit=comments_per_page)\
                 .sort({self.order_by: self.order})
