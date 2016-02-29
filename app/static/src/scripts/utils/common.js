@@ -20,7 +20,7 @@ $(function () {
 
 //dropdown菜单
 $(function () {
-   $("a[data-toggle='dropdown']").on('click', function () {
+   $("a[data-toggle='dropdown']").on('click blur', function () {
        var toggle = $(this).data('toggle');
       $(this).closest('.'+toggle).toggleClass('open');
    });

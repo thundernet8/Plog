@@ -36,12 +36,12 @@
         <section class="editor-actions">
             <button type="button" class="post-settings"><span class="glyphicon glyphicon-cog"></span></button>
             <section class="splitbtn post-actions">
-                <button type="button" class="btn btn-sm btn-info publish-button">保存草稿</button>
-                <button role="button" class="btn btn-sm btn-info dropdown-toggle closed"><span class="glyphicon glyphicon-menu-down"></span></button>
-                <div class="publish-options fade-out closed">
+                <button type="button" class="btn btn-sm btn-info publish-button" data-action="draft">保存草稿</button>
+                <button role="button" class="btn btn-sm btn-info dropdown-toggle closed" data-toggle="dropdown"><span class="glyphicon glyphicon-menu-down"></span></button>
+                <div class="publish-options dropdown fade-out closed">
                     <ul class="dropdown-menu dropdown-triangle-bottom-right">
-                        <li class="post-save-publish"><a href="javascript:void(0)">立即发布</a></li>
-                        <li class="post-save-draft"><a href="javascript:void(0)">保存草稿</a></li>
+                        <li class="post-save-publish" data-action="publish"><a href="javascript:void(0)">立即发布</a></li>
+                        <li class="post-save-draft active" data-action="draft"><a href="javascript:void(0)">保存草稿</a></li>
                         {% if post %}
                         <li class="divider delete"></li>
                         <li class="post-delete"><a href="javascript:void(0)">删除文章</a></li>
@@ -55,7 +55,11 @@
     <section class="editor-container">
         <section class="entry-markdown active">
             <section id="entry-markdown-content" class="entry-markdown-content">
-                <textarea spellcheck="true" tabindex="1" class="markdown-editor"></textarea>
+                <textarea spellcheck="true" tabindex="1" class="markdown-editor">
+                    {% if post %}
+                    {{ post.markdown }}
+                    {% endif %}
+                </textarea>
             </section>
             <footer class="entry-markdown-footer">
                 <span class="desktop-tabs">Markdown</span>

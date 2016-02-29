@@ -187,13 +187,55 @@ $(function () {
 //文章
 //文章编辑 - 自动生成预览
 $(function () {
+   if (!$('body').hasClass('dashboard-post-edit')) return;
    var mdTextarea = $('.entry-markdown textarea'),
        previewArea = $('.entry-preview .rendered-markdown'),
+       countBoard = $('.entry-word-count'),
        md, html;
-    mdTextarea.keyup(function () {
+    function parseMarkdown() {
         md = mdTextarea.val();
         html = mdParser.toHTML(md);
-        console.log(html);
+        //console.log(html);
         previewArea.html(html);
+        countBoard.text(previewArea.text().length.toString() + '个字');
+    }
+    parseMarkdown();
+    mdTextarea.keyup(parseMarkdown);
+});
+
+//发布按钮下拉框
+$(function () {
+   $('button.dropdown-toggle').on('click', function () {
+       if ($(this).hasClass('closed')){
+           $(this).removeClass('closed').addClass('open');
+           $(this).next().removeClass('fade-out closed').addClass('fade-in-scale open');
+       }else{
+           $(this).removeClass('open').addClass('closed');
+           $(this).next().removeClass('fade-in-scale open').addClass('fade-out closed');
+       }
+   }) ;
+
+   $('ul.dropdown-menu>li').on('click', function () {
+       var $this = $(this),
+           action = $this.data('action');
+       $this.siblings().removeClass('active').end().addClass('active').closest('.splitbtn').children().first()
+           .text($this.text()).toggleClass('btn-info btn-danger').data('action', action).next().toggleClass('btn-info btn-danger').trigger('click');
+   });
+});
+
+//发布或保存文章
+$(function () {
+    $('.publish-button').on('click', function () {
+       var btn = $(this),
+           action = btn.data('action'),
+           titleInput = $('#entry-title'),
+           title = titleInput.val(),
+           markdown = $('.entry-markdown textarea').val();
+        if(title == ''){
+            titleInput.focus();
+            return;
+        }
+        
+
     });
 });

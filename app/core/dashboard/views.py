@@ -141,7 +141,7 @@ def footer_navigations():
 # 设置
 @dashboard.route('/settings')
 def settings():
-    return redirect(url_for('dashboard.general'))
+    return redirect(url_for('dashboard.general_setting'))
 
 
 @dashboard.route('/settings/general', methods=['GET', 'POST'])

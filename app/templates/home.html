@@ -13,9 +13,9 @@
 {% endblock %}
 
 {% block css %}
-<!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
-<link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-home.css') }}">
+    <!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-home.css') }}">
 {% endblock %}
 
 {% block header %}
@@ -31,32 +31,32 @@
         <!-- Banner L1 -->
         <div class="big-banner hover-scale">
             <div class="back-img">
-                <img src="http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg" alt="#todo">
+                <img src="{{ Setting.get_setting('big_banner') }}" alt="#todo">
             </div>
-            <a href="/#todo" target="_blank">
+            <a href="{{ Setting.get_setting('big_banner_link') }}" target="_blank">
                 <div class="banner-content">
-                    <h1 class="banner-h1">微信提现收费罪在银行？抱歉，这锅弱势群体不背</h1>
+                    <h1 class="banner-h1">{{ Setting.get_setting('big_banner_title') }}</h1>
                 </div>
             </a>
         </div>
         <!-- Banner L2 -->
         <div class="big-banner2 hover-scale pull-left">
             <div class="back-img">
-                <img src="http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg" alt="#todo">
+                <img src="{{ Setting.get_setting('tiny_banner1') }}" alt="#todo">
             </div>
-            <a href="#todo" target="_blank">
+            <a href="{{ Setting.get_setting('tiny_banner1_link') }}" target="_blank">
                 <div class="banner-content">
-                    <h2 class="banner-h2">微信提现收费罪在银行</h2>
+                    <h2 class="banner-h2">{{ Setting.get_setting('tiny_banner1_title') }}</h2>
                 </div>
             </a>
         </div>
         <div class="big-banner2 hover-scale pull-right">
             <div class="back-img">
-                <img src="http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg" alt="#todo">
+                <img src="{{ Setting.get_setting('tiny_banner2') }}" alt="#todo">
             </div>
-            <a href="#todo" target="_blank">
+            <a href="{{ Setting.get_setting('tiny_banner2_link') }}" target="_blank">
                 <div class="banner-content">
-                    <h2 class="banner-h2">这次弱势群体有话说</h2>
+                    <h2 class="banner-h2">{{ Setting.get_setting('tiny_banner2_title') }}</h2>
                 </div>
             </a>
         </div>

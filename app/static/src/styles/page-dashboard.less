@@ -741,6 +741,25 @@ body{
   }
 }
 
+//content - setting - reading
+.page-container {
+
+  .main-content {
+
+    .content {
+
+      #setting-reading {
+        padding-left: 20px;
+        padding-right: 20px;
+
+        .form-group {
+          max-width: 500px;
+        }
+      }
+    }
+  }
+}
+
 //content - post -edit
 .page-container {
 
@@ -855,6 +874,41 @@ body{
               .glyphicon{
                 color: #FFFFFF;
                 text-align: center;
+              }
+            }
+
+            .dropdown{
+              position: relative;
+              z-index: 999;
+            }
+
+            .dropdown-menu{
+              top: 35px;
+              right: 0;
+              left: auto;
+              padding: 10px;
+              min-width: 200px;
+
+              &>li{
+                margin-bottom: 2px;
+
+                a{
+                  border-radius: 3px;
+
+                  &:hover{
+                    background: rgba(91, 164, 229, 0.15);
+                    color: #242628;
+                    text-decoration: none;
+                  }
+
+                }
+
+                &.active{
+                  a{
+                    background-color: #5bc0de;
+                    color: #FFFFFF;
+                  }
+                }
               }
             }
           }

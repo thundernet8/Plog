@@ -32,6 +32,57 @@
 <section class="content">
     <form id="setting-reading" class="" method="post">
         {{ form.hidden_tag() }}
+        <div class="form-group">
+            <label>博客首页大幻灯</label>
+            <img class="blog-big-banner" alt="big_banner" role="button" src="{{ Setting.get_setting('big_banner') or 'http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg' }}">
+            <input id="blog-big-banner" name="reading[big_banner]" type="hidden" value="{{ Setting.get_setting('big_banner') or 'http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg' }}">
+            <p class="help-block">博客首页顶部大幻灯图片</p>
+        </div>
+        <div class="form-group">
+            <label for="big-banner-title">大幻灯标题</label>
+            <input id="big-banner-title" name="reading[big_banner_title]" type="text" class="text-input ember-view form-control" value="{{ Setting.get_setting('big_banner_title') }}">
+            <p class="help-block">设置大幻灯的标题</p>
+        </div>
+        <div class="form-group">
+            <label for="big-banner-link">大幻灯链接</label>
+            <input id="big-banner-link" name="reading[big_banner_link]" type="text" class="text-input ember-view form-control" value="{{ Setting.get_setting('big_banner_link') }}">
+            <p class="help-block">设置大幻灯的链接</p>
+        </div>
+
+        <div class="form-group">
+            <label>博客首页小幻灯1</label>
+            <img class="blog-tiny-banner1" alt="tiny_banner1" role="button" src="{{ Setting.get_setting('tiny_banner1') or 'http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg' }}">
+            <input id="blog-tiny-banner1" name="reading[tiny_banner1]" type="hidden" value="{{ Setting.get_setting('tiny_banner1') or 'http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg' }}">
+            <p class="help-block">博客首页顶部小幻灯1图片</p>
+        </div>
+        <div class="form-group">
+            <label for="tiny-banner1-title">小幻灯1标题</label>
+            <input id="tiny-banner1-title" name="reading[tiny_banner1_title]" type="text" class="text-input ember-view form-control" value="{{ Setting.get_setting('tiny_banner1_title') }}">
+            <p class="help-block">设置小幻灯1的标题</p>
+        </div>
+        <div class="form-group">
+            <label for="tiny-banner1-link">小幻灯1链接</label>
+            <input id="tiny-banner1-link" name="reading[tiny_banner1_link]" type="text" class="text-input ember-view form-control" value="{{ Setting.get_setting('tiny_banner1_link') }}">
+            <p class="help-block">设置小幻灯1的链接</p>
+        </div>
+
+        <div class="form-group">
+            <label>博客首页小幻灯2</label>
+            <img class="blog-tiny-banner2" alt="tiny_banner2" role="button" src="{{ Setting.get_setting('tiny_banner2') or 'http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg' }}">
+            <input id="blog-tiny-banner2" name="reading[tiny_banner2]" type="hidden" value="{{ Setting.get_setting('tiny_banner2') or 'http://images.huxiu.com/article/cover/201602/16/080449809182.jpg?imageView2/1/w/1600/h/900/imageMogr2/strip/interlace/1/format/jpg' }}">
+            <p class="help-block">博客首页顶部小幻灯1图片</p>
+        </div>
+        <div class="form-group">
+            <label for="tiny-banner2-title">小幻灯2标题</label>
+            <input id="tiny-banner2-title" name="reading[tiny_banner2_title]" type="text" class="text-input ember-view form-control" value="{{ Setting.get_setting('tiny_banner2_title') }}">
+            <p class="help-block">设置小幻灯2的标题</p>
+        </div>
+        <div class="form-group">
+            <label for="tiny-banner2-link">小幻灯2链接</label>
+            <input id="tiny-banner2-link" name="reading[tiny_banner2_link]" type="text" class="text-input ember-view form-control" value="{{ Setting.get_setting('tiny_banner2_link') }}">
+            <p class="help-block">设置小幻灯2的链接</p>
+        </div>
+
         <fieldset>
             <div class="form-group">
                 <label for="posts-per-page">每页显示博文数</label>
