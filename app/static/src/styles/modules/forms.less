@@ -76,6 +76,13 @@ input[type=submit]{
   }
 }
 
+input, textarea, button{
+  &:focus{
+    outline: none;
+  }
+}
+
+
 .help-block {
     display: block;
     margin-top: 5px;
@@ -85,10 +92,4 @@ input[type=submit]{
     &.has-error{
        color: #a94442;
     }
-}
-
-input, textarea, button{
-  &:focus{
-    outline: none;
-  }
 }

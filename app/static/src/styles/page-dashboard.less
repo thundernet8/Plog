@@ -4,6 +4,11 @@
 //scrollbar
 @import "utils/perfect-scrollbar";
 
+//图片上传器
+@import "modules/uploader";
+//加载指示器
+@import "modules/loader";
+
 //dashboard
 .hide{
   display: none;
@@ -1050,6 +1055,186 @@ body{
       .content{
         margin: -30px -30px -31px;
         padding: 0;
+      }
+    }
+  }
+}
+
+//文章选项控制板
+.dashboard-post-edit{
+  #entry-controls{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 500;
+    overflow: hidden;
+    width: 350px;
+    border-left: 1px solid #dfe1e3;
+    background: #FFFFFF;
+    transition: -webkit-transform .4s cubic-bezier(0.1,.7,.1,1);
+    transition: transform .4s cubic-bezier(0.1,.7,.1,1);
+    -webkit-transform: translate3d(350px,0,0);
+    transform: translate3d(350px,0,0);
+
+    header{
+      position: relative;
+      display: -webkit-flex;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-justify-content: space-between;
+      -ms-flex-pack: justify;
+      justify-content: space-between;
+      -webkit-align-items: center;
+      -ms-flex-align: center;
+      align-items: center;
+      padding: 15px 24px;
+
+      h4{
+        margin: 0;
+        font-size: 16px;
+        line-height: 1.5;
+        font-weight: 400;
+      }
+
+      .close{
+        margin-right: -15px;
+        padding: 10px 15px;
+        font-size: 20px;
+        line-height: 20px;
+        opacity: .6;
+      }
+    }
+
+    .post-settings-menu-content{
+      padding: 0 24px 24px;
+
+      .image-uploader{
+        margin: 0 0 16px;
+
+        .description{
+          font-size: 14px;
+        }
+      }
+
+      .form-group{
+        .help-block{
+          margin: 4px 0 0;
+          color: #b1b1b1;
+          font-size: 13px;
+        }
+      }
+
+      .icon-link{
+        display: block;
+
+        &:before{
+          position: absolute;
+          top: 50%;
+          left: 10px;
+          z-index: 100;
+          font-size: 13px;
+          -webkit-transform: translateY(-52%);
+          transform: translateY(-52%);
+          color: #3d4043;
+          opacity: .8;
+        }
+
+        #url{
+          padding-left: 28px;
+        }
+      }
+
+      .selectize-control{
+        position: relative;
+
+        .selectize-items{
+          position: relative;
+          display: inline-block;
+          z-index: 1;
+          overflow: hidden;
+          box-sizing: border-box;
+          width: 100%;
+          height: auto;
+          min-height: 35px;
+          padding: 5px 5px 2px;
+          border: 1px solid #dfe1e3;
+          border-radius: 4px;
+          color: #666;
+          transition: border-color .15s linear;
+
+          .item{
+            position: relative;
+            display: inline-block;
+            padding: 1px 20px 1px 4px;
+            margin: 0 3px 3px 0;
+            border-radius: 3px;
+            background: #5ba4e5;
+            color: #FFFFFF;
+            cursor: pointer;
+
+            .remove{
+              position: absolute;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              z-index: 1;
+              display: -webkit-flex;
+              display: -ms-flexbox;
+              display: flex;
+              -webkit-justify-content: center;
+              -ms-flex-pack: center;
+              justify-content: center;
+              -webkit-align-items: center;
+              -ms-flex-align: center;
+              align-items: center;
+              box-sizing: border-box;
+              width: 17px;
+              border-radius: 0 2px 2px 0;
+              color: inherit;
+              vertical-align: middle;
+              text-align: center;
+              text-decoration: none;
+              font-size: 12px;
+              font-weight: 700;
+            }
+          }
+
+          &>input{
+            display: inline-block!important;
+            margin: 0 1px!important;
+            padding: 0!important;
+            min-height: 0!important;
+            max-width: 100%!important;
+            max-height: none!important;
+            border: 0!important;
+            background: none!important;
+            box-shadow: none!important;
+            text-indent: 0!important;
+            line-height: inherit!important;
+          }
+        }
+      }
+
+
+    }
+  }
+
+  &.post-setting-menu-expanded{
+    .page-container{
+      position: fixed;
+    }
+
+    #entry-controls{
+      -webkit-transform: translate3d(0,0,0);
+      transform: translate3d(0,0,0);
+
+      .post-settings-menu{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        overflow-y: auto;
       }
     }
   }

@@ -1,0 +1,46 @@
+.image-uploader{
+  position: relative;
+  overflow: hidden;
+  margin: 1.6em 0;
+  padding: 55px 60px;
+  width: 100%;
+  height: auto;
+  background: #f6f7f8;
+  border-radius: 4px;
+  color: #808284;
+  text-align: center;
+
+  .description{
+    font-size: 16px;
+  }
+
+  input{
+    &.fileupload{
+      position: absolute;
+      right: 0;
+      margin: 0;
+      font-size: 23px;
+      opacity: 0;
+      cursor: pointer;
+      -webkit-transform: scale(14);
+      transform: scale(14);
+      -webkit-transform-origin: right;
+      transform-origin: right;
+      direction: ltr;
+    }
+  }
+
+  .failed{
+    position: relative;
+    top: -40px;
+    font-size: 16px;
+  }
+
+  .retry{
+    position: relative;
+    z-index: 700;
+    display: inline-block;
+    margin-top: 10px;
+    color: #FFFFFF;
+  }
+}

@@ -10,6 +10,8 @@ var $ = require('jquery');
 var Ps = require('perfect-scrollbar');
 //Markdown 解析器
 var mdParser = require('markdown').markdown;
+//加载指示器
+var loader = require('./utils/loader').loaderIndicator;
 
 var siteUrl = window.location.protocol + '//' + window.location.host;
 
@@ -235,7 +237,26 @@ $(function () {
             titleInput.focus();
             return;
         }
-        
+
 
     });
+});
+
+//侧滑文章选项面板
+$(function () {
+    if($('button.post-settings').length > 0){
+        var postSettingPannelTrigger = $('button.post-settings');
+            //closeSettingPannelTrigger = $('.post-settings-menu button.close');
+        postSettingPannelTrigger.on('click', function (e) {
+            $('body').removeClass('post-setting-menu-expanded').addClass('post-setting-menu-expanded');
+            e.stopPropagation();
+        });
+        //closeSettingPannelTrigger.on('click', function () {
+        //   $('body').removeClass('post-setting-menu-expanded');
+        //});
+        $('body').on('click', '.page-container, .post-settings-menu button.close', function () {
+            $('body').removeClass('post-setting-menu-expanded');
+        });
+    }
+
 });

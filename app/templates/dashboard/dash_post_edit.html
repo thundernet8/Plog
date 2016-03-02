@@ -40,11 +40,11 @@
                 <button role="button" class="btn btn-sm btn-info dropdown-toggle closed" data-toggle="dropdown"><span class="glyphicon glyphicon-menu-down"></span></button>
                 <div class="publish-options dropdown fade-out closed">
                     <ul class="dropdown-menu dropdown-triangle-bottom-right">
-                        <li class="post-save-publish" data-action="publish"><a href="javascript:void(0)">立即发布</a></li>
+                        <li class="post-save-publish" data-action="publish"><a href="javascript:void(0)">{% if post and post.status=='publish' %}更新文章{% else %}立即发布{% endif %}</a></li>
                         <li class="post-save-draft active" data-action="draft"><a href="javascript:void(0)">保存草稿</a></li>
                         {% if post %}
                         <li class="divider delete"></li>
-                        <li class="post-delete"><a href="javascript:void(0)">删除文章</a></li>
+                        <li class="post-delete" data-action="delete"><a href="javascript:void(0)">删除文章</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -55,11 +55,7 @@
     <section class="editor-container">
         <section class="entry-markdown active">
             <section id="entry-markdown-content" class="entry-markdown-content">
-                <textarea spellcheck="true" tabindex="1" class="markdown-editor">
-                    {% if post %}
-                    {{ post.markdown }}
-                    {% endif %}
-                </textarea>
+                <textarea spellcheck="true" tabindex="1" class="markdown-editor">{% if post %}{{- post.markdown -}}{% endif %}</textarea>
             </section>
             <footer class="entry-markdown-footer">
                 <span class="desktop-tabs">Markdown</span>
@@ -77,4 +73,69 @@
         </section>
     </section>
 </section>
+{% endblock %}
+
+{% block body_end %}
+<div id="entry-controls" class="post-settings-container">
+    <div class="post-settings-menu">
+        <header>
+            <h4>博文设置</h4>
+            <button class="close">×<span class="hidden">关闭</span></button>
+        </header>
+        <div class="post-settings-menu-content">
+            <section class="image-uploader js-post-image-upload">
+                {% if post and post.image %}
+                <img class="js-upload-target" src="{{ post.image }}">
+                {% else %}
+                <img class="js-upload-target hidden" src="">
+                {% endif %}
+                <div class="description">为博文设置图片</div>
+                <input class="js-fileupload fileupload" type="file" name="uploadimage" data-url="upload">
+                <div class="js-fail failed" style="display: none">发生故障了：(</div>
+                <button class="retry btn btn-info" style="display: none">重试</button>
+            </section>
+            <form>
+                <div class="form-group">
+                    <label for="url">博文地址</label>
+                    <span class="input-icon icon-link glyphicon glyphicon-link">
+                        <input id="url" name="post-setting-slug" type="text" class="post-setting-slug form-control">
+                    </span>
+                    <p class="description post-url-preview help-block">{{ post.slug or url_for('main.index', _external=True) }}</p>
+                </div>
+                <div class="form-group">
+                    <label for="tag-input">标签</label>
+                    <select id="tag-input" multiple="multiple" autocomplete="off" class="selector hidden">
+                        <!--option value="1" selected="selected">标签1</option-->
+                    </select>
+                    <div class="selectize-control multi">
+                        <div class="selectize-items">
+                            <div data-value="1" class="item">
+                                标签1
+                                <a href="javascript:void(0)" class="remove" tabindex="-1" title="移除">×</a>
+                            </div>
+                            <input type="text" autocomplete="off" tabindex="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="meta-title">SEO标题</label>
+                    <input id="meta-title" class="form-control" name="post-setting-meta-title" type="text">
+                    <p class="help-block">建议: 70 个字符以内</p>
+                </div>
+                <div class="form-group">
+                    <label for="meta-descrition">SEO描述</label>
+                    <input id="meta-descrition" class="form-control" name="post-setting-meta-descrition" type="text">
+                    <p class="help-block">建议: 156 个字符以内</p>
+                </div>
+                <div class="form-group for-checkbox">
+                    <label class="checkbox" for="static-page">
+                        <input id="static-page" type="checkbox" name="static-page" class="post-setting-static-page input-checkbox">
+                        <span class="input-toggle-component"></span>
+                        <p>设置为页面(采用独立模板,不出现在文章列表中)</p>
+                    </label>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

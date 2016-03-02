@@ -17,6 +17,7 @@ from .forms import GeneralSettingForm
 from .forms import ReadingSettingForm
 from .forms import DiscussionSettingForm
 from app.core.models.settings import Setting
+from app.core.models.posts import Post
 
 
 # 验证登录
@@ -65,12 +66,13 @@ def all_posts():
 
 @dashboard.route('/post/editor')
 def new_post():
-    return render_template('dashboard/dash_post_edit.html', request=request)
+    return render_template('dashboard/dash_post_edit.html', post=None)
 
 
 @dashboard.route('/post/editor/<int:post_id>')
-def edit_post():
-    return render_template('dashboard/dash_post_edit.html', request=request)
+def edit_post(post_id):
+    post = Post.get_post(post_id)
+    return render_template('dashboard/dash_post_edit.html', post=post)
 
 
 # 标签
