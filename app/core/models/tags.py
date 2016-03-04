@@ -143,7 +143,7 @@ class Tag(object):
         :param name: 标签名
         :return: 增加/更新的标签 id or None
         """
-        slug = slug_generator(name)
+        slug = get_slug(name)
         slug_count = 0
         try:
             count = mongo.db.tags.count({'slug': slug})
@@ -160,7 +160,7 @@ class Tag(object):
                     'tag_id': get_next_sequence('tag_id'),
                     'slug': slug
                 }
-            })
+            }, upsert=True)
             tag = mongo.db.tags.find_one({'name': name})
             if result and tag:
                 return tag.get('tag_id')

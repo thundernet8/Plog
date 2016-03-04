@@ -19,7 +19,7 @@
             <li>
                 <a href="{{ url_for('dashboard.posts') }}">文章</a>
             </li>
-            <li>编辑</li>
+            <li>编辑器</li>
         </ol>
     </div>
     <div class="clearfix"></div>
@@ -30,6 +30,7 @@
 <section class="content">
     <!-- 编辑器头,包括标题和配置/保存按钮 -->
     <header class="editor-header">
+        <input id="entry-pid-token" type="hidden" value="{{ post.get_pid_token() if post else '' }}">
         <h2 class="editor-title">
             <input id="entry-title" class="text-input" type="text" tabindex="1" placeholder="文章标题">
         </h2>
@@ -109,10 +110,7 @@
                     </select>
                     <div class="selectize-control multi">
                         <div class="selectize-items">
-                            <div data-value="1" class="item">
-                                标签1
-                                <a href="javascript:void(0)" class="remove" tabindex="-1" title="移除">×</a>
-                            </div>
+                            <!--div data-value="1" class="item">标签1<a href="javascript:void(0)" class="remove" tabindex="-1" title="移除">×</a></div-->
                             <input type="text" autocomplete="off" tabindex="0">
                         </div>
                     </div>

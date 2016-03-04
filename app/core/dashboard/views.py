@@ -107,7 +107,7 @@ def edit_user(user_id):
     return render_template('dashboard/dash_user_edit.html', request=request)
 
 
-@dashboard.route('/users/myprofile')
+@dashboard.route('/users/me')
 def my_profile():
     return render_template('dashboard/dash_user_me.html', request=request)
 

@@ -49,15 +49,15 @@ if os.path.exists('.env'):
 app = create_app(os.getenv('PLOG_CONFIG') or 'default')
 
 
-# 错误处理
+# 错误处理 # 蓝本不支持404和500的处理方法
 @app.errorhandler(404)
 def app_404(e):
-    return render_template('error_pages/404.html')
+    return render_template('error_pages/404.html'), 404
 
 
 @app.errorhandler(500)
 def app_500(e):
-    return render_template('error_pages/500.html')
+    return render_template('error_pages/500.html'), 500
 
 # jinja_env
 app.jinja_env.globals['Setting'] = Setting

@@ -5,8 +5,10 @@ from datetime import datetime
 from random import randint
 
 import flask_pymongo
+from flask import current_app
 from flask import abort
 from flask import url_for
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask.ext.login import current_user
 
 from app import mongo
@@ -43,6 +45,7 @@ class Post(object):
     :comment_status 文章评论状态
     :comment_count 文章评论数量
     :view_count 阅读数量
+    :tag_ids 文章标签 id 拼合字符串
     """
 
     ##
@@ -91,6 +94,7 @@ class Post(object):
         self.comment_status = kwargs.get('comment_status', 1)
         self.comment_count = kwargs.get('comment_count', 0)
         self.view_count = kwargs.get('view_count', 0)
+        self.tag_ids = kwargs.get('tag_ids', '')
 
     ##
     # 文章操作
@@ -445,6 +449,29 @@ class Post(object):
         :return: 文章固定链接
         """
         return url_for('main.article_detail', post_id=self.post_id, _external=external)
+
+    def get_pid_token(self, expiration=3600*24):
+        """
+        加密文章 post_id 防止篡改
+        :param expiration: token 过期时间
+        :return: token 字符串
+        """
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'editor_pid': self.post_id}).decode('ascii')
+
+    @staticmethod
+    def get_pid_from_token(token):
+        """
+        从加密的 pid token 中获得原始 post_id
+        :param token:  包含 post_id 信息的 token
+        :return:  原始 post_id 或 0
+        """
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return 0
+        return data.get('editor_pid', 0)
 
 
 class Posts(object):

@@ -2,7 +2,7 @@
 
 from flask import request
 from flask import jsonify
-from flask.ext.login import login_user
+from flask import url_for
 
 from . import api
 from .errors import value_error
@@ -10,24 +10,25 @@ from .errors import action_failed
 from app.core.models.users import User
 
 
-@api.route('/login', methods=['POST'])
-def login():
-    """
-    登录 api 接口
-    :return: 结果 json
-    """
-    # POST username/password
-    username = request.form.get('username')  # TODO 可采用邮箱登录
-    password = request.form.get('password')
-    # print(request.form)
+@api.route('/authentication/refresh', methods=['GET', 'POST'])
+def refresh_token():
+    refresh = request.form.get('refresh_token') or request.args.get('refresh_token')
+    new_token = User.refresh_access_token(refresh)
+    if new_token and isinstance(new_token, dict):
+        return jsonify(new_token)
+    return jsonify({'grant_token': url_for('api.grant_token', _external=True)})
+
+
+@api.route('/authentication/token', methods=['GET', 'POST'])
+def grant_token():
+    username = request.form.get('username') or request.args.get('username')
+    password = request.form.get('password') or request.args.get('password')
     if not username or not password:
         # parameters are invalid
         return value_error(u"无效的用户名或密码")
     try:
         user = User(name=username)
         if user and user.verify_password(password):
-            # login_manager 保存登录状态
-            login_user(user, remember=True)  # TODO 可让用户选择是否保存登录状态
             # ajax response
             # 生成 token
             tokens = user.generate_access_token()

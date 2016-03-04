@@ -37,139 +37,139 @@ class Permission(object):
         """
         permissions = [
             {
-                'id': 1,
+                'permission_id': 1,
                 'name': 'import_db',
                 'type': 'db',
                 'action_type': 'importContent'
             },
             {
-                'id': 2,
+                'permission_id': 2,
                 'name': 'delete_db_content',
                 'type': 'db',
                 'action_type': 'deleteContent'
             },
             {
-                'id': 3,
+                'permission_id': 3,
                 'name': 'send_mail',
                 'type': 'mail',
                 'action_type': 'send'
             },
             {
-                'id': 4,
+                'permission_id': 4,
                 'name': 'read_notifications',
                 'type': 'notification',
                 'action_type': 'read'
             },
             {
-                'id': 5,
+                'permission_id': 5,
                 'name': 'add_notifications',
                 'type': 'notification',
                 'action_type': 'add'
             },
             {
-                'id': 6,
+                'permission_id': 6,
                 'name': 'delete_notifications',
                 'type': 'notification',
                 'action_type': 'delete'
             },
             {
-                'id': 7,
+                'permission_id': 7,
                 'name': 'read_posts',
                 'type': 'post',
                 'action_type': 'read'
             },
             {
-                'id': 8,
+                'permission_id': 8,
                 'name': 'edit_posts',
                 'type': 'post',
                 'action_type': 'edit'
             },
             {
-                'id': 9,
+                'permission_id': 9,
                 'name': 'edit_self_posts',
                 'type': 'post',
                 'action_type': 'edit'
             },
             {
-                'id': 10,
+                'permission_id': 10,
                 'name': 'add_posts',
                 'type': 'post',
                 'action_type': 'add'
             },
             {
-                'id': 11,
+                'permission_id': 11,
                 'name': 'publish_posts',
                 'type': 'post',
                 'action_type': 'add'
             },
             {
-                'id': 12,
+                'permission_id': 12,
                 'name': 'delete_posts',
                 'type': 'post',
                 'action_type': 'delete'
             },
             {
-                'id': 13,
+                'permission_id': 13,
                 'name': 'delete_self_posts',
                 'type': 'post',
                 'action_type': 'delete'
             },
             {
-                'id': 14,
+                'permission_id': 14,
                 'name': 'read_settings',
                 'type': 'setting',
                 'action_type': 'read'
             },
             {
-                'id': 15,
+                'permission_id': 15,
                 'name': 'edit_setting',
                 'type': 'setting',
                 'action_type': 'edit'
             },
             {
-                'id': 16,
+                'permission_id': 16,
                 'name': 'edit_tags',
                 'type': 'tag',
                 'action_type': 'edit'
             },
             {
-                'id': 17,
+                'permission_id': 17,
                 'name': 'add_tags',
                 'type': 'tag',
                 'action_type': 'add'
             },
             {
-                'id': 18,
+                'permission_id': 18,
                 'name': 'delete_tags',
                 'type': 'tag',
                 'action_type': 'delete'
             },
             {
-                'id': 19,
+                'permission_id': 19,
                 'name': 'read_users',
                 'type': 'user',
                 'action_type': 'read'
             },
             {
-                'id': 20,
+                'permission_id': 20,
                 'name': 'edit_users',
                 'type': 'user',
                 'action_type': 'edit'
             },
             {
-                'id': 21,
+                'permission_id': 21,
                 'name': 'ban_users',
                 'type': 'user',
                 'action_type': 'edit'
             },
             {
-                'id': 22,
+                'permission_id': 22,
                 'name': 'add_users',
                 'type': 'user',
                 'action_type': 'add'
             },
             {
-                'id': 23,
+                'permission_id': 23,
                 'name': 'delete_users',
                 'type': 'user',
                 'action_type': 'delete'

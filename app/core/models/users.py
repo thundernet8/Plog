@@ -188,8 +188,8 @@ class User(UserMixin):
             data = s.loads(token)
         except:
             return False
-        user = User(data.get('email'))
-        if not user:
+        user = User(email=data.get('email'))
+        if not user or not user.user_id:
             return False
         if data.get('reset_uid') != user.user_id:
             return False
@@ -241,6 +241,60 @@ class User(UserMixin):
             }
         })
         return True
+
+    def generate_access_token(self, expiration=3600):
+        """
+        生成用于 API 访问的Access_token
+        :param expiration: Access_token 过期时间
+        :return: 包含Access_token的字典
+        """
+        s1 = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        s2 = Serializer(current_app.config['SECRET_KEY'], expires_in=3600*24*10)
+        access_token = s1.dumps({'token_uid': self.user_id, 'token_usage': 'access'}).decode('ascii')
+        refresh_token = s2.dumps({'token_uid': self.user_id, 'token_usage': 'refresh'}).decode('ascii')
+        return dict(access_token=access_token, refresh_token=refresh_token, expires_in=expiration,
+                    expires_at=int(time.time())+expiration, token_type='Bearer')
+
+    @staticmethod
+    def verify_access_token(access_token):
+        """
+        验证 Access_token
+        :param access_token: access_token
+        :return: 验证成功返回对应用户,否则返回 False
+        """
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(access_token)
+        except:
+            return False
+        if data.get('token_usage') != 'access':
+            return False
+        user = User(user_id=data.get('token_uid'))
+        if not user or not user.user_id or not user.is_active:
+            return False
+        return user
+
+    @staticmethod
+    def refresh_access_token(refresh_token, expiration=3600):
+        """
+        刷新 Access_token
+        :param refresh_token: refresh_token
+        :param expiration: 新 Access_token 有效时间
+        :return: 成功返回包含新的 Access_token 的字典,否则返回False
+        """
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(refresh_token)
+        except:
+            return False
+        if data.get('token_usage') != 'refresh':
+            return False
+        if not data.get('token_uid'):
+            return False
+        sa = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        access_token = sa.dumps({'token_uid': data.get('token_uid'), 'token_usage': 'access'}).decode('ascii')
+        return dict(access_token=access_token, refresh_token=refresh_token, expires_in=expiration,
+                    expires_at=int(time.time())+expiration, token_type='Bearer')
 
     ##
     # 用户属性

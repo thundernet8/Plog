@@ -83,6 +83,16 @@ $(function () {
                console.log(common.getUrlPara('redirect'));
              if(data.success && data.success==1){
                   submitBtn.text('登录成功');
+                  //存储 token 到 localStorage
+                  var secureInfo = {
+                    plog_authenticator: 'password_grant',
+                    access_token: data.access_token,
+                    expires_in: data.expires_in,
+                    expires_at: data.expires_at,
+                    refresh_token: data.refresh_token,
+                    token_type: data.token_type
+                  };
+                 localStorage.setItem('Plog:Token', JSON.stringify(secureInfo));
                   setTimeout(function () {
                       var href = common.getUrlPara('redirect') ? (decodeURIComponent(common.getUrlPara('redirect')).indexOf("http") == 0 ? decodeURIComponent(common.getUrlPara('redirect')) : siteUrl + '/' + decodeURIComponent(common.getUrlPara('redirect'))) : siteUrl;
                       //console.log(href);

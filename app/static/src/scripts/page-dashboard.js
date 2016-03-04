@@ -5,16 +5,22 @@
  */
 
 var $ = require('jquery');
-
+var common = require('./utils/common');
 //scrollbar plugin
 var Ps = require('perfect-scrollbar');
 //Markdown 解析器
 var mdParser = require('markdown').markdown;
 //加载指示器
 var loader = require('./utils/loader').loaderIndicator;
+//Token 监视器
+var tokenMonitor = require('./utils/token-monitor');
+//图片上传
+var upload = require('./utils/upload');
 
-var siteUrl = window.location.protocol + '//' + window.location.host;
-
+//监视 token
+$(function () {
+   tokenMonitor();
+});
 
 //边栏二级菜单展开
 $(function () {
@@ -259,4 +265,117 @@ $(function () {
         });
     }
 
+});
+
+//文章选项面板博文地址预览
+$(function () {
+   $('input[name="post-setting-slug"]').keyup(function () {
+       var slug = $(this).val();
+       var previewDiv = $(this).parent().next();
+       previewDiv.text(common.getSiteUrl() + '/' + encodeURIComponent(slug));
+   }) ;
+});
+
+//文章选项面板标签处理
+$(function () {
+    var select = $('#tag-input');
+    var itemsWrap = $('.selectize-items');
+    var tags = [];
+    var updateSelectOptions = function(){
+        select.html('');
+        tags = [];
+        itemsWrap.children('.item').each(function () {
+            select.append('<option value="' + $(this).data('value') + '" selected="selected">' + $(this).text().replace('×', '') + '</option>');
+            tags.push($(this).text().replace('×', ''));
+        })
+    };
+    updateSelectOptions();
+
+    itemsWrap.on('click', 'a.remove', function () {
+       $(this).parent().remove();
+        updateSelectOptions();
+    });
+    itemsWrap.children('input').keyup(function (e) {
+        var $this = $(this);
+        var newTag;
+        if(e.keyCode==13 && $this.val()){
+            if(tags.indexOf($this.val()) != -1 ){
+                alert('请勿重复添加标签');
+            }else{
+                $.ajax({
+                    url: common.getSiteUrl()+'/api/v1.0/tags/' + $this.val(),
+                    method: 'put',
+                    dataType: 'json',
+                    beforeSend: function(xhr){
+                        xhr.setRequestHeader('Authorization', "Bearer "+common.getStoredAccessToken());
+                    },
+                    success: function(data){
+                        console.log(data);
+                        if(!data.success && data.message) alert(data.message);
+                        if(!data.success || !data.tagId) return;
+                        newTag = '<div data-value="' + data.tagId + '" class="item">' + $this.val() + '<a href="javascript:void(0)" class="remove" tabindex="-1" title="移除">×</a></div>';
+                        $this.before(newTag);
+                        $this.val('');
+                        updateSelectOptions();
+                    },
+                    error: function(data){
+                        console.log('error');
+                    }
+                })
+            }
+
+        }
+    });
+});
+
+//提交文章
+$(function () {
+    var submitBtn = $('.dashboard-post-edit button.publish-button');
+    var title, markdown, pidToken, slug, metaTitle, metaDescription, thumbUrl, postType, tags, action;
+
+    function updatePostData(){
+        title = $('input#entry-title').val() || 'Untitled';
+        markdown = $('#entry-markdown-content textarea').val();
+        pidToken = $('input#entry-pid-token').val();
+        thumbUrl = $('img.js-upload-target').attr('src');
+        slug = $('input[name="post-setting-slug"]').val();
+        slug = encodeURIComponent(slug);
+        metaTitle = $('#meta-title').val();
+        metaDescription = $('#meta-descrition').val();
+        postType = $('input#static-page').is(':checked') ? 'page':'post';
+        tags = $('select#tag-input').val();
+        action = submitBtn.data('action') == 'publish' ? 'publish':'draft';
+    }
+
+    if(submitBtn){
+        submitBtn.on('click', function () {
+            updatePostData();
+            $.ajax({
+                url: common.getAPIUrl + '/posts',
+                method: 'post',
+                dataType: 'json',
+                data: {
+                    title: title,
+                    markdown: markdown,
+                    pidToken: pidToken,
+                    thumbUrl: thumbUrl,
+                    slug: slug,
+                    metaTitle: metaTitle,
+                    metaDescription: metaDescription,
+                    postType: postType,
+                    tags: tags,
+                    action: action
+                },
+                beforeSend: function(xhr){
+                    xhr.setRequestHeader('Authorization', "Bearer "+common.getStoredAccessToken());
+                },
+                success: function(data){
+
+                },
+                error: function(data){
+
+                }
+            })
+        })
+    }
 });
