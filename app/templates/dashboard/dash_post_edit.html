@@ -32,17 +32,27 @@
     <header class="editor-header">
         <input id="entry-pid-token" type="hidden" value="{{ post.get_pid_token() if post else '' }}">
         <h2 class="editor-title">
-            <input id="entry-title" class="text-input" type="text" tabindex="1" placeholder="文章标题">
+            <input id="entry-title" class="text-input" type="text" tabindex="1" placeholder="文章标题" value="{{ post.title if post else '' }}">
         </h2>
         <section class="editor-actions">
             <button type="button" class="post-settings"><span class="glyphicon glyphicon-cog"></span></button>
             <section class="splitbtn post-actions">
+                {% if post and post.status == 'published' %}
+                <button type="button" class="btn btn-sm btn-success publish-button" data-action="update">更新文章</button>
+                <button role="button" class="btn btn-sm btn-success dropdown-toggle closed" data-toggle="dropdown"><span class="glyphicon glyphicon-menu-down"></span></button>
+                {% else %}
                 <button type="button" class="btn btn-sm btn-info publish-button" data-action="draft">保存草稿</button>
                 <button role="button" class="btn btn-sm btn-info dropdown-toggle closed" data-toggle="dropdown"><span class="glyphicon glyphicon-menu-down"></span></button>
+                {% endif %}
                 <div class="publish-options dropdown fade-out closed">
                     <ul class="dropdown-menu dropdown-triangle-bottom-right">
-                        <li class="post-save-publish" data-action="publish"><a href="javascript:void(0)">{% if post and post.status=='publish' %}更新文章{% else %}立即发布{% endif %}</a></li>
+                        {% if not post or post.status != 'published' %}
+                        <li class="post-save-publish" data-action="publish"><a href="javascript:void(0)">立即发布</a></li>
                         <li class="post-save-draft active" data-action="draft"><a href="javascript:void(0)">保存草稿</a></li>
+                        {% else %}
+                        <li class="post-save-update active" data-action="update"><a href="javascript:void(0)">更新文章</a></li>
+                        <li class="post-save-draft" data-action="draft"><a href="javascript:void(0)">保存草稿</a></li>
+                        {% endif %}
                         {% if post %}
                         <li class="divider delete"></li>
                         <li class="post-delete" data-action="delete"><a href="javascript:void(0)">删除文章</a></li>
@@ -99,9 +109,9 @@
                 <div class="form-group">
                     <label for="url">博文地址</label>
                     <span class="input-icon icon-link glyphicon glyphicon-link">
-                        <input id="url" name="post-setting-slug" type="text" class="post-setting-slug form-control">
+                        <input id="url" name="post-setting-slug" type="text" class="post-setting-slug form-control" value="{{ post.slug if post else '' }}">
                     </span>
-                    <p class="description post-url-preview help-block">{{ post.slug or url_for('main.index', _external=True) }}</p>
+                    <p class="description post-url-preview help-block">{{ url_for('main.index', _external=True)+'article/'+post.slug if post else url_for('main.index', _external=True)+'article/' }}</p>
                 </div>
                 <div class="form-group">
                     <label for="tag-input">标签</label>
@@ -111,23 +121,25 @@
                     <div class="selectize-control multi">
                         <div class="selectize-items">
                             <!--div data-value="1" class="item">标签1<a href="javascript:void(0)" class="remove" tabindex="-1" title="移除">×</a></div-->
+                            {% import 'macros/dash_editor_tags.html' as tag_macro %}
+                            {{ tag_macro.output_tags(post.get_tags() if post else None) }}
                             <input type="text" autocomplete="off" tabindex="0">
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="meta-title">SEO标题</label>
-                    <input id="meta-title" class="form-control" name="post-setting-meta-title" type="text">
+                    <input id="meta-title" class="form-control" name="post-setting-meta-title" type="text" value="{{ post.meta_title if post else '' }}">
                     <p class="help-block">建议: 70 个字符以内</p>
                 </div>
                 <div class="form-group">
                     <label for="meta-descrition">SEO描述</label>
-                    <input id="meta-descrition" class="form-control" name="post-setting-meta-descrition" type="text">
+                    <input id="meta-descrition" class="form-control" name="post-setting-meta-descrition" type="text" value="{{ post.meta_description if post else '' }}">
                     <p class="help-block">建议: 156 个字符以内</p>
                 </div>
                 <div class="form-group for-checkbox">
                     <label class="checkbox" for="static-page">
-                        <input id="static-page" type="checkbox" name="static-page" class="post-setting-static-page input-checkbox">
+                        <input id="static-page" type="checkbox" name="static-page" class="post-setting-static-page input-checkbox" {{ ' checked="checked"' if post and post.type=='page' else '' }}>
                         <span class="input-toggle-component"></span>
                         <p>设置为页面(采用独立模板,不出现在文章列表中)</p>
                     </label>

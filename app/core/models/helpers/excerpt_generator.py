@@ -3,7 +3,7 @@
 import re
 
 
-def get_excerpt(text, count, suffix=u'', wrapper=u'p'):
+def get_excerpt(text, count, suffix=u'...', wrapper=u''):
     """
     获取摘要
     :param text: 文章原文本
@@ -18,5 +18,7 @@ def get_excerpt(text, count, suffix=u'', wrapper=u'p'):
     if not type(text) == unicode:
         text = text.decode('utf-8')
     excerpt = re.sub(r'<.*?>', u'', text)
-    excerpt = u''.join(excerpt.split())[0:count]
-    return u'<{0}>{1}{2}</{0}>'.format(wrapper, excerpt, suffix)
+    excerpt = u''.join(excerpt.split())[0:int(count)]
+    if wrapper:
+        return u'<{0}>{1}{2}</{0}>'.format(wrapper, excerpt, suffix)
+    return u'{0}{1}'.format(excerpt, suffix)

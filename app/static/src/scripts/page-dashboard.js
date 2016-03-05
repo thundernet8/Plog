@@ -12,6 +12,7 @@ var Ps = require('perfect-scrollbar');
 var mdParser = require('markdown').markdown;
 //加载指示器
 var loader = require('./utils/loader').loaderIndicator;
+loader = new loader();
 //Token 监视器
 var tokenMonitor = require('./utils/token-monitor');
 //图片上传
@@ -225,27 +226,11 @@ $(function () {
 
    $('ul.dropdown-menu>li').on('click', function () {
        var $this = $(this),
-           action = $this.data('action');
+           action = $this.data('action'),
+           btnClasses = {update: 'btn-success', publish: 'btn-warning', draft: 'btn-info', delete: 'btn-danger'};
        $this.siblings().removeClass('active').end().addClass('active').closest('.splitbtn').children().first()
-           .text($this.text()).toggleClass('btn-info btn-danger').data('action', action).next().toggleClass('btn-info btn-danger').trigger('click');
+           .text($this.text()).removeClass('btn-info btn-warning btn-success btn-danger').addClass(btnClasses[action]).data('action', action).next().removeClass('btn-info btn-warning btn-success btn-danger').addClass(btnClasses[action]).trigger('click');
    });
-});
-
-//发布或保存文章
-$(function () {
-    $('.publish-button').on('click', function () {
-       var btn = $(this),
-           action = btn.data('action'),
-           titleInput = $('#entry-title'),
-           title = titleInput.val(),
-           markdown = $('.entry-markdown textarea').val();
-        if(title == ''){
-            titleInput.focus();
-            return;
-        }
-
-
-    });
 });
 
 //侧滑文章选项面板
@@ -272,7 +257,7 @@ $(function () {
    $('input[name="post-setting-slug"]').keyup(function () {
        var slug = $(this).val();
        var previewDiv = $(this).parent().next();
-       previewDiv.text(common.getSiteUrl() + '/' + encodeURIComponent(slug));
+       previewDiv.text(common.getSiteUrl() + '/article/' + encodeURIComponent(slug));
    }) ;
 });
 
@@ -344,6 +329,7 @@ $(function () {
         metaDescription = $('#meta-descrition').val();
         postType = $('input#static-page').is(':checked') ? 'page':'post';
         tags = $('select#tag-input').val();
+        tags = tags ? Array.prototype.join.call(tags, ',') : '';
         action = submitBtn.data('action') == 'publish' ? 'publish':'draft';
     }
 
@@ -351,7 +337,7 @@ $(function () {
         submitBtn.on('click', function () {
             updatePostData();
             $.ajax({
-                url: common.getAPIUrl + '/posts',
+                url: common.getAPIUrl() + '/posts',
                 method: 'post',
                 dataType: 'json',
                 data: {
@@ -368,12 +354,19 @@ $(function () {
                 },
                 beforeSend: function(xhr){
                     xhr.setRequestHeader('Authorization', "Bearer "+common.getStoredAccessToken());
+                    loader.show();
                 },
                 success: function(data){
-
+                    loader.hide();
+                    if(data.success && data.success == 1){
+                        location.href = data.editUrl || (common.getDashUrl() + '/editor/' + data.pid);
+                    }else{
+                        alert(data.message || '文章保存失败,请重新尝试');
+                    }
                 },
                 error: function(data){
-
+                    loader.hide();
+                    alert(data.message || '文章保存失败,请重新尝试')
                 }
             })
         })

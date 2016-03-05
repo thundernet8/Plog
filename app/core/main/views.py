@@ -63,7 +63,7 @@ def index():
 @main.route('/page/<int:page>')
 @redis_cached(timeout=30, key_prefix='home_html_%s')
 def index_paged(page):
-    pagenation = Posts(filters={'status': 'published'}).pagination(page=page, posts_per_page=2)
+    pagenation = Posts(filters={'status': 'published'}).pagination(page=page)
     posts = pagenation.items if pagenation else []
     return render_template('home.html', posts=posts, pagenation=pagenation)
 
@@ -73,7 +73,7 @@ def index_paged(page):
 @redis_cached(timeout=30, key_prefix='article_%s')
 def article_detail(post_id):
     post = Post.get_post(post_id)
-    if not post or not post.post_id:
+    if not post or not post.post_id or post.status != 'published':
         abort(404)
     author = User(user_id=post.author_id)
     comment_form = CommentForm()

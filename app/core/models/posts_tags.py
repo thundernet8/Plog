@@ -48,14 +48,24 @@ class PostsTags(object):
         :return: 添加成功返回插入的记录数量,否则返回 False
         """
         count = 0
+        try:
+            mongo.db.posts_tags.delete_many({'post_id': post_id})
+        except:
+            pass
         for tag_id in tag_ids:
+            tag_id = int(tag_id)
             try:
                 result = mongo.db.posts_tags.update_one({
                     'post_id': post_id, 'tag_id': tag_id
                 }, {
-                    '$setOnInsert': {'tag_id': tag_id}
+                    '$setOnInsert': {
+                        'post_id': post_id,
+                        'tag_id': tag_id
+                    }
                 }, upsert=True)
-                count += result.modified_count
+                #count += result.modified_count or result.upserted_id
+                if result.upserted_id:
+                    count += 1
             except:
                 pass
         return count if count else False

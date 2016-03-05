@@ -24,7 +24,7 @@
                 </div>
                 <div class="time">
                     <span class="glyphicon glyphicon-time"></span>
-                    <span>{{ post.create_at.strftime('%Y/%m/%d %H:%M') }}</span>
+                    <span>{{ post.publish_at.strftime('%Y/%m/%d %H:%M') }}</span>
                 </div>
                 <a class="comment" rel="nofollow" href="{{ url_for('main.article_detail', post_id=post.post_id) }}#comments" target="_blank">
                     <span class="glyphicon glyphicon-comment"></span>

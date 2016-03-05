@@ -13,6 +13,7 @@ from flask.ext.login import current_user
 
 from app import mongo
 from .settings import Setting
+from .posts_tags import PostsTags
 #from .comments import Comment
 import comments
 from .mongo_counter import get_next_sequence
@@ -20,6 +21,7 @@ from .helpers.pagination import Pagination
 from .helpers.slug_generator import get_slug
 from .helpers.excerpt_generator import get_excerpt
 from .helpers.redis_cache_decorator import redis_memoize
+from .helpers.md_to_html import parse_markdown
 
 
 class Post(object):
@@ -86,10 +88,10 @@ class Post(object):
         self.status = kwargs.get('status', None)  # trash/draft/pending/published
         self.meta_title = kwargs.get('meta_title', None)
         self.meta_description = kwargs.get('meta_description', None)
-        self.author_id = kwargs.get('author_id', 0)
+        self.author_id = int(kwargs.get('author_id', 0))
         self.create_at = datetime.fromtimestamp(int(kwargs.get('create_at', 0)))
         self.update_at = datetime.fromtimestamp(int(kwargs.get('update_at', 0)))
-        self.update_by = kwargs.get('update_by', 0)
+        self.update_by = int(kwargs.get('update_by', 0))
         self.publish_at = datetime.fromtimestamp(int(kwargs.get('publish_at', 0)))
         self.comment_status = kwargs.get('comment_status', 1)
         self.comment_count = kwargs.get('comment_count', 0)
@@ -128,6 +130,23 @@ class Post(object):
         return Post.get_post_by_field('post_id', post_id)
 
     @staticmethod
+    def get_post_json(post_id):
+        """
+        根据文章 id 查询文章对象
+        :param post_id: 文章 id
+        :return: 文章的字典对象 or None
+        """
+        try:
+            result = mongo.db.posts.find_one({'post_id': post_id})
+            if result:
+                result.pop('_id', '')
+                return result
+            else:
+                return None
+        except:
+            return None
+
+    @staticmethod
     def get_post_by_id(post_id):
         """
         根据文章 id 查询文章对象
@@ -158,9 +177,7 @@ class Post(object):
             sets['type'] = 'post'
         if not sets.get('slug'):
             sets['slug'] = get_slug(sets.get('title'))
-        sets['excerpt'] = get_excerpt(sets.get('html', u''),
-                                      count=Setting.get_setting('excerpt_length', 120), wrapper=u'')
-        slug_count = mongo.db.posts.count({'slug': sets.get('slug')})
+        slug_count = mongo.db.posts.count({'slug': sets.get('slug'), 'post_id': {'$ne': post_id}})
         if slug_count > 0:
             new_slug = '-'.join([sets.get('slug'), str(slug_count+1)])
             while mongo.db.posts.count({'slug': new_slug}):
@@ -175,6 +192,10 @@ class Post(object):
             sets['update_by'] = str(current_user.get_id())
         if sets.get('create_at'):
             del sets['create_at']
+        if sets.get('markdown'):
+            sets['html'] = parse_markdown(sets['markdown'])
+        if not sets.get('excerpt'):
+            sets['excerpt'] = get_excerpt(sets['html'], count=Setting.get_setting('excerpt_length', 120), wrapper=u'')
         try:
             result = mongo.db.posts.update_one({
                 'post_id': post_id
@@ -186,9 +207,14 @@ class Post(object):
                 }
             }, upsert=True)
             if result and result.modified_count > 0:
-                return post_id
+                pid = post_id
+                Post.update_post_tags(pid, sets.get('tag_ids', ''))
+                return pid
             if result and result.upserted_id:
-                return mongo.db.posts.find_one({'_id': result.upserted_id}).get('post_id')
+                pid = mongo.db.posts.find_one({'_id': result.upserted_id}).get('post_id')
+                Post.update_post_tags(pid, sets.get('tag_ids', ''))
+                return pid
+
             return False
         except:
             return False
@@ -196,15 +222,33 @@ class Post(object):
     @staticmethod
     def publish_post(post_id, **kwargs):
         """
-        发表文章(任何文章发表前经由草稿阶段)
+        发表文章
         :param post_id: 文章 id
         :return: 成功返回 文章 id,失败返回 False
         """
         sets = dict(kwargs)
         sets.update({
             'status': 'published',
-            'update_at': int(time.time())
+            'update_at': int(time.time()),
+            'publish_at': int(time.time())
         })
+        try:
+            count = mongo.db.posts.count({'post_id': post_id, 'publish_at': {'$gt': 0}})
+            if count and count > 0:
+                sets.pop('publish_at', '')
+            else:
+                pass
+        except:
+            pass
+        if not sets.get('slug'):
+            sets['slug'] = get_slug(sets.get('title'))
+        slug_count = mongo.db.posts.count({'slug': sets.get('slug'), 'post_id': {'$ne': post_id}})
+        if slug_count > 0:
+            new_slug = '-'.join([sets.get('slug'), str(slug_count+1)])
+            while mongo.db.posts.count({'slug': new_slug}):
+                slug_count += 1
+                new_slug = '-'.join([sets.get('slug'), str(slug_count+1)])
+            sets['slug'] = new_slug
         if not sets.get('type'):
             sets['type'] = 'post'
         if not sets.get('author_id'):
@@ -217,6 +261,10 @@ class Post(object):
             sets['comment_status'] = 1
         if sets.get('create_at'):
             del sets['create_at']
+        if sets.get('markdown'):
+            sets['html'] = parse_markdown(sets['markdown'])
+        if not sets.get('excerpt'):
+            sets['excerpt'] = get_excerpt(sets['html'], count=Setting.get_setting('excerpt_length', 120), wrapper=u'')
         try:
             result = mongo.db.posts.update_one({
                 'post_id': post_id
@@ -228,9 +276,13 @@ class Post(object):
                 }
             }, upsert=True)
             if result and result.modified_count > 0:
-                return post_id
+                pid = post_id
+                Post.update_post_tags(pid, sets.get('tag_ids', ''))
+                return pid
             if result and result.upserted_id:
-                return mongo.db.posts.find_one({'_id': result.upserted_id}).get('post_id')
+                pid = mongo.db.posts.find_one({'_id': result.upserted_id}).get('post_id')
+                Post.update_post_tags(pid, sets.get('tag_ids', ''))
+                return pid
             return False
         except:
             return False
@@ -243,16 +295,27 @@ class Post(object):
         :param kwargs: 文章字段键值对
         :return: 成功返回文章 id,失败返回 False
         """
-        if not current_user.is_logged_in:
-            return False
         sets = dict(kwargs)
         sets.update({
             'update_at': int(time.time())
         })
+        if not sets.get('slug'):
+            sets['slug'] = get_slug(sets.get('title'))
+        slug_count = mongo.db.posts.count({'slug': sets.get('slug'), 'post_id': {'$ne': post_id}})
+        if slug_count > 0:
+            new_slug = '-'.join([sets.get('slug'), str(slug_count+1)])
+            while mongo.db.posts.count({'slug': new_slug}):
+                slug_count += 1
+                new_slug = '-'.join([sets.get('slug'), str(slug_count+1)])
+            sets['slug'] = new_slug
         if not sets.get('update_by'):
             sets['update_by'] = str(current_user.get_id())
         if sets.get('create_at'):
             del sets['create_at']
+        if sets.get('markdown'):
+            sets['html'] = parse_markdown(sets['markdown'])
+        if not sets.get('excerpt') and sets.get('html'):
+            sets['excerpt'] = get_excerpt(sets['html'], count=Setting.get_setting('excerpt_length', 120), wrapper=u'')
         try:
             result = mongo.db.posts.update_one({
                 'post_id': post_id
@@ -260,6 +323,7 @@ class Post(object):
                 '$set': sets
             })
             if result and result.modified_count > 0:
+                Post.update_post_tags(post_id, sets.get('tag_ids', ''))
                 return post_id
             return False
         except:
@@ -472,6 +536,39 @@ class Post(object):
         except:
             return 0
         return data.get('editor_pid', 0)
+
+    # 文章标签操作
+    @staticmethod
+    def update_post_tags(post_id, tag_ids):
+        """
+        更新文章 id 与标签 id 关系记录
+        :param post_id: 文章 id
+        :param tag_ids: 文章标签 id 列表或字符串
+        :return: 返回记录数量
+        """
+        if not tag_ids:
+            return 0
+        if not isinstance(tag_ids, list):
+            tag_ids = tag_ids.strip().split(',')
+        result = PostsTags.add_post_tags_relation(post_id, tag_ids)
+        return result
+
+    @staticmethod
+    def get_post_tags(post_id):
+        """
+        获取文章标签
+        :param post_id: 文章 id
+        :return: 文章的标签对象列表
+        """
+        tags = PostsTags.get_post_tags(post_id)
+        return tags
+
+    def get_tags(self):
+        """
+        获取文章标签
+        :return: 文章的标签对象列表
+        """
+        return Post.get_post_tags(self.post_id)
 
 
 class Posts(object):

@@ -81,7 +81,7 @@ class Tag(object):
             field = 'tag_id'
         try:
             result = mongo.db.tags.find_one({field: value})
-            if result and result.count() > 0:
+            if result:
                 tag = Tag(**dict(result))
                 return tag
             return None

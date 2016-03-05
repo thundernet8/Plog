@@ -94,7 +94,7 @@ $(function () {
                   };
                  localStorage.setItem('Plog:Token', JSON.stringify(secureInfo));
                   setTimeout(function () {
-                      var href = common.getUrlPara('redirect') ? (decodeURIComponent(common.getUrlPara('redirect')).indexOf("http") == 0 ? decodeURIComponent(common.getUrlPara('redirect')) : siteUrl + '/' + decodeURIComponent(common.getUrlPara('redirect'))) : siteUrl;
+                      var href = common.getUrlPara('redirect') ? (decodeURIComponent(common.getUrlPara('redirect')).indexOf("http") == 0 ? decodeURIComponent(common.getUrlPara('redirect')) : common.getSiteUrl() + decodeURIComponent(common.getUrlPara('redirect'))) : common.getSiteUrl();
                       //console.log(href);
                       window.location.href = href;
                   }, 1500);

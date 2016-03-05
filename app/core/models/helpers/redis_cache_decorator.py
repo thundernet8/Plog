@@ -7,6 +7,7 @@ from datetime import datetime
 
 from flask import current_app
 from flask import request
+from flask.ext.login import current_user
 from jinja2 import nodes
 from jinja2.ext import Extension
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -54,7 +55,7 @@ def redis_cached(timeout=None, key_prefix='view/%s', unless=None):
             if callable(key_prefix):
                 cache_key = key_prefix()
             elif '%s' in key_prefix:
-                cache_key = key_prefix % request.url
+                cache_key = key_prefix % (request.url+'_uid_'+str(current_user.get_id()))
             else:
                 cache_key = key_prefix
             cache_key = hashlib.md5(cache_key.encode('utf-8')).hexdigest()

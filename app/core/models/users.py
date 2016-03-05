@@ -69,7 +69,7 @@ class User(UserMixin):
         # super(User, self).__init__(**kwargs)
         user = mongo.db.users.find_one(dict(kwargs))
         if user:
-            self.user_id = user.get('user_id')
+            self.user_id = int(user.get('user_id'))
             self.name = user.get('name')
             self.nickname = user.get('nickname') or self.name
             self.email = user.get('email')
@@ -95,7 +95,7 @@ class User(UserMixin):
         :return:
         """
         try:
-            return unicode(self.user_id)
+            return int(self.user_id)
         except AttributeError:
             raise NotImplementedError('No `user_id` attribute')
 

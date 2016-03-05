@@ -1,0 +1,7 @@
+{%- macro output_tags(tags) -%}
+{% if tags %}
+    {% for tag in tags %}
+    <div data-value="{{ tag.tag_id }}" class="item">{{ tag.name }}<a href="javascript:void(0)" class="remove" tabindex="-1" title="移除">×</a></div>
+    {% endfor %}
+{% endif %}
+{%- endmacro -%}

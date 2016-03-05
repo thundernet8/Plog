@@ -58,3 +58,8 @@ exports.getSiteUrl = function () {
 exports.getAPIUrl = function () {
     return window.location.protocol + '//' + window.location.host + '/api/v1.0';
 };
+
+//获取后台 url
+exports.getDashUrl = function () {
+    return window.location.protocol + '//' + window.location.host + '/dashboard';
+};

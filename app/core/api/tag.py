@@ -13,7 +13,7 @@ from app.core.models.tags import Tag
 @api.route('/tags/<string:tag_name>', methods=['PUT'])
 @auth.login_required
 def add_tag(tag_name):
-    if not g.current_user.can('add_tags'):
+    if not (g.current_user.can('add_tags')):
         return jsonify({'success': 0, 'error': 'permission denied', 'message': u'没有权限添加标签'})
     tag_id = Tag.add_tag(tag_name)
     tag_id = tag_id or 0

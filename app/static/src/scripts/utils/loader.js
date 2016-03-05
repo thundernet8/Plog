@@ -15,8 +15,8 @@ exports.loaderIndicator = function (loaderImg, text, backLayer) {
         this.isShowing = true;
     };
     this.hide = function () {
-      if($('.loader').length > 0){
-          $('.loader').remove();
+      if($('.loader-background').length > 0){
+          $('.loader-background').remove();
           this.isShowing = false;
       }
     };
