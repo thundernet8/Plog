@@ -1,0 +1,8 @@
+{%- macro output_tags(tags) -%}
+{% if tags %}
+    <span class="tag-tip">标签: </span>
+    {% for tag in tags %}
+    <span class="tag-item" data-slug="{{ tag.slug }}"><a href="{{ url_for('main.tag', tag_id=tag.tag_id) }}" target="_blank">{{ tag.name }}</a></span>
+    {% endfor %}
+{% endif %}
+{%- endmacro -%}

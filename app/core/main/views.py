@@ -94,6 +94,13 @@ def rss():
     return 'rss'  # TODO rss
 
 
+# TAG
+@main.route('/tag/<int:tag_id>')
+@redis_cached(timeout=600, key_prefix='tag_%s')
+def tag(tag_id):
+    return 'tag page' + str(tag_id)  # TODO tag
+
+
 # 404
 @main.errorhandler(404)
 def main_404(e):

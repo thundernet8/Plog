@@ -26,8 +26,8 @@ class Permission(object):
         创建数据库若干字段唯一索引,程序部署初始化调用
         :return:
         """
-        mongo.db.settings.create_index([("id", flask_pymongo.ASCENDING)], unique=True)
-        mongo.db.settings.create_index([("name", flask_pymongo.ASCENDING)], unique=True)
+        mongo.db.permissions.create_index([("permission_id", flask_pymongo.ASCENDING)], unique=True)
+        mongo.db.permissions.create_index([("name", flask_pymongo.ASCENDING)], unique=True)
 
     @staticmethod
     def insert_defaults_permissions():

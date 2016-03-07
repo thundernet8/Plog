@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 
-{% block title %}
-{{ Setting.get_setting('blogtitle', 'Plog') }}
-{% endblock %}
+{% block title %}{{ post.title+' - ' if post else '文章 - ' }}{{- Setting.get_setting('blogtitle', 'Plog') -}}{% endblock %}
+
+{% block keywords %}{{ post.meta_title if post else '' }}{% endblock %}
+{% block description %}{{ post.meta_description if post else '' }}{% endblock %}
 
 {% block css %}
 <!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
@@ -62,14 +63,8 @@
                 </section>
                 <!-- 标签 -->
                 <section class="tags">
-                    <span class="tag-tip">标签: </span>
-                    <!-- TODO article tags -->
-                    <span class="tag-item">
-                        <a href="#" target="_blank">标签1</a>
-                    </span>
-                    <span class="tag-item">
-                        <a href="#" target="_blank">标签2</a>
-                    </span>
+                    {% import 'macros/article_tags.html' as tag_macro %}
+                    {{ tag_macro.output_tags(post.get_tags() if post else None) }}
                 </section>
                 <!-- 分享 -->
                 <section class="share">

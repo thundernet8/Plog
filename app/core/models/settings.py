@@ -44,7 +44,7 @@ class Setting(object):
         # 每页评论数
         Setting.update_setting('comments_per_page', 20, 'blog')
         # 默认导航
-        Setting.update_setting('navigation', json.dumps({'navigations': [{u'首页': url_for('main.index', _external=True)}]}))
+        # Setting.update_setting('navigation', json.dumps({'navigations': [{u'首页': url_for('main.index', _external=True)}]}))
         # navigations structure #
         # {'navigations': [
         #     {'primary': {u'首页': '/'}},

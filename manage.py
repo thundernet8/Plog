@@ -109,8 +109,6 @@ def deploy():
     Tag.create_table_indexes()
     # 评论数据库索引
     Comment.create_table_indexes()
-    # 用户数据库索引
-    User.create_table_indexes()
 
 
 @manager.command

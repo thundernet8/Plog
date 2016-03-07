@@ -40,11 +40,11 @@ class Comment(object):
         创建数据库若干字段唯一索引,程序部署初始化调用
         :return:
         """
-        mongo.db.settings.create_index([("comment_id", flask_pymongo.ASCENDING)], unique=True)
-        mongo.db.settings.create_index([("post_id", flask_pymongo.ASCENDING)])
-        mongo.db.settings.create_index([("user_id", flask_pymongo.ASCENDING)])
-        mongo.db.settings.create_index([("create_at", flask_pymongo.ASCENDING)])
-        mongo.db.settings.create_index([("parent", flask_pymongo.ASCENDING)])
+        mongo.db.permissions_roles.create_index([("comment_id", flask_pymongo.ASCENDING)], unique=True)
+        mongo.db.permissions_roles.create_index([("post_id", flask_pymongo.ASCENDING)])
+        mongo.db.permissions_roles.create_index([("user_id", flask_pymongo.ASCENDING)])
+        mongo.db.permissions_roles.create_index([("create_at", flask_pymongo.ASCENDING)])
+        mongo.db.permissions_roles.create_index([("parent", flask_pymongo.ASCENDING)])
 
     ##
     # 评论实例
