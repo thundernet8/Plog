@@ -15,3 +15,12 @@
 
 ## DEMO
 [DEMO](http://www.parser.cc)
+
+
+## Screenshots
+![dash-editor](https://raw.githubusercontent.com/thundernet8/Plog/df9b2fc0019913300daa686e390f54df0f2bf768/screenshots/dash-editor.jpg)
+![dash-general-setting](https://raw.githubusercontent.com/thundernet8/Plog/df9b2fc0019913300daa686e390f54df0f2bf768/screenshots/dash-general-setting.jpg)
+![dash-navi](https://raw.githubusercontent.com/thundernet8/Plog/df9b2fc0019913300daa686e390f54df0f2bf768/screenshots/dash-navi.jpg)
+![dash-slide-menu](https://raw.githubusercontent.com/thundernet8/Plog/df9b2fc0019913300daa686e390f54df0f2bf768/screenshots/dash-slide-menu.jpg)
+![home](https://raw.githubusercontent.com/thundernet8/Plog/df9b2fc0019913300daa686e390f54df0f2bf768/screenshots/home.jpg)
+![post](https://raw.githubusercontent.com/thundernet8/Plog/df9b2fc0019913300daa686e390f54df0f2bf768/screenshots/post.jpg)
