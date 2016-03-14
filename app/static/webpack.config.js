@@ -12,6 +12,7 @@ module.exports = {
         login: './src/scripts/page-login.js',
         register: './src/scripts/page-register.js',
         home: './src/scripts/page-home.js',
+        tag: './src/scripts/page-tag.js',
         article: './src/scripts/page-article.js',
         dashboard: './src/scripts/page-dashboard.js',
         error: './src/scripts/page-error.js'

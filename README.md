@@ -9,7 +9,7 @@
   - Redis RestFul API 高速缓存数据库以及页面缓存
 * 前端
   - Bootstrap CSS 框架
-  - LESS 动态CSS
+  - LESS CSS预处理编译器
   - jQuery
   - Gulp/Webpack JS模块化以及静态资源自动化合并压缩发布
 

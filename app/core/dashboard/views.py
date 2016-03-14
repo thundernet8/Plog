@@ -16,6 +16,7 @@ from .forms import EditBottomNaviForm
 from .forms import GeneralSettingForm
 from .forms import ReadingSettingForm
 from .forms import DiscussionSettingForm
+from .forms import CDNSettingForm
 from app.core.models.settings import Setting
 from app.core.models.posts import Post
 
@@ -193,3 +194,17 @@ def discussion_setting():
                     Setting.update_setting(options[0], value)
         return redirect(url_for('dashboard.discussion_setting'))
     return render_template('dashboard/dash_setting_discussion.html', form=form)
+
+
+@dashboard.route('/settings/cdn', methods=['GET', 'POST'])
+def cdn_setting():
+    form = CDNSettingForm()
+    if form.validate_on_submit():
+        if current_user.is_administrator:
+            reg = re.compile('cdn\[([a-zA-Z0-9_]+)\]')
+            for key, value in request.form.iteritems():
+                options = reg.findall(key)
+                if options:
+                    Setting.update_setting(options[0], value)
+        return redirect(url_for('dashboard.cdn_setting'))
+    return render_template('dashboard/dash_setting_cdn.html', form=form)

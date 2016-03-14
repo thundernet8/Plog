@@ -49,3 +49,8 @@ class ReadingSettingForm(Form):
 class DiscussionSettingForm(Form):
     """ 讨论设置表单 """
     submit = SubmitField('Submit')
+
+
+class CDNSettingForm(Form):
+    """ CDN设置表单 """
+    submit = SubmitField('Submit')

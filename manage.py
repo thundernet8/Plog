@@ -7,6 +7,7 @@ import json
 
 from flask import Markup
 from flask import render_template
+from flask import request
 from flask.ext.script import Manager
 from flask.ext.script import Shell
 
@@ -58,6 +59,15 @@ def app_404(e):
 @app.errorhandler(500)
 def app_500(e):
     return render_template('error_pages/500.html'), 500
+
+
+@app.after_request
+def app_after_request(response):
+    if request.endpoint != 'static':
+        return response
+    response.cache_control.max_age = 15552000
+    return response
+
 
 # jinja_env
 app.jinja_env.globals['Setting'] = Setting

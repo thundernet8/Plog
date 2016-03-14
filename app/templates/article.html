@@ -77,7 +77,31 @@
             </section>
             <!-- 评论 -->
             <section class="single-article-comments" id="comments" data-aid="{{ post.post_id }}">
-                {% include 'modules/comments.html' %}
+                <!--{ include 'modules/comments.html' }-->
+                <!-- DISQUS -->
+                <!--a href="{{ url_for('main.article_detail', post_id=post.post_id, _external=True) }}#disqus_thread">Count</a-->
+                <!--span class="disqus-comment-count" data-disqus-identifier="{{ post.post_id if post else 0 }}"></span-->
+                <div id="disqus_thread"></div>
+                <script>
+                /**
+                * RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                * LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables
+                */
+
+                var disqus_config = function () {
+                    this.page.url = "{{ url_for('main.article_detail', post_id=post.post_id, _external=True) }}"; // Replace PAGE_URL with your page's canonical URL variable
+                    this.page.identifier = {{ post.post_id }}; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                };
+
+                (function() { // DON'T EDIT BELOW THIS LINE
+                    var d = document, s = d.createElement('script');
+                    s.src = '//parser.disqus.com/embed.js';
+                    s.setAttribute('data-timestamp', +new Date());
+                    (d.head || d.body).appendChild(s);
+                })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+                <!-- END DISQUS -->
             </section>
         </div>
         <!-- End 文章 -->
@@ -96,4 +120,5 @@
 <!--script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script-->
 <script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/libs/jquery/2.2.0/jquery.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/page-article.js') }}"></script>
+<script id="dsq-count-scr" src="//parser.disqus.com/count.js" async></script>
 {% endblock %}

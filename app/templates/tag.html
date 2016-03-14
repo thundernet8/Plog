@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}{{- tag.name if tag else '标签' -}}{{- ' - ' -}}{{- Setting.get_setting('subtitle', 'Another Plog Site') -}}{% endblock %}
+
+{% block keywords %}{{- tag.meta_title if tag and tag.meta_title else '' -}}{% endblock %}
+
+{% block description %}{{- tag.meta_description if tag and tag.meta_title else '' -}}{% endblock %}
+
+{% block css %}
+    <!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
+    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-tag.css') }}">
+{% endblock %}
+
+{% block header %}
+{% include 'modules/common_header.html' %}
+{% endblock %}
+
+{% block body_class %}tag abs-header{% endblock %}
+
+{% block content %}
+<div class="container main col-1">
+    {{ super() }}
+    <div class="wrap-center">
+        <!-- 标签信息 -->
+        <section class="tag-info">
+            <h1><span class="glyphicon glyphicon-tag"></span>{{ tag.name if tag else '' }}</h1>
+            <div class="meta">
+                <span class="number">{{ tag.get_posts(count=True) if tag else 0 }}</span>&nbsp;篇文章
+            </div>
+        </section>
+        <!-- 文章列表 -->
+        <section class="article-list index-article-list">
+            {% import 'macros/index_article.html' as article_render %}
+            {% for post in posts %}
+                {{ article_render.render_article_item(post) }}
+            {% endfor %}
+        </section>
+        <!-- End 文章列表 -->
+        <!-- 分页 -->
+        <div class="pagination clearfix">
+        {% if pagenation.has_prev or pagenation.has_next %}
+            {% if pagenation.has_prev %}
+            <a href="{{ url_for('main.index_paged', page=pagenation.prev_num) }}" class="prev transition">上一页</a>
+            {% else %}
+            <a href="javascript:void(0)" class="prev disabled">上一页</a>
+            {% endif %}
+            {% if pagenation.has_next %}
+            <a href="{{ url_for('main.index_paged', page=pagenation.next_num) }}" class="next transition">下一页</a>
+            {% else %}
+            <a href="javascript:void(0)" class="next disabled">下一页</a>
+            {% endif %}
+        {% endif %}
+        </div>
+        <!-- End 分页 -->
+    </div>
+</div>
+{% endblock %}
+{% block footer %}
+{% include 'modules/common_footer.html' %}
+{% endblock %}
+
+{% block script %}
+<!--script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script-->
+<script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/libs/jquery/2.2.0/jquery.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/page-tag.js') }}"></script>
+{% endblock %}

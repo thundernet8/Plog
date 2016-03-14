@@ -3,12 +3,10 @@
 
 @import "modules/common-header";
 @import "modules/common_footer";
-@import "modules/sidebar";
 
 //vars
 @hover_color: #3ca5f6;
 
-//home page
 body{
   //background-color: #e9eaec;
 }
@@ -27,103 +25,34 @@ a:focus{
   outline: none;
 }
 
-.container{
-  padding: 0;
+.wrap-center{
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 0;
+  color: #808080;
 
-  &.col-2{
-    padding-right: 360px;
+}
 
-    .wrap-left{
-      margin-right: 25px;
+//标签信息
+.tag-info{
+  text-align: center;
 
-      .big-banner{
-        position: relative;
-        width: 100%;
-        height: auto;
-        max-height: 440px;
-        margin-bottom: 30px;
-        overflow: hidden;
-
-        .back-img{
-          width: 100%;
-        }
-
-        .banner-content{
-
-          h1{
-            position: absolute;
-            bottom: 22px;
-            margin: 0 30px;
-            word-break: break-all;
-            line-height: 42px;
-            font-size: 28px;
-            color: #FFFFFF;
-          }
-        }
-      }
-
-      .big-banner2{
-        position: relative;
-        width: e("-webkit-calc(50% - 12px)");
-        width: e("-moz-calc(50% - 12px)");
-        width: e("calc(50% - 12px)");
-        height: auto;
-        max-height: 215px;
-        overflow: hidden;
-
-        .banner-content{
-
-          h2{
-            position: absolute;
-            bottom: 22px;
-            margin: 0 30px;
-            font-size: 18px;
-            line-height: 1.5;
-            font-weight: 400;
-            color: #FFFFFF;
-          }
-        }
-      }
-
-      .big-banner, .big-banner2{
-        &:before{
-          content: " ";
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          z-index: 1;
-          opacity: 1;
-          -webkit-transition: all .3s ease;
-          transition: all .3s ease;
-          background: -webkit-gradient(linear, 0 50%, 0 100%, from(rgba(0, 0, 0, 0)), to(#000000));
-          background: -moz-linear-gradient(top, rgba(0, 0, 0, 0), #000000);
-          background: -ms-linear-gradient(top, rgba(0, 0, 0, 0), #000000);
-          background: -o-linear-gradient(top, rgba(0, 0, 0, 0), #000000);
-        }
-
-        &:hover:before{
-          opacity: .9;
-        }
-
-        a{
-          position: absolute;
-          top: 0;
-          width: 100%;
-          height: 100%;
-
-          .banner-content{
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            cursor: pointer;
-          }
-        }
-
-      }
-    }
+  h1{
+    color: #333333;
+    font-size: 36px;
   }
 
+  .glyphicon{
+    margin-right: 10px;
+    font-size: 25px;
+  }
+
+  .meta{
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 16px;
+  }
 }
 
 //文章列表
@@ -174,8 +103,8 @@ a:focus{
       .meta{
         position: absolute;
         padding-top: 12px;
-        bottom: 35px;
-        width: 543px;
+        bottom: 30px;
+        width: e('calc(100% - 225px)');
         height: 38px;
         line-height: 26px;
         font-size: 13px;
@@ -272,7 +201,3 @@ a:focus{
     }
   }
 }
-
-
-
-

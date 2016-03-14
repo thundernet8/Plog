@@ -18,6 +18,7 @@ from app.core.models.settings import Setting
 from app.core.models.posts import Post
 from app.core.models.posts import Posts
 from app.core.models.users import User
+from app.core.models.tags import Tag
 from .forms import CommentForm
 
 
@@ -96,9 +97,12 @@ def rss():
 
 # TAG
 @main.route('/tag/<int:tag_id>')
-@redis_cached(timeout=600, key_prefix='tag_%s')
+#@redis_cached(timeout=600, key_prefix='tag_%s')
 def tag(tag_id):
-    return 'tag page' + str(tag_id)  # TODO tag
+    tag = Tag.get_tag_by_id(tag_id)
+    pagenation = Tag.get_tag_posts(tag_id)
+    posts = pagenation.items if pagenation else []
+    return render_template('tag.html', tag=tag, posts=posts, pagenation=pagenation)
 
 
 # 404

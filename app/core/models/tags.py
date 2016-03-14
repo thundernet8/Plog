@@ -166,3 +166,37 @@ class Tag(object):
                 return tag.get('tag_id')
         except:
             return None
+
+    @staticmethod
+    def get_tag_posts(tag_id):
+        """
+        获取标签下的文章
+        :param tag_id: 标签 id
+        :return: 文章集合分页模型 or None
+        """
+        try:
+            results = mongo.db.posts_tags.find({'tag_id':tag_id}, {'_id':0, 'post_id':1})
+            if results:
+                pids = [result['post_id'] for result in results]
+                from .posts import Posts
+                pagenation = Posts(filters={'post_id': {'$in': pids}, 'status': 'published'}).pagination()
+                #posts = pagenation.items if pagenation else []
+                return pagenation
+            else:
+                return None
+        except:
+            return None
+
+    def get_posts(self, count=False):
+        """
+        获取标签下的文章
+        :param: count: 是否返回文章数量
+        :return: 文章模型集合
+        """
+        if count:
+            try:
+                num = mongo.db.posts_tags.count({'tag_id':self.tag_id})
+                return num
+            except:
+                return 0
+        return Tag.get_tag_posts(self.tag_id)
