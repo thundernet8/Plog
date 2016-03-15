@@ -97,7 +97,7 @@ def rss():
 
 # TAG
 @main.route('/tag/<int:tag_id>')
-#@redis_cached(timeout=600, key_prefix='tag_%s')
+@redis_cached(timeout=600, key_prefix='tag_%s')
 def tag(tag_id):
     tag = Tag.get_tag_by_id(tag_id)
     pagenation = Tag.get_tag_posts(tag_id)

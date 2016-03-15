@@ -10,6 +10,9 @@
     <!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
     <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-tag.css') }}">
+    {% if tag %}
+    <link rel='canonical' href='{{ url_for('main.tag', tag_id=tag.tag_id, _external=True) }}' /> <!-- 保留权重 -->
+    {% endif %}
 {% endblock %}
 
 {% block header %}
