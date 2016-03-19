@@ -100,6 +100,8 @@ def rss():
 @redis_cached(timeout=600, key_prefix='tag_%s')
 def tag(tag_id):
     tag = Tag.get_tag_by_id(tag_id)
+    if not tag:
+        abort(404)
     pagenation = Tag.get_tag_posts(tag_id)
     posts = pagenation.items if pagenation else []
     return render_template('tag.html', tag=tag, posts=posts, pagenation=pagenation)
