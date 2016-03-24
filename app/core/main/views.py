@@ -85,7 +85,24 @@ def article_detail(post_id):
 @main.route('/author/<int:user_id>')
 @redis_cached(timeout=300, key_prefix='author_%s')
 def user_homepage(user_id):
-    return 'user homepage'+str(user_id)  # TODO /考虑使用用户名或昵称替代用户 id 作为链接标识
+    author = User.get_user_by_id(user_id)
+    if not author:
+        abort(404)
+    pagenation = User.get_user_posts_pagenation(user_id)
+    posts = pagenation.items if pagenation else []
+    return render_template('author.html', author=author, posts=posts, pagenation=pagenation)  # TODO /考虑使用用户名或昵称替代用户 id 作为链接标识
+
+
+# 用户/作者主页(带分页)
+@main.route('/author/<int:user_id>/page/<int:page>')
+@redis_cached(timeout=300, key_prefix='author_%s')
+def user_homepage_paged(user_id, page):
+    author = User.get_user_by_id(user_id)
+    if not author:
+        abort(404)
+    pagenation = User.get_user_posts_pagenation(user_id, page=page)
+    posts = pagenation.items if pagenation else []
+    return render_template('author.html', author=author, posts=posts, pagenation=pagenation)
 
 
 # RSS
@@ -103,6 +120,18 @@ def tag(tag_id):
     if not tag:
         abort(404)
     pagenation = Tag.get_tag_posts(tag_id)
+    posts = pagenation.items if pagenation else []
+    return render_template('tag.html', tag=tag, posts=posts, pagenation=pagenation)
+
+
+# TAG(带分页)
+@main.route('/tag/<int:tag_id>/page/<int:page>')
+@redis_cached(timeout=600, key_prefix='tag_%s')
+def tag_paged(tag_id, page):
+    tag = Tag.get_tag_by_id(tag_id)
+    if not tag:
+        abort(404)
+    pagenation = Tag.get_tag_posts(tag_id, page=page)
     posts = pagenation.items if pagenation else []
     return render_template('tag.html', tag=tag, posts=posts, pagenation=pagenation)
 

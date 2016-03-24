@@ -386,6 +386,22 @@ class User(UserMixin):
         posts = Post.get_posts(filters, limit=limit, offset=offset)
         return posts
 
+    @staticmethod
+    def get_user_posts_pagenation(user_id, page=1):
+        """
+        获取用户的文章分页模型
+        :param user_id: 用户 id
+        :param page: 当前页码
+        :return: 文章集合分页模型 or None
+        """
+        try:
+            from .posts import Posts
+            pagenation = Posts(filters={'author_id': user_id, 'status': 'published'}).pagination(page=page)
+            #posts = pagenation.items if pagenation else []
+            return pagenation
+        except:
+            return None
+
     def get_user_comments(self, count=False, limit=20, offset=0):
         """
         获取用户的评论或者评论数量

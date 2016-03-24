@@ -168,18 +168,19 @@ class Tag(object):
             return None
 
     @staticmethod
-    def get_tag_posts(tag_id):
+    def get_tag_posts(tag_id, page=1):
         """
         获取标签下的文章
         :param tag_id: 标签 id
+        :param page: 当前文章页
         :return: 文章集合分页模型 or None
         """
         try:
-            results = mongo.db.posts_tags.find({'tag_id':tag_id}, {'_id':0, 'post_id':1})
+            results = mongo.db.posts_tags.find({'tag_id': tag_id}, {'_id': 0, 'post_id': 1})
             if results:
                 pids = [result['post_id'] for result in results]
                 from .posts import Posts
-                pagenation = Posts(filters={'post_id': {'$in': pids}, 'status': 'published'}).pagination()
+                pagenation = Posts(filters={'post_id': {'$in': pids}, 'status': 'published'}).pagination(page=page)
                 #posts = pagenation.items if pagenation else []
                 return pagenation
             else:

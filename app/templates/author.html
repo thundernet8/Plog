@@ -1,35 +1,38 @@
 {% extends 'base.html' %}
 
-{% block title %}{{- tag.name if tag else '标签' -}}{{- ' - ' -}}{{- Setting.get_setting('subtitle', 'Another Plog Site') -}}{% endblock %}
+{% block title %}{{- author.nickname if author else '作者主页' -}}{{- ' - ' -}}{{- Setting.get_setting('subtitle', 'Another Plog Site') -}}{% endblock %}
 
-{% block keywords %}{{- tag.meta_title if tag and tag.meta_title else '' -}}{% endblock %}
+{% block keywords %}{% endblock %}
 
-{% block description %}{{- tag.meta_description if tag and tag.meta_title else '' -}}{% endblock %}
+{% block description %}{{- author.bio if author and author.bio else '' -}}{% endblock %}
 
 {% block css %}
     <!--link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"-->
     <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-tag.css') }}">
-    {% if tag %}
-    <link rel='canonical' href='{{ url_for('main.tag', tag_id=tag.tag_id, _external=True) }}' /> <!-- 保留权重 -->
-    {% endif %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/styles/page-author.css') }}">
 {% endblock %}
 
 {% block header %}
-{% include 'modules/common_header.html' %}
+{% include 'modules/auth_header.html' %}
 {% endblock %}
 
-{% block body_class %}tag abs-header{% endblock %}
+{% block body_class %}author{% endblock %}
 
 {% block content %}
 <div class="container main col-1">
     {{ super() }}
     <div class="wrap-center">
-        <!-- 标签信息 -->
-        <section class="tag-info">
-            <h1><span class="glyphicon glyphicon-tag"></span>{{ tag.name if tag else '' }}</h1>
-            <div class="meta">
-                <span class="number">{{ tag.get_posts(count=True) if tag else 0 }}</span>&nbsp;篇文章
+        <!-- 作者信息 -->
+        <section class="author-profile">
+            <figure class="author-image">
+                <img class="avatar" src="{{ author.get_avatar(size=120) }}">
+            </figure>
+            <h1 class="author-title">{{ author.nickname if author else '' }}</h1>
+            <div class="author-meta">
+                <span class="author-stats">
+                    <i class="glyphicon glyphicon-signal"></i>
+                    {{ author.get_user_posts(count=True) or 0 }}&nbsp;篇文章
+                </span>
             </div>
         </section>
         <!-- 文章列表 -->
@@ -44,12 +47,12 @@
         <div class="pagination clearfix">
         {% if pagenation.has_prev or pagenation.has_next %}
             {% if pagenation.has_prev %}
-            <a href="{{ url_for('main.tag_paged', page=pagenation.prev_num, tag_id=tag.tag_id) }}" class="prev transition">上一页</a>
+            <a href="{{ url_for('main.user_homepage_paged', page=pagenation.prev_num, user_id=author.user_id) }}" class="prev transition">上一页</a>
             {% else %}
             <a href="javascript:void(0)" class="prev disabled">上一页</a>
             {% endif %}
             {% if pagenation.has_next %}
-            <a href="{{ url_for('main.tag_paged', page=pagenation.next_num, tag_id=tag.tag_id) }}" class="next transition">下一页</a>
+            <a href="{{ url_for('main.user_homepage_paged', page=pagenation.next_num, user_id=author.user_id) }}" class="next transition">下一页</a>
             {% else %}
             <a href="javascript:void(0)" class="next disabled">下一页</a>
             {% endif %}
@@ -66,5 +69,5 @@
 {% block script %}
 <!--script src="//cdn.bootcss.com/jquery/2.2.0/jquery.min.js"></script-->
 <script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/libs/jquery/2.2.0/jquery.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/page-tag.js') }}"></script>
+<!--script type="text/javascript" src="{{ url_for('static', filename='dist/scripts/page-author.js') }}"></script-->
 {% endblock %}

@@ -1,0 +1,242 @@
+@import "utils/normalize";
+@import "utils/common";
+
+@import "modules/auth-header";
+@import "modules/common_footer";
+
+//vars
+@hover_color: #3ca5f6;
+
+body{
+  //background-color: #e9eaec;
+}
+
+a, a:link{
+  color: #333333;
+  text-decoration: none;
+}
+
+a:hover{
+  color: @hover_color;
+  text-decoration: none;
+}
+
+a:focus{
+  outline: none;
+}
+
+.wrap-center{
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 40px 0;
+  color: #808080;
+
+}
+
+//作者信息
+.author-profile{
+  position: relative;
+  margin: 0 auto 25px;
+  padding: 0 15px 40px 15px;
+  border-bottom: 1px solid #EBF2F6;
+  text-align: center;
+
+  &:after{
+    display: block;
+    content: "";
+    width: 7px;
+    height: 7px;
+    border: #E7EEF2 1px solid;
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    margin-left: -5px;
+    background: #FFF;
+    border-radius: 100%;
+    box-shadow: #FFF 0 0 0 5px;
+  }
+
+  .author-image{
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 120px;
+    height: 120px;
+    padding: 3px;
+    margin: -25px auto 0 auto;
+    box-shadow: none;
+
+    img{
+      position: relative;
+      display: block;
+      width: 114px;
+      height: 114px;
+      border-radius: 50%;
+    }
+  }
+
+  .author-title{
+    margin: 24px 0 16px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #2e2e2e;
+  }
+
+  .author-meta{
+    margin: 30px 0;
+    padding: 0;
+    font-size: 16px;
+    line-height: 100%;
+    font-style: italic;
+    color: #9eabb3;
+  }
+}
+
+//文章列表
+.article-list{
+  display: inline-block;
+
+  .mod-article{
+    position: relative;
+    padding: 30px 0;
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #f5f5f5;
+
+    &:last-child{
+      border-bottom-width: 0;
+    }
+
+    .mod-thumb{
+      float: left;
+      width: 210px;
+      height: 140px;
+      display: inline-block;
+      overflow: hidden;
+
+      img{
+        height: 100%;
+      }
+    }
+
+    .mod-word{
+      padding-left: 235px;
+      padding-right: 10px;
+
+      h3{
+        margin-top: 0;
+        font-size: 20px;
+        line-height: 150%;
+        max-height: 30px;
+        overflow: hidden;
+      }
+
+      .des{
+        font-size: 14px;
+        color: #999;
+        line-height: 24px;
+        max-height: 72px;
+        overflow: hidden;
+      }
+
+      .meta{
+        position: absolute;
+        padding-top: 12px;
+        bottom: 30px;
+        width: e('calc(100% - 225px)');
+        height: 38px;
+        line-height: 26px;
+        font-size: 13px;
+        color: #b8b8b8;
+
+        .author{
+          float: left;
+          margin-right: 0;
+          width: 130px;
+
+          .avatar{
+            float: left;
+            width: 26px;
+            height: 26px;
+            margin-right: 5px;
+            border-radius: 50%;
+          }
+
+          span{
+            float: left;
+            width: 80px;
+            height: 26px;
+            font-size: 13px;
+            white-space: nowrap;
+            color: #b8b8b8;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &:hover{
+              color: @hover_color;
+            }
+          }
+        }
+
+        .time{
+          float: left;
+        }
+
+        .comment{
+          float: right;
+          min-width: 55px;
+          font-size: 14px;
+          color: #b8b8b8;
+        }
+
+        .time, .comment{
+          .glyphicon{
+            vertical-align: text-top;
+          }
+        }
+
+      }
+    }
+  }
+
+}
+
+//分页
+.pagination{
+  margin-top: 30px;
+  margin-bottom: 60px;
+  display: block;
+
+  .prev, .next{
+    width: e('calc(50% - 8px)');
+    height: 56px;
+    background: @hover_color;
+    text-align: center;
+    line-height: 56px;
+    font-size: 16px;
+    color: #FFFFFF;
+    font-weight: 600;
+    border-radius: 3px;
+  }
+
+  .prev{
+    float: left;
+  }
+
+  .next{
+    float: right;
+  }
+
+  .disabled{
+    background: #ececec;
+    color: #737373;
+    cursor: not-allowed;
+  }
+
+  a:not(.disabled){
+    opacity: .9;
+    &:hover{
+      opacity: 1;
+    }
+  }
+}
